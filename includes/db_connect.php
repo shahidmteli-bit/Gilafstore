@@ -69,9 +69,9 @@ if (!function_exists('asset_url')) {
 }
 
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'ecommerce_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_NAME', 'u237768108_gilafstore');
+define('DB_USER', 'u237768108_gilafstore');
+define('DB_PASS', '1Mst@#$941940');
 
 try {
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
