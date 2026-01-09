@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Homepage Click Tracking</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .test-link { display: block; padding: 20px; margin: 10px 0; background: #0d6efd; color: white; text-decoration: none; border-radius: 5px; text-align: center; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .success { background: #d1e7dd; color: #0f5132; }
+        .error { background: #f8d7da; color: #842029; }
+    </style>
+</head>
+<body>
+    <h1>Test Homepage Click Tracking</h1>
+    <p>This simulates exactly what happens when you click on homepage.</p>
+    
+    <a href="#" class="test-link" onclick="testHomepageClick(7); return false;">
+        Click to Test (Product ID: 7 - Raisins)
+    </a>
+    
+    <a href="#" class="test-link" onclick="testHomepageClick(8); return false;">
+        Click to Test (Product ID: 8 - Red Chilli)
+    </a>
+    
+    <div id="result"></div>
+    
+    <script>
+    function testHomepageClick(productId) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = 'result';
+        resultDiv.innerHTML = '⏳ Testing click tracking...';
+        
+        console.log('Testing click for product:', productId);
+        
+        // This is the EXACT function from footer
+        const data = JSON.stringify({ product_id: productId, source: 'homepage' });
+        const url = 'http://localhost/Gilaf%20Ecommerce%20website/api/track_product_click.php';
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: data,
+            keepalive: true
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = '✅ Click tracked successfully!<br>Product ID: ' + productId + '<br>Source: homepage<br><br>Now check the dashboard or live test page.';
+            } else {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '❌ Tracking failed: ' + (data.error || 'Unknown error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            resultDiv.className = 'result error';
+            resultDiv.innerHTML = '❌ Network error: ' + error.message;
+        });
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Console Tracking Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .instruction { background: #fff3cd; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .test-link { display: inline-block; padding: 15px 30px; margin: 10px; background: #0d6efd; color: white; text-decoration: none; border-radius: 5px; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Console Tracking Test</h1>
+    
+    <div class="instruction">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Keep this page open</li>
+            <li>Press <strong>F12</strong> to open Developer Tools</li>
+            <li>Go to <strong>Console</strong> tab</li>
+            <li>Click the link below</li>
+            <li>Watch the console for messages</li>
+        </ol>
+    </div>
+    
+    <h3>Test Link (simulates homepage click):</h3>
+    <a href="#" class="test-link" onclick="testTrackClick(7, 'homepage'); return false;">
+        Click Me to Test Tracking
+    </a>
+    
+    <h3>What to Look For in Console:</h3>
+    <pre>
+✅ Good: "Tracking click for product: 7"
+✅ Good: "Fetch completed successfully"
+❌ Bad: "trackClick is not defined"
+❌ Bad: "Failed to fetch"
+❌ Bad: Any red error messages
+    </pre>
+    
+    <h3>Expected Console Output:</h3>
+    <div id="console-output" style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin-top: 15px;">
+        <p><em>Console messages will appear in the browser's Developer Tools Console tab (F12)</em></p>
+    </div>
+    
+    <script>
+    // Add detailed logging
+    console.log('%c=== Analytics Tracking Test Started ===', 'color: blue; font-weight: bold;');
+    
+    function testTrackClick(productId, source) {
+        console.log('%cTracking click for product: ' + productId, 'color: green; font-weight: bold;');
+        console.log('Source:', source);
+        
+        const data = JSON.stringify({ product_id: productId, source: source });
+        const url = 'http://localhost/Gilaf%20Ecommerce%20website/api/track_product_click.php';
+        
+        console.log('Sending request to:', url);
+        console.log('Data:', data);
+        
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: data,
+            keepalive: true
+        })
+        .then(response => {
+            console.log('%cResponse received!', 'color: green;');
+            console.log('Status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('%cResponse data:', 'color: green;');
+            console.log(data);
+            if (data.success) {
+                console.log('%c✅ SUCCESS! Click was tracked!', 'color: green; font-weight: bold; font-size: 16px;');
+                alert('✅ Click tracked successfully! Check the console for details.');
+            } else {
+                console.error('%c❌ FAILED: ' + (data.error || 'Unknown error'), 'color: red; font-weight: bold;');
+                alert('❌ Tracking failed: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('%c❌ ERROR:', 'color: red; font-weight: bold;');
+            console.error(error);
+            alert('❌ Network error: ' + error.message);
+        });
+    }
+    
+    console.log('%cTest page loaded. Click the blue link above to test.', 'color: blue;');
+    </script>
+</body>
+</html>

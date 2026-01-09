@@ -1,0 +1,5 @@
+<svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+  <text x="10" y="25" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#232F3E">pay</text>
+  <path d="M15 32 Q30 28, 45 32" stroke="#FF9900" stroke-width="3" fill="none"/>
+  <path d="M42 30 L48 32 L45 35 Z" fill="#FF9900"/>
+</svg>

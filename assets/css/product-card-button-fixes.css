@@ -1,0 +1,336 @@
+/**
+ * Product Card Button Fixes
+ * Small, Equal-Sized, Consistent Buttons
+ */
+
+/* ============================================
+   BUTTON CONTAINER
+   ============================================ */
+.product-card-body > div[style*="display: flex"] {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: stretch !important;
+    width: 100%;
+}
+
+/* ============================================
+   UNIFORM BUTTON SIZING
+   ============================================ */
+.product-card-body .btn,
+.product-card .btn {
+    /* Fixed Height */
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    
+    /* Consistent Padding */
+    padding: 0 14px !important;
+    
+    /* Typography */
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    line-height: 38px !important;
+    letter-spacing: 0.3px !important;
+    
+    /* Border & Radius */
+    border-radius: 8px !important;
+    border: 2px solid transparent !important;
+    
+    /* Display & Alignment */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    
+    /* Transitions */
+    transition: all 0.2s ease !important;
+    
+    /* Remove default margins */
+    margin: 0 !important;
+    
+    /* Text decoration */
+    text-decoration: none !important;
+    
+    /* Cursor */
+    cursor: pointer !important;
+}
+
+/* ============================================
+   BUTTON WIDTH BALANCE - EQUAL SIZE
+   ============================================ */
+/* Both buttons equal width */
+.product-card-body .btn-secondary,
+.product-card .btn-secondary,
+.product-card-body .btn-primary,
+.product-card .btn-primary {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
+/* ============================================
+   VIEW BUTTON STYLING
+   ============================================ */
+.product-card-body .btn-secondary,
+.product-card .btn-secondary {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    border-color: #ef4444 !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25) !important;
+}
+
+.product-card-body .btn-secondary:hover,
+.product-card .btn-secondary:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    border-color: #dc2626 !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.35) !important;
+}
+
+/* ============================================
+   ADD TO CART BUTTON STYLING
+   ============================================ */
+.product-card-body .btn-primary,
+.product-card .btn-primary {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #ffffff !important;
+    border-color: #10b981 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25) !important;
+}
+
+.product-card-body .btn-primary:hover,
+.product-card .btn-primary:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+    border-color: #059669 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.35) !important;
+}
+
+/* ============================================
+   BUTTON ACTIVE STATE
+   ============================================ */
+.product-card-body .btn:active,
+.product-card .btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ============================================
+   BUTTON FOCUS STATE (Accessibility)
+   ============================================ */
+.product-card-body .btn:focus,
+.product-card .btn:focus {
+    outline: 2px solid #d4af37 !important;
+    outline-offset: 2px !important;
+}
+
+/* ============================================
+   MOBILE TAP-FRIENDLY (44px minimum)
+   ============================================ */
+@media (max-width: 768px) {
+    .product-card-body .btn,
+    .product-card .btn {
+        height: 44px !important;
+        min-height: 44px !important;
+        max-height: 44px !important;
+        line-height: 44px !important;
+        font-size: 14px !important;
+        padding: 0 16px !important;
+    }
+    
+    .product-card-body .btn-secondary,
+    .product-card .btn-secondary {
+        min-width: 80px !important;
+    }
+    
+    .product-card-body .btn-primary,
+    .product-card .btn-primary {
+        min-width: 140px !important;
+    }
+}
+
+/* ============================================
+   BUTTON CONTAINER SPACING
+   ============================================ */
+.product-card-body {
+    padding: 18px !important;
+}
+
+/* Ensure proper spacing above buttons */
+.product-card-price {
+    margin-bottom: 14px !important;
+}
+
+/* ============================================
+   FIX BUTTON ALIGNMENT ISSUES
+   ============================================ */
+/* Remove any conflicting flex properties */
+.product-card-body > div[style*="flex: 1"] {
+    flex: 0 0 auto !important;
+}
+
+.product-card-body > div[style*="flex: 2"] {
+    flex: 1 1 auto !important;
+}
+
+/* ============================================
+   BUTTON TEXT CONTRAST
+   ============================================ */
+/* Ensure text is crisp and readable */
+.product-card-body .btn,
+.product-card .btn {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+}
+
+/* ============================================
+   PREVENT BUTTON TEXT WRAP
+   ============================================ */
+.product-card-body .btn span,
+.product-card .btn span {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* ============================================
+   BUTTON ICON SPACING (if icons are used)
+   ============================================ */
+.product-card-body .btn i,
+.product-card .btn i {
+    margin-right: 4px !important;
+    font-size: 12px !important;
+}
+
+/* ============================================
+   DISABLED BUTTON STATE
+   ============================================ */
+.product-card-body .btn:disabled,
+.product-card .btn:disabled,
+.product-card-body .btn.disabled,
+.product-card .btn.disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+/* ============================================
+   BUTTON LOADING STATE
+   ============================================ */
+.product-card-body .btn.loading,
+.product-card .btn.loading {
+    position: relative !important;
+    color: transparent !important;
+    pointer-events: none !important;
+}
+
+.product-card-body .btn.loading::after,
+.product-card .btn.loading::after {
+    content: '' !important;
+    position: absolute !important;
+    width: 16px !important;
+    height: 16px !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin-left: -8px !important;
+    margin-top: -8px !important;
+    border: 2px solid #ffffff !important;
+    border-radius: 50% !important;
+    border-top-color: transparent !important;
+    animation: button-spin 0.6s linear infinite !important;
+}
+
+@keyframes button-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   FORM BUTTON FIXES
+   ============================================ */
+/* Fix form buttons inside product cards */
+.product-card-body form,
+.product-card form {
+    margin: 0 !important;
+    flex: 1 1 auto !important;
+}
+
+.product-card-body form .btn,
+.product-card form .btn {
+    width: 100% !important;
+}
+
+/* ============================================
+   BUTTON GROUP ALIGNMENT
+   ============================================ */
+/* Ensure buttons stay aligned even with different content */
+.product-card-body > div:last-child {
+    margin-top: auto !important;
+}
+
+/* ============================================
+   SMALL SCREEN ADJUSTMENTS
+   ============================================ */
+@media (max-width: 480px) {
+    .product-card-body .btn,
+    .product-card .btn {
+        font-size: 13px !important;
+        padding: 0 12px !important;
+    }
+    
+    .product-card-body > div[style*="display: flex"] {
+        gap: 6px !important;
+    }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+    .product-card-body .btn,
+    .product-card .btn {
+        border: 1px solid #000 !important;
+        background: #fff !important;
+        color: #000 !important;
+        box-shadow: none !important;
+    }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+@media (prefers-contrast: high) {
+    .product-card-body .btn-secondary,
+    .product-card .btn-secondary {
+        border-color: #000000 !important;
+        color: #000000 !important;
+    }
+    
+    .product-card-body .btn-primary,
+    .product-card .btn-primary {
+        background: #000000 !important;
+        border-color: #000000 !important;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    .product-card-body .btn,
+    .product-card .btn {
+        transition: none !important;
+        transform: none !important;
+    }
+    
+    .product-card-body .btn:hover,
+    .product-card .btn:hover {
+        transform: none !important;
+    }
+}
