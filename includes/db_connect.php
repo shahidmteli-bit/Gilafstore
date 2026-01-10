@@ -68,10 +68,27 @@ if (!function_exists('asset_url')) {
     }
 }
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'u237768108_gilafstore');
-define('DB_USER', 'u237768108_gilafstore');
-define('DB_PASS', '1Gfs@#$222');
+// Auto-detect environment and use appropriate credentials
+$isLocal = (
+    $_SERVER['HTTP_HOST'] === 'localhost' || 
+    strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false ||
+    strpos($_SERVER['HTTP_HOST'], '::1') !== false ||
+    strpos($_SERVER['SERVER_NAME'], 'localhost') !== false
+);
+
+if ($isLocal) {
+    // Local XAMPP credentials
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'ecommerce_db');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+} else {
+    // Production Hostinger credentials
+    define('DB_HOST', 'localhost');
+    define('DB_NAME', 'u237768108_gilafstore');
+    define('DB_USER', 'u237768108_gilafstore');
+    define('DB_PASS', '1Gfs@#$222');
+}
 
 try {
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
