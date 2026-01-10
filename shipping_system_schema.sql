@@ -3,8 +3,7 @@
 -- ============================================
 -- Comprehensive shipping module for international eCommerce
 -- Supports zones, methods, weight-based pricing, COD, and tracking
-
-USE ecommerce_db;
+-- Compatible with Hostinger (u237768108_gilafstore)
 
 -- ============================================
 -- 1. SHIPPING ZONES TABLE

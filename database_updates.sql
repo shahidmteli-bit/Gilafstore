@@ -33,7 +33,6 @@ CREATE TABLE IF NOT EXISTS `batch_codes` (
   `is_active` TINYINT(1) DEFAULT 1,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `batch_code` (`batch_code`),
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -66,14 +65,16 @@ CREATE TABLE IF NOT EXISTS `site_settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 5. Add search_keywords column to products table (if not exists)
-ALTER TABLE `products` 
-ADD COLUMN IF NOT EXISTS `search_keywords` TEXT AFTER `description`;
+-- Note: Comment out if column already exists
+-- ALTER TABLE `products` 
+-- ADD COLUMN IF NOT EXISTS `search_keywords` TEXT AFTER `description`;
 
 -- 6. Add is_featured column to categories (for homepage display)
-ALTER TABLE `categories` 
-ADD COLUMN IF NOT EXISTS `is_featured` TINYINT(1) DEFAULT 0 AFTER `name`,
-ADD COLUMN IF NOT EXISTS `icon` VARCHAR(100) AFTER `is_featured`,
-ADD COLUMN IF NOT EXISTS `display_order` INT(11) DEFAULT 0 AFTER `icon`;
+-- Note: Comment out if columns already exist
+-- ALTER TABLE `categories` 
+-- ADD COLUMN IF NOT EXISTS `is_featured` TINYINT(1) DEFAULT 0 AFTER `name`,
+-- ADD COLUMN IF NOT EXISTS `icon` VARCHAR(100) AFTER `is_featured`,
+-- ADD COLUMN IF NOT EXISTS `display_order` INT(11) DEFAULT 0 AFTER `icon`;
 
 -- ============================================
 -- INSERT DEFAULT DATA
@@ -119,7 +120,8 @@ INSERT IGNORE INTO `banners` (`title`, `subtitle`, `image`, `link_url`, `button_
 -- ============================================
 -- INDEXES FOR PERFORMANCE
 -- ============================================
-ALTER TABLE products ADD INDEX idx_products_name (name(191));
-ALTER TABLE batch_codes ADD INDEX idx_batch_active (is_active, batch_code);
-ALTER TABLE cms_pages ADD INDEX idx_cms_published (is_published, slug(191));
-ALTER TABLE banners ADD INDEX idx_banners_active (is_active, position);
+-- Note: Comment out if indexes already exist to avoid duplicate key errors
+-- ALTER TABLE products ADD INDEX IF NOT EXISTS idx_products_name (name(191));
+-- ALTER TABLE batch_codes ADD INDEX IF NOT EXISTS idx_batch_active (is_active, batch_code);
+-- ALTER TABLE cms_pages ADD INDEX IF NOT EXISTS idx_cms_published (is_published, slug(191));
+-- ALTER TABLE banners ADD INDEX IF NOT EXISTS idx_banners_active (is_active, position);

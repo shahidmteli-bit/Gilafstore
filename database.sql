@@ -1,8 +1,5 @@
 -- Gilaf Store Ecommerce Database Schema
--- Database: ecommerce_db
-
-CREATE DATABASE IF NOT EXISTS ecommerce_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE ecommerce_db;
+-- Compatible with Hostinger (u237768108_gilafstore)
 
 -- Users table stores both customers and admins
 CREATE TABLE IF NOT EXISTS users (

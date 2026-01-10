@@ -251,106 +251,106 @@ include __DIR__ . '/includes/new-header.php';
         <!-- Highlights & Trust Panel -->
         <div class="card" style="margin-top: var(--space-6); border: 2px solid rgba(201, 169, 97, 0.4); background: linear-gradient(135deg, rgba(255, 250, 240, 0.95) 0%, rgba(255, 255, 255, 0.95) 50%, rgba(250, 245, 235, 0.95) 100%); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: 0 10px 40px rgba(201, 169, 97, 0.2); position: relative; overflow: hidden; border-radius: 16px;">
           <div class="card-body" style="padding: 20px;">
-            <h4 style="font-size: 0.9rem; font-weight: 800; color: #1A3C34; margin-bottom: 14px; font-family: 'Poppins', sans-serif; text-align: center; letter-spacing: 0.8px; text-transform: uppercase; background: linear-gradient(135deg, #B8935A, #C9A961, #D4B76A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">✨ WHY CHOOSE US</h4>
+            <h4 style="font-size: 0.82rem; font-weight: 800; color: #1A3C34; margin-bottom: 12px; font-family: 'Poppins', sans-serif; text-align: center; letter-spacing: 0.6px; text-transform: uppercase; background: linear-gradient(135deg, #B8935A, #C9A961, #D4B76A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">✨ WHY CHOOSE US</h4>
             
             <!-- Auto-sliding Highlights -->
-            <div class="trust-highlights-container" style="position: relative; height: 80px; margin-bottom: 0;">
+            <div class="trust-highlights-container" style="position: relative; height: 68px; margin-bottom: 0;">
               <div class="trust-highlights-track">
                 <!-- Slide 1: Fast Delivery -->
                 <div class="trust-highlight-card active">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(201, 169, 97, 0.18); border: 1.5px solid rgba(201, 169, 97, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #C9A961, #D4B76A); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);">🚀</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(201, 169, 97, 0.18); border: 1.5px solid rgba(201, 169, 97, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #C9A961, #D4B76A); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);">🚀</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Fast Delivery</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quick shipping nationwide</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Fast Delivery</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quick shipping</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 2: Easy Returns -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(102, 126, 234, 0.18); border: 1.5px solid rgba(102, 126, 234, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">↩️</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(102, 126, 234, 0.18); border: 1.5px solid rgba(102, 126, 234, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">↩️</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Easy Returns</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hassle-free return policy</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Easy Returns</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hassle-free policy</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 3: Secure Checkout -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 255, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(48, 207, 208, 0.18); border: 1.5px solid rgba(48, 207, 208, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #30cfd0, #330867); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(48, 207, 208, 0.4);">🔒</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 255, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(48, 207, 208, 0.18); border: 1.5px solid rgba(48, 207, 208, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #30cfd0, #330867); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(48, 207, 208, 0.4);">🔒</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Secure Checkout</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Safe payment processing</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Secure Checkout</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Safe payments</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 4: Lab Tested -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 250, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(255, 107, 107, 0.18); border: 1.5px solid rgba(255, 107, 107, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #FF6B6B, #FF8E53); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);">🔬</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 250, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(255, 107, 107, 0.18); border: 1.5px solid rgba(255, 107, 107, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #FF6B6B, #FF8E53); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);">🔬</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Lab Tested</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quality verified products</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Lab Tested</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quality verified</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 5: Traceable Sourcing -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 255, 253, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(168, 237, 234, 0.18); border: 1.5px solid rgba(168, 237, 234, 0.35);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #a8edea, #fed6e3); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(168, 237, 234, 0.4);">📍</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 255, 253, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(168, 237, 234, 0.18); border: 1.5px solid rgba(168, 237, 234, 0.35);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #a8edea, #fed6e3); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(168, 237, 234, 0.4);">📍</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Traceable Sourcing</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Know your product origin</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Traceable Source</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Know origin</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 6: Certified Quality -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(240, 147, 251, 0.18); border: 1.5px solid rgba(240, 147, 251, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);">✓</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(240, 147, 251, 0.18); border: 1.5px solid rgba(240, 147, 251, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #f093fb, #f5576c); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);">✓</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Certified Quality</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Premium grade standards</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Certified Quality</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Premium grade</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 7: Trusted Brand -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 253, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(250, 112, 154, 0.18); border: 1.5px solid rgba(250, 112, 154, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #fa709a, #fee140); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(250, 112, 154, 0.4);">⭐</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 253, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(250, 112, 154, 0.18); border: 1.5px solid rgba(250, 112, 154, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #fa709a, #fee140); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(250, 112, 154, 0.4);">⭐</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Trusted by Customers</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Thousands of happy buyers</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Trusted Brand</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Happy customers</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 8: Premium Packaging -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(201, 169, 97, 0.18); border: 1.5px solid rgba(201, 169, 97, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #C9A961, #1A3C34); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);">📦</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 252, 248, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(201, 169, 97, 0.18); border: 1.5px solid rgba(201, 169, 97, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #C9A961, #1A3C34); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(201, 169, 97, 0.4);">📦</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Premium Packaging</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Elegant gift-ready boxes</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Premium Pack</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Gift-ready boxes</div>
                     </div>
                   </div>
                 </div>
                 
                 <!-- Slide 9: Quality Guaranteed -->
                 <div class="trust-highlight-card">
-                  <div style="display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 12px; border-radius: 10px; box-shadow: 0 3px 15px rgba(102, 126, 234, 0.18); border: 1.5px solid rgba(102, 126, 234, 0.3);">
-                    <div style="flex-shrink: 0; width: 44px; height: 44px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">🏆</div>
+                  <div style="display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(252, 250, 255, 0.98) 100%); backdrop-filter: blur(10px); padding: 10px; border-radius: 8px; box-shadow: 0 3px 15px rgba(102, 126, 234, 0.18); border: 1.5px solid rgba(102, 126, 234, 0.3);">
+                    <div style="flex-shrink: 0; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);">🏆</div>
                     <div style="flex: 1; min-width: 0;">
-                      <div style="font-size: 0.88rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quality Guaranteed</div>
-                      <div style="font-size: 0.75rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">100% satisfaction promise</div>
+                      <div style="font-size: 0.8rem; font-weight: 700; color: #0d1f1a; margin-bottom: 2px; font-family: 'Poppins', sans-serif; letter-spacing: 0.05px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Quality Assured</div>
+                      <div style="font-size: 0.68rem; color: #3a4a45; line-height: 1.2; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">100% satisfaction</div>
                     </div>
                   </div>
                 </div>

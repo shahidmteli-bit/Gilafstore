@@ -1,7 +1,5 @@
 -- Password Reset Tokens Table for Admin Panel
--- Make sure to select your database first in phpMyAdmin or run: USE ecommerce_db;
-
-USE ecommerce_db;
+-- Compatible with Hostinger (u237768108_gilafstore)
 
 CREATE TABLE IF NOT EXISTS password_resets (
     id INT AUTO_INCREMENT PRIMARY KEY,

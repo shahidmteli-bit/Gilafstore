@@ -21,15 +21,15 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   PRIMARY KEY (`id`),
   KEY `order_id` (`order_id`),
   KEY `user_id` (`user_id`),
-  KEY `invoice_number` (`invoice_number`),
   CONSTRAINT `fk_invoice_order` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_invoice_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Add invoice_id column to orders table if not exists
-ALTER TABLE `orders` 
-ADD COLUMN `invoice_id` int(11) DEFAULT NULL AFTER `id`,
-ADD KEY `invoice_id` (`invoice_id`);
+-- Note: Comment out if column already exists to avoid errors
+-- ALTER TABLE `orders` 
+-- ADD COLUMN IF NOT EXISTS `invoice_id` int(11) DEFAULT NULL AFTER `id`,
+-- ADD KEY IF NOT EXISTS `invoice_id` (`invoice_id`);
 
 -- Create invoice audit log for compliance
 CREATE TABLE IF NOT EXISTS `invoice_audit_log` (
