@@ -17,6 +17,11 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Hero Section -->
 <section class="hero">
+    <!-- TEMPORARY DEPLOYMENT TEST - REMOVE AFTER VERIFICATION -->
+    <div style="position: fixed; top: 0; left: 0; right: 0; background: #ff6b6b; color: white; padding: 10px; text-align: center; z-index: 9999; font-weight: bold; font-size: 14px;">
+        ✅ AUTO-DEPLOYMENT TEST - Jan 10, 2026 8:58 PM - If you see this, deployment is working!
+    </div>
+    <!-- END TEMPORARY TEST -->
     <div class="container hero-content">
         <div class="tagline-pill">
             <i class="fas fa-crown" style="color: var(--color-gold); font-size: 0.8rem;"></i>
