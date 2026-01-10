@@ -1,3 +1,6 @@
+echo "<div style='background:red;color:white;text-align:center;padding:10px;font-weight:bold'>
+AUTO DEPLOY TEST ".date('H:i:s')."
+</div>";
 <?php
 $pageTitle = 'Gilaf Store | Taste • Culture • Craft';
 $activePage = 'home';
