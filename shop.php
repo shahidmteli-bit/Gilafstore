@@ -89,6 +89,33 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Critical Inline CSS for Full-Width Hero Promo Billboard -->
 <style>
+/* FORCE 2-COLUMN MOBILE PRODUCT GRID */
+@media (max-width: 768px) {
+    .products-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+    
+    .product-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .product-card-body {
+        padding: 10px !important;
+    }
+    
+    .product-card-title {
+        font-size: 13px !important;
+    }
+    
+    .product-card-category {
+        font-size: 9px !important;
+    }
+}
+
 .shop-header-ad-panel { display: none; }
 @media (min-width: 768px) {
     .shop-header-ad-panel { display: block; flex: 0 0 auto; margin-left: auto; margin-right: 16px; width: 50%; max-width: 50%; box-sizing: border-box; }
