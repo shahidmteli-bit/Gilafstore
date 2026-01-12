@@ -313,9 +313,19 @@ include __DIR__ . '/../includes/delete-modal.php';
 }
 
 @media (max-width: 768px) {
+    .addresses-page {
+        margin-top: -75px !important;
+        padding-top: 0 !important;
+    }
+    
     .page-header {
         flex-direction: column;
         gap: 15px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem !important;
+        white-space: nowrap;
     }
     
     .btn-back-profile {
