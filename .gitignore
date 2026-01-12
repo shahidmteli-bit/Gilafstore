@@ -1,0 +1,161 @@
+# ===================================
+# GILAF ECOMMERCE - GIT IGNORE FILE
+# ===================================
+
+# ============ SENSITIVE FILES ============
+# Database Configuration
+includes/db_connect.php
+config/database.php
+.env
+.env.local
+.env.production
+
+# API Keys & Secrets
+chatbot_config.php
+*_config.php
+*.key
+*.pem
+
+# ============ USER UPLOADS ============
+# Uploaded Files (Don't track user-uploaded content)
+uploads/**/*
+!uploads/.htaccess
+!uploads/*/
+assets/Images/products/*
+!assets/Images/products/.gitkeep
+
+# Lab Reports
+assets/lab_reports/*.pdf
+
+# Distributor Applications
+uploads/distributor_applications/*.pdf
+
+# ============ CACHE & LOGS ============
+# Cache Directories
+cache/**/*
+!cache/.htaccess
+!cache/*/.gitkeep
+
+# Log Files
+logs/*.log
+*.log
+error_log
+debug.log
+
+# ============ TEMPORARY FILES ============
+# PHP Temporary Files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Backup Files
+*.bak
+*.backup
+*.old
+*_backup.php
+*_old.php
+
+# ============ DEVELOPMENT FILES ============
+# Debug & Test Files
+debug_*.php
+test_*.php
+check_*.php
+diagnose_*.php
+deep_*.php
+fix_and_test_*.php
+live_*_test.php
+clear_test_data.php
+deployment_debug.php
+
+# ============ VENDOR & DEPENDENCIES ============
+# Composer
+/vendor/
+composer.lock
+
+# Node Modules (if you add frontend build tools later)
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============ IDE & EDITOR FILES ============
+# VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# PhpStorm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============ OPERATING SYSTEM FILES ============
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# ============ ARCHIVE & DELETED FILES ============
+# Archive Directory
+archive/
+deleted_files_*/
+
+# ============ DATABASE FILES ============
+# SQL Dumps (Keep schema files, ignore data dumps)
+*_dump.sql
+backup_*.sql
+database_backup_*.sql
+
+# Keep these schema files
+!database.sql
+!database_*.sql
+
+# ============ DOCUMENTATION (OPTIONAL) ============
+# You can uncomment these if you don't want to track all docs
+# *.md
+# !README.md
+# !DEPLOYMENT_GUIDE.md
+
+# ============ SPECIFIC EXCLUSIONS ============
+# Payment Gateway Test Files
+confirm_upi_payment.php
+
+# Analytics Debug Files
+check_analytics_data.php
+check_click_data.php
+check_database_clicks.php
+debug_clicks.php
+get_click_stats.php
+
+# Cart Debug Files
+debug_cart_navigation.php
+deep_cart_analysis.php
+
+# Signup Debug
+debug_signup_analysis.php
+
+# Discount Debug
+debug_discounts.php
+
+# ============ KEEP THESE IMPORTANT FILES ============
+# Force include important files even if matched above
+!.htaccess
+!uploads/.htaccess
+!cache/.htaccess
+!README.md
+!DEPLOYMENT_GUIDE.md
+!SETUP_INSTRUCTIONS.md
