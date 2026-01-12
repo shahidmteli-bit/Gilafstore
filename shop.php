@@ -95,15 +95,23 @@ a.btn-danger {
     display: none !important;
 }
 
-/* MOBILE: Remove top padding on shop page */
+/* MOBILE: Remove ALL top padding/margin on shop page */
 @media (max-width: 768px) {
     section.py-5 {
         padding-top: 0 !important;
         padding-bottom: 3rem !important;
+        margin-top: 0 !important;
+    }
+    
+    section.py-5 .container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
     }
     
     .shop-breadcrumb {
+        margin-top: 0 !important;
         margin-bottom: 1rem !important;
+        padding-top: 0.5rem !important;
     }
     
     .shop-page {
