@@ -94,7 +94,7 @@ window.addEventListener('resize', function() {
             closeMobileMenu();
         }
     }, 250);
-});}
+});
 
 // Login Modal Functions
 function openLoginModal() { 
