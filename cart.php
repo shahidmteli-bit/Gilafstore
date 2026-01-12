@@ -68,6 +68,14 @@ include __DIR__ . '/includes/new-header.php';
 <link rel="stylesheet" href="<?= asset_url('css/cinematic-cart-checkout.css'); ?>">
 
 <style>
+/* Mobile: Reduce top padding on cart page */
+@media (max-width: 768px) {
+  section.py-5 {
+    margin-top: -50px !important;
+    padding-top: 10px !important;
+  }
+}
+
 /* Modern Shopping Cart Layout */
 * {
   box-sizing: border-box;
