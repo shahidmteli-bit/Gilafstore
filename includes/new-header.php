@@ -283,14 +283,8 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
             
             <!-- Mobile Navigation -->
             <nav class="mobile-nav">
-                <!-- Mobile Menu Top Bar -->
-                <div class="mobile-menu-top-bar">
-                    <button class="mobile-menu-action" onclick="toggleSearch(); closeMobileMenu();">
-                        <span>SEARCH</span>
-                    </button>
-                    <button class="mobile-menu-action" onclick="<?= $isLoggedIn ? "window.location.href='" . base_url('user/dashboard.php') . "'" : 'openLoginModal(); closeMobileMenu();' ?>">
-                        <span>ACCOUNT</span>
-                    </button>
+                <!-- Mobile Menu Header with Close Button Only -->
+                <div class="mobile-menu-header-bar">
                     <button class="mobile-menu-close">
                         <i class="fas fa-times"></i>
                     </button>
@@ -298,34 +292,54 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                 
                 <!-- Main Menu List -->
                 <div class="mobile-menu-list">
-                    <a href="<?= base_url('index.php'); ?>" class="mobile-menu-item">HOME</a>
+                    <a href="<?= base_url('index.php'); ?>" class="mobile-menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>HOME</span>
+                    </a>
                     
                     <div class="mobile-menu-item-wrapper">
                         <button class="mobile-menu-item has-submenu" data-submenu="shop">
+                            <i class="fas fa-shopping-bag"></i>
                             <span>SHOP</span>
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
                         </button>
                     </div>
                     
                     <div class="mobile-menu-item-wrapper">
                         <button class="mobile-menu-item has-submenu" data-submenu="categories">
+                            <i class="fas fa-th-large"></i>
                             <span>COLLECTIONS</span>
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
                         </button>
                     </div>
                     
-                    <a href="<?= base_url('shop.php?filter=bestsellers'); ?>" class="mobile-menu-item">BESTSELLERS</a>
-                    <a href="<?= base_url('offers.php'); ?>" class="mobile-menu-item">SALE</a>
-                    <a href="#" onclick="openTrackingModal(); return false;" class="mobile-menu-item">TRACK ORDER</a>
+                    <a href="<?= base_url('shop.php?filter=bestsellers'); ?>" class="mobile-menu-item">
+                        <i class="fas fa-star"></i>
+                        <span>BESTSELLERS</span>
+                    </a>
+                    
+                    <a href="<?= base_url('offers.php'); ?>" class="mobile-menu-item">
+                        <i class="fas fa-tag"></i>
+                        <span>SALE</span>
+                    </a>
+                    
+                    <a href="#" onclick="openTrackingModal(); return false;" class="mobile-menu-item">
+                        <i class="fas fa-box"></i>
+                        <span>TRACK ORDER</span>
+                    </a>
                     
                     <div class="mobile-menu-item-wrapper">
                         <button class="mobile-menu-item has-submenu" data-submenu="story">
+                            <i class="fas fa-book-open"></i>
                             <span>OUR STORY</span>
-                            <i class="fas fa-chevron-right"></i>
+                            <i class="fas fa-chevron-right arrow-icon"></i>
                         </button>
                     </div>
                     
-                    <a href="<?= base_url('contact.php'); ?>" class="mobile-menu-item">CONTACT US</a>
+                    <a href="<?= base_url('contact.php'); ?>" class="mobile-menu-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>CONTACT US</span>
+                    </a>
                 </div>
             </nav>
             
