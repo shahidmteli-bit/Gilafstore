@@ -1128,7 +1128,8 @@ footer { background-color: var(--color-green); color: white; padding: 80px 0 30p
         min-height: 600px;
         height: auto; 
         background-attachment: scroll;
-        padding-top: 100px;
+        padding-top: 60px;
+        margin-top: 0;
     }
     .hero h2 { font-size: 2.2rem; line-height: 1.2; margin-bottom: 20px; }
     .hero p { font-size: 1rem; margin-bottom: 30px; }
