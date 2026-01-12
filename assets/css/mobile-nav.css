@@ -1,0 +1,241 @@
+/* =========================================
+   GILAF STORE - MOBILE NAVIGATION
+   Modern Drawer Menu with Icons & Hierarchy
+   ========================================= */
+
+/* Mobile Menu Items Styling */
+@media (max-width: 768px) {
+    /* Main Navigation Items */
+    .nav-links > a,
+    .nav-links > .dropdown {
+        width: 100%;
+        border-bottom: 1px solid rgba(26, 60, 52, 0.08);
+    }
+    
+    .nav-links > a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 16px 20px;
+        color: var(--color-text);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: none;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .nav-links > a::before {
+        display: none;
+    }
+    
+    .nav-links > a:hover {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%);
+        color: var(--color-gold);
+        transform: translateX(0);
+        padding-left: 25px;
+    }
+    
+    /* Icons for Menu Items */
+    .nav-links > a::after {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 1.1rem;
+        color: var(--color-gold);
+        min-width: 24px;
+        text-align: center;
+    }
+    
+    .nav-links > a[href*="index.php"]::after {
+        content: '\f015'; /* Home icon */
+    }
+    
+    .nav-links > a[href*="shop.php"]::after {
+        content: '\f07a'; /* Shopping cart icon */
+    }
+    
+    /* Dropdown Styling */
+    .nav-links > .dropdown {
+        position: relative;
+        display: block;
+        width: 100%;
+    }
+    
+    .nav-links .dropbtn {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 16px 20px;
+        color: var(--color-text);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: transparent;
+        border: none;
+    }
+    
+    .nav-links .dropbtn::before {
+        display: none;
+    }
+    
+    .nav-links .dropbtn::after {
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 1.1rem;
+        color: var(--color-gold);
+        min-width: 24px;
+        text-align: center;
+        order: -1;
+        margin-right: 15px;
+    }
+    
+    /* Dropdown Icons */
+    .dropdown:has(.dropbtn:contains("SHOP BY CATEGORY")) .dropbtn::after,
+    .dropdown:nth-of-type(1) .dropbtn::after {
+        content: '\f07a'; /* Shopping bag */
+    }
+    
+    .dropdown:has(.dropbtn:contains("TRACK")) .dropbtn::after,
+    .dropdown:nth-of-type(2) .dropbtn::after {
+        content: '\f466'; /* Box icon */
+    }
+    
+    .dropdown:has(.dropbtn:contains("OUR STORY")) .dropbtn::after,
+    .dropdown:nth-of-type(3) .dropbtn::after {
+        content: '\f02d'; /* Book icon */
+    }
+    
+    .nav-links .dropbtn i {
+        font-size: 0.7rem;
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+    
+    .nav-links .dropdown.mobile-expanded .dropbtn i {
+        transform: rotate(180deg);
+    }
+    
+    /* Dropdown Content */
+    .nav-links .dropdown-content {
+        position: static;
+        display: none;
+        background: rgba(248, 245, 242, 0.5);
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+        padding: 0;
+        border: none;
+        animation: none;
+        backdrop-filter: none;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .nav-links .dropdown.mobile-expanded .dropdown-content {
+        display: block;
+    }
+    
+    .nav-links .dropdown-content a {
+        padding: 12px 20px 12px 60px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        color: var(--color-text-light);
+        border-bottom: 1px solid rgba(26, 60, 52, 0.05);
+        letter-spacing: 0.3px;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links .dropdown-content a::before {
+        display: none;
+    }
+    
+    .nav-links .dropdown-content a:hover {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.08) 0%, transparent 100%);
+        color: var(--color-gold);
+        padding-left: 65px;
+        transform: translateX(0);
+    }
+    
+    .nav-links .dropdown-content hr {
+        margin: 8px 20px 8px 60px;
+        border: none;
+        border-top: 1px solid rgba(26, 60, 52, 0.1);
+    }
+    
+    /* Hover Effects */
+    .nav-links .dropbtn:hover {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%);
+        color: var(--color-gold);
+        transform: translateX(0);
+        padding-left: 25px;
+    }
+    
+    /* Remove desktop hover behavior */
+    .nav-links .dropdown:hover .dropdown-content {
+        display: none;
+    }
+    
+    .nav-links .dropdown.mobile-expanded:hover .dropdown-content {
+        display: block;
+    }
+    
+    /* Menu Footer - Optional Contact/Support */
+    .mobile-menu-footer {
+        margin-top: auto;
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(26, 60, 52, 0.05) 0%, rgba(197, 160, 89, 0.05) 100%);
+        border-top: 1px solid rgba(26, 60, 52, 0.1);
+    }
+    
+    .mobile-menu-footer a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        color: var(--color-text-light);
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .mobile-menu-footer a:hover {
+        color: var(--color-gold);
+    }
+    
+    .mobile-menu-footer a i {
+        font-size: 1rem;
+        color: var(--color-gold);
+        width: 24px;
+        text-align: center;
+    }
+    
+    /* Smooth Scrolling */
+    .nav-links {
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-gold) transparent;
+    }
+    
+    .nav-links::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .nav-links::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    
+    .nav-links::-webkit-scrollbar-thumb {
+        background: var(--color-gold);
+        border-radius: 2px;
+    }
+}
+
+/* Prevent body scroll when menu is open */
+body.mobile-menu-open {
+    overflow: hidden;
+}

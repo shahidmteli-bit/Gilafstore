@@ -51,6 +51,9 @@ $htmlLangDir = htmlspecialchars(get_language_direction());
     <!-- New Design CSS -->
     <link rel="stylesheet" href="<?= asset_url('css/new-design.css'); ?>?v=<?= time(); ?>">
     
+    <!-- Mobile Navigation CSS -->
+    <link rel="stylesheet" href="<?= asset_url('css/mobile-nav.css'); ?>?v=<?= time(); ?>">
+    
     <!-- Layout Fixes CSS - Comprehensive responsive and layout fixes -->
     <link rel="stylesheet" href="<?= asset_url('css/layout-fixes.css'); ?>">
 </head>
@@ -236,10 +239,21 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                 </a>
             </div>
             <nav class="nav-links">
-                <a href="<?= base_url('index.php'); ?>">HOME</a>
-                <a href="<?= base_url('shop.php'); ?>">SHOP</a>
+                <!-- Mobile Menu Header -->
+                <div class="mobile-menu-header">
+                    <div class="logo">
+                        <h1>GILAF STORE</h1>
+                        <span>Taste • Culture • Craft</span>
+                    </div>
+                    <div class="mobile-menu-close">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                
+                <a href="<?= base_url('index.php'); ?>">Home</a>
+                <a href="<?= base_url('shop.php'); ?>">Shop</a>
                 <div class="dropdown">
-                    <span class="dropbtn">SHOP BY CATEGORY <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <span class="dropbtn">Shop by Category <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
                     <div class="dropdown-content">
                         <?php
                         $categories = get_categories();
@@ -253,7 +267,7 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                     </div>
                 </div>
                 <div class="dropdown">
-                    <span class="dropbtn">TRACK <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <span class="dropbtn">Track <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
                     <div class="dropdown-content">
                         <a href="#" onclick="openTrackingModal(); return false;">Track Order</a>
                         <?php if ($isLoggedIn): ?>
@@ -266,14 +280,32 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                     </div>
                 </div>
                 <div class="dropdown">
-                    <span class="dropbtn">OUR STORY <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <span class="dropbtn">Our Story <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
                     <div class="dropdown-content">
                         <a href="<?= base_url('about-us.php'); ?>">About Us</a>
                         <a href="<?= base_url('our-values.php'); ?>">Our Values</a>
                         <a href="<?= base_url('blogs.php'); ?>">Blogs</a>
                     </div>
                 </div>
+                
+                <!-- Mobile Menu Footer -->
+                <div class="mobile-menu-footer">
+                    <a href="<?= base_url('contact.php'); ?>">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact Us</span>
+                    </a>
+                    <?php if ($isLoggedIn): ?>
+                        <a href="<?= base_url('user/create_ticket.php'); ?>">
+                            <i class="fas fa-headset"></i>
+                            <span>Support</span>
+                        </a>
+                    <?php endif; ?>
+                </div>
             </nav>
+            
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu-overlay"></div>
+            
             <div class="user-actions">
                 <div id="searchContainer" style="position: relative;">
                     <i class="fas fa-search" id="searchIcon" onclick="toggleSearch()" style="cursor: pointer;"></i>

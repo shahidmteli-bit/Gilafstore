@@ -11,29 +11,90 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Mobile Menu Toggle
+// Modern Mobile Menu Drawer Toggle
 const menuToggle = document.querySelector('.menu-toggle');
+const mobileMenuClose = document.querySelector('.mobile-menu-close');
+const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+const navLinks = document.querySelector('.nav-links');
+
+function openMobileMenu() {
+    if (navLinks) navLinks.classList.add('mobile-open');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.add('active');
+    document.body.classList.add('mobile-menu-open');
+}
+
+function closeMobileMenu() {
+    if (navLinks) navLinks.classList.remove('mobile-open');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
+    document.body.classList.remove('mobile-menu-open');
+    // Close all expanded dropdowns
+    document.querySelectorAll('.dropdown.mobile-expanded').forEach(dropdown => {
+        dropdown.classList.remove('mobile-expanded');
+    });
+}
+
 if (menuToggle) {
-    menuToggle.addEventListener('click', function() {
-        const nav = document.querySelector('.nav-links');
-        if (nav.style.display === 'flex') {
-            nav.style.display = 'none';
-        } else {
-            nav.style.display = 'flex';
-            nav.style.flexDirection = 'column';
-            nav.style.position = 'absolute';
-            nav.style.top = '70px';
-            nav.style.left = '0';
-            nav.style.width = '100%';
-            nav.style.background = '#fff';
-            nav.style.padding = '20px';
-            nav.style.boxShadow = '0 5px 10px rgba(0,0,0,0.1)';
-            document.querySelectorAll('.nav-links a').forEach(a => a.style.color = '#1A3C34');
-            const dropbtns = document.querySelectorAll('.dropbtn');
-            if (dropbtns) dropbtns.forEach(btn => btn.style.color = '#1A3C34');
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openMobileMenu();
+    });
+}
+
+if (mobileMenuClose) {
+    mobileMenuClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeMobileMenu();
+    });
+}
+
+if (mobileMenuOverlay) {
+    mobileMenuOverlay.addEventListener('click', function() {
+        closeMobileMenu();
+    });
+}
+
+// Mobile Dropdown Toggle
+if (window.innerWidth <= 768) {
+    document.querySelectorAll('.nav-links .dropdown').forEach(dropdown => {
+        const dropbtn = dropdown.querySelector('.dropbtn');
+        if (dropbtn) {
+            dropbtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close other dropdowns
+                document.querySelectorAll('.dropdown.mobile-expanded').forEach(otherDropdown => {
+                    if (otherDropdown !== dropdown) {
+                        otherDropdown.classList.remove('mobile-expanded');
+                    }
+                });
+                
+                // Toggle current dropdown
+                dropdown.classList.toggle('mobile-expanded');
+            });
         }
     });
 }
+
+// Close menu when clicking on a link
+document.querySelectorAll('.nav-links a:not(.dropbtn)').forEach(link => {
+    link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) {
+            closeMobileMenu();
+        }
+    });
+});
+
+// Handle window resize
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
+    }, 250);
+});}
 
 // Login Modal Functions
 function openLoginModal() { 
