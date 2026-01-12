@@ -287,9 +287,9 @@
     }
     
     .mobile-menu-item i:first-child {
-        font-size: 1rem;
+        font-size: 1.2rem;
         color: #C5A059;
-        min-width: 22px;
+        min-width: 24px;
         text-align: center;
     }
     
