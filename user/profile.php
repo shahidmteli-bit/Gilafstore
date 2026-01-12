@@ -277,7 +277,7 @@ include __DIR__ . '/../includes/new-header.php';
 /* Mobile/Tablet: Reduce top padding and hide alerts */
 @media (max-width: 768px) {
     .profile-page {
-        margin-top: -110px !important;
+        margin-top: -75px !important;
         padding-top: 0 !important;
     }
     
