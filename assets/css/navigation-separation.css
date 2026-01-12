@@ -270,7 +270,7 @@
         align-items: center;
         gap: 12px;
         width: 100%;
-        padding: 11px 20px;
+        padding: 10px 20px;
         font-size: 0.87rem;
         font-weight: 500;
         letter-spacing: 0.3px;
@@ -393,7 +393,7 @@
     /* Mobile Utility Section */
     .mobile-utility-section {
         margin-top: 0;
-        padding: 12px 20px 14px 20px;
+        padding: 10px 20px 12px 20px;
         background: #ffffff;
         border-top: 2px solid #f0f0f0;
         flex-shrink: 0;
@@ -405,7 +405,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 7px 0;
+        padding: 6px 0;
         font-size: 0.81rem;
         color: #4a4a4a;
     }
@@ -439,7 +439,7 @@
     .mobile-utility-divider {
         height: 1px;
         background: #f0f0f0;
-        margin: 3px 0;
+        margin: 2px 0;
     }
     
     /* Prevent body scroll when menu is open */
