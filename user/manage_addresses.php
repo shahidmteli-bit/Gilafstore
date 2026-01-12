@@ -1205,10 +1205,12 @@ async function detectCountryByIP() {
 function openEditModal(addressId) {
     document.getElementById('modalTitle').textContent = 'Edit Address';
     
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    
     fetch('manage_addresses.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: 'action=get&id=' + addressId
+        body: 'action=get&id=' + addressId + '&csrf_token=' + encodeURIComponent(csrfToken)
     })
     .then(response => response.json())
     .then(data => {
@@ -1240,10 +1242,12 @@ function deleteAddress(addressId) {
         title: 'Delete Address?',
         message: 'Are you sure you want to delete this address? This action cannot be undone.',
         onConfirm: function() {
+            const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+            
             fetch('manage_addresses.php', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'action=delete&id=' + addressId
+                body: 'action=delete&id=' + addressId + '&csrf_token=' + encodeURIComponent(csrfToken)
             })
             .then(response => response.json())
             .then(data => {
