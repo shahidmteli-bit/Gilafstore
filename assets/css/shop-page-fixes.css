@@ -43,6 +43,40 @@
     height: auto;
 }
 
+/* Mobile 2-Column Grid Layout */
+@media (max-width: 768px) {
+    .products-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+    
+    .product-card {
+        width: 100%;
+    }
+    
+    .product-card-image {
+        padding-top: 100%;
+    }
+    
+    .product-card-body {
+        padding: 12px;
+    }
+    
+    .product-card-title {
+        font-size: 14px;
+        min-height: 38px;
+    }
+    
+    .product-card-category {
+        font-size: 10px;
+    }
+    
+    .product-card-meta {
+        font-size: 11px;
+    }
+}
+
 .product-card-image {
     padding-top: 100%; /* Maintain 1:1 ratio */
     position: relative;
