@@ -1137,6 +1137,13 @@ footer { background-color: var(--color-green); color: white; padding: 80px 0 30p
     .hero p { font-size: 1rem; margin-bottom: 30px; }
     .hero-buttons { flex-direction: column; width: 100%; max-width: 320px; gap: 15px; }
     .btn { width: 100%; text-align: center; padding: 15px 20px; }
+    
+    /* Gold outline for hero buttons on mobile */
+    .hero .btn-primary,
+    .hero .btn-outline {
+        border: 1.5px solid #C5A059;
+        box-shadow: 0 0 0 1px rgba(197, 160, 89, 0.3);
+    }
 
     .features-marquee { padding: 60px 0; }
     .marquee-item { margin: 0 20px; }
