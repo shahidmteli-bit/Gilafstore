@@ -114,6 +114,28 @@ include __DIR__ . '/includes/new-header.php';
     .product-card-category {
         font-size: 9px !important;
     }
+    
+    /* Fix button layout for 2-column grid */
+    .product-card-body > div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+    
+    .product-card-body .btn {
+        width: 100% !important;
+        padding: 8px 10px !important;
+        font-size: 11px !important;
+        white-space: nowrap !important;
+    }
+    
+    .btn-outline {
+        padding: 8px 10px !important;
+    }
+    
+    .btn-primary {
+        padding: 8px 10px !important;
+    }
 }
 
 .shop-header-ad-panel { display: none; }
