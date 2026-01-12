@@ -781,6 +781,28 @@ include __DIR__ . '/../includes/delete-modal.php';
     50% { transform: scale(1.05); }
 }
 
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+    }
+}
+
 .delete-modal h3 {
     font-family: 'Playfair Display', serif;
     font-size: 1.8rem;
@@ -1282,14 +1304,19 @@ document.getElementById('addressForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            if (fromCheckout) {
-                // If coming from checkout, redirect back to checkout after adding address
-                window.location.href = '<?= base_url('user/manage_addresses.php?from=checkout'); ?>';
-            } else {
-                location.reload();
-            }
+            const message = addressId ? 'Address updated successfully!' : 'Address added successfully!';
+            showNotification(message, 'success');
+            
+            setTimeout(() => {
+                if (fromCheckout) {
+                    // If coming from checkout, redirect back to checkout after adding address
+                    window.location.href = '<?= base_url('user/manage_addresses.php?from=checkout'); ?>';
+                } else {
+                    location.reload();
+                }
+            }, 1500);
         } else {
-            alert('Error: ' + data.message);
+            showNotification('Error: ' + data.message, 'error');
         }
     });
 });
@@ -1601,30 +1628,42 @@ function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.style.cssText = `
         position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 16px 28px;
         border-radius: 12px;
         color: white;
         font-weight: 600;
+        font-size: 0.9375rem;
         z-index: 10000;
-        animation: slideIn 0.3s ease-out;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        animation: slideDown 0.3s ease, slideUp 0.3s ease 2.7s;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        min-width: 300px;
+        max-width: 500px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
     `;
     
     if (type === 'success') {
         notification.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        notification.innerHTML = '<i class="fas fa-check-circle"></i> ' + message;
+        notification.innerHTML = '<i class="fas fa-check-circle" style="font-size: 1.2rem;"></i> <span>' + message + '</span>';
     } else if (type === 'info') {
         notification.style.background = 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)';
-        notification.innerHTML = '<i class="fas fa-info-circle"></i> ' + message;
+        notification.innerHTML = '<i class="fas fa-info-circle" style="font-size: 1.2rem;"></i> <span>' + message + '</span>';
+    } else if (type === 'warning') {
+        notification.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+        notification.innerHTML = '<i class="fas fa-exclamation-triangle" style="font-size: 1.2rem;"></i> <span>' + message + '</span>';
     } else {
         notification.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
-        notification.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + message;
+        notification.innerHTML = '<i class="fas fa-exclamation-circle" style="font-size: 1.2rem;"></i> <span>' + message + '</span>';
     }
     
     document.body.appendChild(notification);
-    setTimeout(() => notification.remove(), 4000);
+    setTimeout(() => notification.remove(), 3000);
 }
 </script>
 
