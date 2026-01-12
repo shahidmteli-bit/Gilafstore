@@ -591,19 +591,15 @@ a.btn-danger {
 
         <script>
           (function() {
-            const interactiveSelectors = 'a, button, input, select, textarea, label, [role="button"], [role="link"], [data-no-card-nav]';
-
-            function shouldIgnore(eventTarget) {
-              return eventTarget.closest(interactiveSelectors) !== null;
-            }
-
             function handleNavigation(card) {
               const url = card.getAttribute('data-product-url');
               const productId = card.getAttribute('data-product-id');
               
               if (url && productId) {
                 // Track click before navigation using global trackClick function
-                trackClick(parseInt(productId), 'shop_page');
+                if (typeof trackClick === 'function') {
+                  trackClick(parseInt(productId), 'shop_page');
+                }
                 
                 // Small delay to ensure tracking completes
                 setTimeout(() => {
@@ -616,7 +612,11 @@ a.btn-danger {
 
             document.querySelectorAll('.product-card[data-product-url]').forEach(card => {
               card.addEventListener('click', event => {
-                if (shouldIgnore(event.target)) return;
+                // Only ignore if directly clicking on a button or link (not their parents)
+                const target = event.target;
+                if (target.tagName === 'BUTTON' || target.tagName === 'A' || target.tagName === 'INPUT') {
+                  return;
+                }
                 handleNavigation(card);
               });
 
@@ -624,7 +624,6 @@ a.btn-danger {
                 const isEnter = event.key === 'Enter';
                 const isSpace = event.key === ' ' || event.key === 'Spacebar';
                 if (!isEnter && !isSpace) return;
-                if (shouldIgnore(event.target)) return;
                 event.preventDefault();
                 handleNavigation(card);
               });
