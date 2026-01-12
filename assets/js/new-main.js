@@ -11,7 +11,7 @@ window.addEventListener('scroll', function() {
     }
 });
 
-// Modern Mobile Menu Drawer Toggle
+// Modern Mobile Menu with Submenu Panels
 const menuToggle = document.querySelector('.menu-toggle');
 const mobileMenuClose = document.querySelector('.mobile-menu-close');
 const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
@@ -27,9 +27,9 @@ function closeMobileMenu() {
     if (navLinks) navLinks.classList.remove('mobile-open');
     if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
     document.body.classList.remove('mobile-menu-open');
-    // Close all expanded dropdowns
-    document.querySelectorAll('.dropdown.mobile-expanded').forEach(dropdown => {
-        dropdown.classList.remove('mobile-expanded');
+    // Close all submenu panels
+    document.querySelectorAll('.mobile-submenu-panel').forEach(panel => {
+        panel.classList.remove('active');
     });
 }
 
@@ -53,35 +53,45 @@ if (mobileMenuOverlay) {
     });
 }
 
-// Mobile Dropdown Toggle
-if (window.innerWidth <= 768) {
-    document.querySelectorAll('.nav-links .dropdown').forEach(dropdown => {
-        const dropbtn = dropdown.querySelector('.dropbtn');
-        if (dropbtn) {
-            dropbtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Close other dropdowns
-                document.querySelectorAll('.dropdown.mobile-expanded').forEach(otherDropdown => {
-                    if (otherDropdown !== dropdown) {
-                        otherDropdown.classList.remove('mobile-expanded');
-                    }
-                });
-                
-                // Toggle current dropdown
-                dropdown.classList.toggle('mobile-expanded');
-            });
-        }
+// Submenu Panel Navigation
+document.addEventListener('DOMContentLoaded', function() {
+    // Open submenu panels
+    document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const submenuId = this.getAttribute('data-submenu');
+            const submenuPanel = document.getElementById('submenu-' + submenuId);
+            if (submenuPanel) {
+                submenuPanel.classList.add('active');
+            }
+        });
     });
-}
-
-// Close menu when clicking on a link
-document.querySelectorAll('.nav-links a:not(.dropbtn)').forEach(link => {
-    link.addEventListener('click', function() {
-        if (window.innerWidth <= 768) {
+    
+    // Back buttons to close submenu panels
+    document.querySelectorAll('.mobile-submenu-back').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const panel = this.closest('.mobile-submenu-panel');
+            if (panel) {
+                panel.classList.remove('active');
+            }
+        });
+    });
+    
+    // Close menu when clicking submenu items
+    document.querySelectorAll('.mobile-submenu-item').forEach(link => {
+        link.addEventListener('click', function() {
             closeMobileMenu();
-        }
+        });
+    });
+    
+    // Close menu when clicking main menu items (non-submenu)
+    document.querySelectorAll('.mobile-menu-item:not(.has-submenu)').forEach(link => {
+        link.addEventListener('click', function() {
+            if (this.tagName === 'A') {
+                closeMobileMenu();
+            }
+        });
     });
 });
 
@@ -97,7 +107,8 @@ window.addEventListener('resize', function() {
 });
 
 // Login Modal Functions
-function openLoginModal() { 
+function openLoginModal() {
+    closeMobileMenu(); 
     const modal = document.getElementById('loginModal');
     if (modal) {
         modal.classList.add('active');
@@ -110,6 +121,15 @@ function closeLoginModal() {
     if (modal) {
         modal.classList.remove('active');
         document.body.classList.remove('modal-open');
+    }
+}
+
+function openTrackingModal() {
+    closeMobileMenu();
+    const modal = document.getElementById('trackingModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
     }
 }
 

@@ -1,0 +1,201 @@
+/* =========================================
+   GILAF STORE - MOBILE MENU REDESIGN
+   Clean, Modern Style (Inspired by koshurindia.com)
+   ========================================= */
+
+@media (max-width: 768px) {
+    /* Mobile Menu Top Bar */
+    .mobile-menu-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        border-bottom: 1px solid #e5e5e5;
+        background: #ffffff;
+    }
+    
+    .mobile-menu-action {
+        background: none;
+        border: none;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+        color: #333;
+        cursor: pointer;
+        padding: 8px 12px;
+        transition: color 0.3s ease;
+    }
+    
+    .mobile-menu-action:active {
+        color: #C5A059;
+    }
+    
+    .mobile-menu-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #333;
+        cursor: pointer;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Main Menu List */
+    .mobile-menu-list {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        background: #ffffff;
+    }
+    
+    .mobile-menu-item-wrapper {
+        width: 100%;
+    }
+    
+    .mobile-menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 18px 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: #333 !important;
+        text-decoration: none;
+        border-bottom: 1px solid #f0f0f0;
+        background: transparent;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+        text-align: left;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    
+    .mobile-menu-item:active {
+        background: #f8f8f8;
+    }
+    
+    .mobile-menu-item.has-submenu {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .mobile-menu-item.has-submenu i {
+        font-size: 0.75rem;
+        color: #999;
+    }
+    
+    /* Remove old mobile menu styling */
+    .nav-links > a::after,
+    .nav-links .dropbtn::after {
+        display: none !important;
+    }
+    
+    .nav-links > a,
+    .nav-links .dropbtn {
+        padding: 0 !important;
+        border: none !important;
+    }
+    
+    /* Hide old dropdown structure */
+    .nav-links .dropdown {
+        display: none !important;
+    }
+    
+    /* Submenu Panels */
+    .mobile-submenu-panel {
+        position: fixed;
+        top: 0;
+        left: 100%;
+        width: 320px;
+        max-width: 85%;
+        height: 100vh;
+        background: #ffffff;
+        z-index: 2001;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .mobile-submenu-panel.active {
+        left: 0;
+    }
+    
+    .mobile-submenu-header {
+        padding: 20px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    
+    .mobile-submenu-back {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: none;
+        border: none;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: #333;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .mobile-submenu-back i {
+        font-size: 0.9rem;
+    }
+    
+    .mobile-submenu-title {
+        padding: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: #333;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .mobile-submenu-list {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .mobile-submenu-item {
+        display: block;
+        padding: 18px 20px;
+        font-size: 0.85rem;
+        font-weight: 400;
+        letter-spacing: 0.3px;
+        color: #666 !important;
+        text-decoration: none;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background 0.2s ease;
+    }
+    
+    .mobile-submenu-item:active {
+        background: #f8f8f8;
+        color: #333 !important;
+    }
+    
+    /* Override old mobile nav styles */
+    .nav-links {
+        padding: 0 !important;
+    }
+    
+    .mobile-menu-footer {
+        display: none !important;
+    }
+    
+    /* Ensure clean white background */
+    .nav-links,
+    .mobile-menu-top-bar,
+    .mobile-menu-list,
+    .mobile-submenu-panel {
+        background: #ffffff !important;
+    }
+}

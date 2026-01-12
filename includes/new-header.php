@@ -53,6 +53,7 @@ $htmlLangDir = htmlspecialchars(get_language_direction());
     
     <!-- Mobile Navigation CSS -->
     <link rel="stylesheet" href="<?= asset_url('css/mobile-nav.css'); ?>?v=<?= time(); ?>">
+    <link rel="stylesheet" href="<?= asset_url('css/mobile-menu-redesign.css'); ?>?v=<?= time(); ?>">
     
     <!-- Layout Fixes CSS - Comprehensive responsive and layout fixes -->
     <link rel="stylesheet" href="<?= asset_url('css/layout-fixes.css'); ?>">
@@ -239,69 +240,103 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                 </a>
             </div>
             <nav class="nav-links">
-                <!-- Mobile Menu Header -->
-                <div class="mobile-menu-header">
-                    <div class="logo">
-                        <h1>GILAF STORE</h1>
-                        <span>Taste • Culture • Craft</span>
-                    </div>
-                    <div class="mobile-menu-close">
+                <!-- Mobile Menu Top Bar -->
+                <div class="mobile-menu-top-bar">
+                    <button class="mobile-menu-action" onclick="toggleSearch(); closeMobileMenu();">
+                        <span>SEARCH</span>
+                    </button>
+                    <button class="mobile-menu-action" onclick="<?= $isLoggedIn ? "window.location.href='" . base_url('user/dashboard.php') . "'" : 'openLoginModal(); closeMobileMenu();' ?>">
+                        <span>ACCOUNT</span>
+                    </button>
+                    <button class="mobile-menu-close">
                         <i class="fas fa-times"></i>
-                    </div>
+                    </button>
                 </div>
                 
-                <a href="<?= base_url('index.php'); ?>">Home</a>
-                <a href="<?= base_url('shop.php'); ?>">Shop</a>
-                <div class="dropdown">
-                    <span class="dropbtn">Shop by Category <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
-                    <div class="dropdown-content">
-                        <?php
-                        $categories = get_categories();
-                        foreach ($categories as $cat):
-                        ?>
-                            <a href="<?= base_url('shop.php?category=' . $cat['id']); ?>"><?= htmlspecialchars($cat['name']); ?></a>
-                        <?php endforeach; ?>
-                        <hr style="margin: 8px 0; border: none; border-top: 1px solid #e0e0e0;">
-                        <a href="<?= base_url('offers.php'); ?>">🎁 Offers & Deals</a>
-                        <a href="<?= base_url('gifting-hampers.php'); ?>">🎀 Gifting & Hampers</a>
+                <!-- Main Menu List -->
+                <div class="mobile-menu-list">
+                    <a href="<?= base_url('index.php'); ?>" class="mobile-menu-item">HOME</a>
+                    
+                    <div class="mobile-menu-item-wrapper">
+                        <button class="mobile-menu-item has-submenu" data-submenu="shop">
+                            <span>SHOP</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
-                </div>
-                <div class="dropdown">
-                    <span class="dropbtn">Track <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
-                    <div class="dropdown-content">
-                        <a href="#" onclick="openTrackingModal(); return false;">Track Order</a>
-                        <?php if ($isLoggedIn): ?>
-                            <a href="<?= base_url('user/my_tickets.php'); ?>">Track Requests</a>
-                        <?php else: ?>
-                            <a href="#" onclick="openLoginModal(); return false;">Track Requests</a>
-                        <?php endif; ?>
-                        <a href="#locator">Track Stores</a>
-                        <a href="#verification">Authenticity Tracking</a>
+                    
+                    <div class="mobile-menu-item-wrapper">
+                        <button class="mobile-menu-item has-submenu" data-submenu="categories">
+                            <span>COLLECTIONS</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
-                </div>
-                <div class="dropdown">
-                    <span class="dropbtn">Our Story <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
-                    <div class="dropdown-content">
-                        <a href="<?= base_url('about-us.php'); ?>">About Us</a>
-                        <a href="<?= base_url('our-values.php'); ?>">Our Values</a>
-                        <a href="<?= base_url('blogs.php'); ?>">Blogs</a>
+                    
+                    <a href="<?= base_url('shop.php?filter=bestsellers'); ?>" class="mobile-menu-item">BESTSELLERS</a>
+                    <a href="<?= base_url('offers.php'); ?>" class="mobile-menu-item">SALE</a>
+                    <a href="#" onclick="openTrackingModal(); return false;" class="mobile-menu-item">TRACK ORDER</a>
+                    
+                    <div class="mobile-menu-item-wrapper">
+                        <button class="mobile-menu-item has-submenu" data-submenu="story">
+                            <span>OUR STORY</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
-                </div>
-                
-                <!-- Mobile Menu Footer -->
-                <div class="mobile-menu-footer">
-                    <a href="<?= base_url('contact.php'); ?>">
-                        <i class="fas fa-envelope"></i>
-                        <span>Contact Us</span>
-                    </a>
-                    <?php if ($isLoggedIn): ?>
-                        <a href="<?= base_url('user/create_ticket.php'); ?>">
-                            <i class="fas fa-headset"></i>
-                            <span>Support</span>
-                        </a>
-                    <?php endif; ?>
+                    
+                    <a href="<?= base_url('contact.php'); ?>" class="mobile-menu-item">CONTACT US</a>
                 </div>
             </nav>
+            
+            <!-- Submenu Panel: Shop -->
+            <div class="mobile-submenu-panel" id="submenu-shop">
+                <div class="mobile-submenu-header">
+                    <button class="mobile-submenu-back">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>BACK</span>
+                    </button>
+                </div>
+                <div class="mobile-submenu-title">SHOP</div>
+                <div class="mobile-submenu-list">
+                    <a href="<?= base_url('shop.php'); ?>" class="mobile-submenu-item">ALL PRODUCTS</a>
+                    <a href="<?= base_url('shop.php?filter=new'); ?>" class="mobile-submenu-item">NEW ARRIVALS</a>
+                    <a href="<?= base_url('offers.php'); ?>" class="mobile-submenu-item">OFFERS & DEALS</a>
+                    <a href="<?= base_url('gifting-hampers.php'); ?>" class="mobile-submenu-item">GIFTING & HAMPERS</a>
+                </div>
+            </div>
+            
+            <!-- Submenu Panel: Collections -->
+            <div class="mobile-submenu-panel" id="submenu-categories">
+                <div class="mobile-submenu-header">
+                    <button class="mobile-submenu-back">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>BACK</span>
+                    </button>
+                </div>
+                <div class="mobile-submenu-title">COLLECTIONS</div>
+                <div class="mobile-submenu-list">
+                    <?php
+                    $categories = get_categories();
+                    foreach ($categories as $cat):
+                    ?>
+                        <a href="<?= base_url('shop.php?category=' . $cat['id']); ?>" class="mobile-submenu-item"><?= strtoupper(htmlspecialchars($cat['name'])); ?></a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            
+            <!-- Submenu Panel: Our Story -->
+            <div class="mobile-submenu-panel" id="submenu-story">
+                <div class="mobile-submenu-header">
+                    <button class="mobile-submenu-back">
+                        <i class="fas fa-chevron-left"></i>
+                        <span>BACK</span>
+                    </button>
+                </div>
+                <div class="mobile-submenu-title">OUR STORY</div>
+                <div class="mobile-submenu-list">
+                    <a href="<?= base_url('about-us.php'); ?>" class="mobile-submenu-item">ABOUT US</a>
+                    <a href="<?= base_url('our-values.php'); ?>" class="mobile-submenu-item">OUR VALUES</a>
+                    <a href="<?= base_url('blogs.php'); ?>" class="mobile-submenu-item">BLOGS</a>
+                </div>
+            </div>
             
             <!-- Mobile Menu Overlay -->
             <div class="mobile-menu-overlay"></div>
