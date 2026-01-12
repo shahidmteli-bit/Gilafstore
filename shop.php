@@ -100,7 +100,7 @@ a.btn-danger {
     section.py-5 {
         padding-top: 0 !important;
         padding-bottom: 3rem !important;
-        margin-top: -60px !important;
+        margin-top: -75px !important;
     }
     
     section.py-5 .container {
