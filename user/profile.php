@@ -274,6 +274,18 @@ include __DIR__ . '/../includes/new-header.php';
     opacity: 0.9;
 }
 
+/* Mobile/Tablet: Reduce top padding and hide alerts */
+@media (max-width: 768px) {
+    .profile-page {
+        margin-top: -110px !important;
+        padding-top: 0 !important;
+    }
+    
+    .alert {
+        display: none !important;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
     .profile-grid {
