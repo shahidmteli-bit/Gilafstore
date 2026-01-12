@@ -585,6 +585,7 @@ include __DIR__ . '/../includes/new-header.php';
 @media (max-width: 768px) {
     .orders-page {
         padding: 60px 0 30px 0;
+        margin-top: -75px !important;
     }
     
     .orders-container {
