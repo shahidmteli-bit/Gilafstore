@@ -67,42 +67,110 @@
    ============================================ */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
     
-    /* Header spacing */
-    .header-top {
-        padding: 12px 30px;
+    /* Main header - desktop-like layout */
+    .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
     
-    .main-nav {
-        padding: 0 30px;
+    /* Navigation container - proper flex layout */
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 25px;
+        gap: 20px;
     }
     
-    /* Logo sizing */
+    /* Hide mobile menu toggle on tablets */
+    .menu-toggle {
+        display: none !important;
+    }
+    
+    /* Logo sizing - balanced for tablets */
+    .logo {
+        flex-shrink: 0;
+    }
+    
     .logo h1 {
-        font-size: 1.6rem;
+        font-size: 1.5rem !important;
+        margin-bottom: 2px;
     }
     
-    .logo p {
-        font-size: 0.7rem;
-        letter-spacing: 0.15em;
+    .logo span {
+        font-size: 0.65rem !important;
+        letter-spacing: 0.2em;
     }
     
-    /* Navigation links - proper spacing */
+    /* Desktop navigation - show on tablets */
+    .desktop-nav {
+        display: flex !important;
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* Navigation links - compact spacing for tablets */
     .nav-links {
-        gap: 25px;
-    }
-    
-    .nav-links a {
-        font-size: 0.95rem;
-        padding: 8px 12px;
-    }
-    
-    /* User actions - balanced sizing */
-    .user-actions {
+        display: flex !important;
         gap: 18px;
+        align-items: center;
+    }
+    
+    .nav-links > a,
+    .nav-links .dropdown .dropbtn {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+    
+    /* Dropdown adjustments */
+    .dropdown {
+        position: relative;
+    }
+    
+    .dropdown-content {
+        min-width: 200px;
+        font-size: 0.85rem;
+    }
+    
+    .dropdown-content a {
+        padding: 10px 16px;
+    }
+    
+    /* User actions - proper alignment */
+    .user-actions {
+        display: flex !important;
+        gap: 16px;
+        align-items: center;
+        flex-shrink: 0;
     }
     
     .user-actions a {
-        font-size: 1.1rem;
+        font-size: 1rem;
+    }
+    
+    /* Search icon */
+    .search-icon {
+        display: inline-block;
+    }
+    
+    /* Cart badge */
+    .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--color-gold);
+        color: white;
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 10px;
+    }
+    
+    /* Mobile nav - hide on tablets */
+    .mobile-nav {
+        display: none !important;
     }
 }
 
@@ -259,36 +327,150 @@
    ============================================ */
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
     
-    .footer {
+    /* Footer - desktop-like layout, slightly compacted */
+    footer {
         padding: 60px 30px 30px;
     }
     
+    /* Footer grid - 3 columns for tablets */
     .footer-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 40px;
-        max-width: 900px;
-        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 35px;
+        max-width: 95%;
+        margin: 0 auto 40px;
     }
     
-    .footer-column h3 {
-        font-size: 1.1rem;
-        margin-bottom: 18px;
+    /* Footer brand */
+    .footer-brand .logo h1 {
+        font-size: 1.6rem;
     }
     
-    .footer-column ul li a {
+    .footer-brand .logo span {
+        font-size: 0.6rem;
+        letter-spacing: 3px;
+    }
+    
+    .footer-brand p {
+        font-size: 0.85rem;
+        line-height: 1.7;
+        margin-top: 15px;
+    }
+    
+    /* Footer columns */
+    .footer-col h4 {
         font-size: 0.95rem;
+        margin-bottom: 20px;
     }
     
+    .footer-col ul li {
+        margin-bottom: 10px;
+    }
+    
+    .footer-col ul li a {
+        font-size: 0.85rem;
+    }
+    
+    /* Social icons */
+    .social-icons a {
+        font-size: 1rem;
+        margin-right: 12px;
+    }
+    
+    /* Shipping partners section - SINGLE ROW */
+    .shipping-partners-section {
+        display: flex;
+        flex-direction: row;
+        gap: 40px;
+        justify-content: space-between;
+        padding-top: 35px;
+        margin-bottom: 35px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .ship-group {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    /* Shipping titles */
+    .shipping-title {
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+        color: var(--color-gold);
+    }
+    
+    .shipping-subtitle {
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+        color: rgba(255,255,255,0.6);
+    }
+    
+    /* Partner logos - SINGLE HORIZONTAL ROW */
+    .partner-logos-grid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        padding-bottom: 5px;
+    }
+    
+    /* Hide scrollbar but keep functionality */
+    .partner-logos-grid::-webkit-scrollbar {
+        height: 3px;
+    }
+    
+    .partner-logos-grid::-webkit-scrollbar-track {
+        background: rgba(255,255,255,0.1);
+        border-radius: 2px;
+    }
+    
+    .partner-logos-grid::-webkit-scrollbar-thumb {
+        background: var(--color-gold);
+        border-radius: 2px;
+    }
+    
+    /* Partner logo badges - properly sized */
+    .partner-text-logo {
+        flex: 0 0 auto !important;
+        height: 45px !important;
+        min-width: 95px !important;
+        padding: 10px 16px !important;
+        font-size: 0.85rem !important;
+        border-radius: 6px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Partner buttons */
+    .partner-btn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+    
+    /* Footer bottom */
     .footer-bottom {
-        padding-top: 30px;
-        margin-top: 40px;
+        padding-top: 25px;
+        margin-top: 35px;
+        display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
     }
     
     .footer-bottom p {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+    }
+    
+    .footer-bottom a {
+        font-size: 0.8rem;
     }
 }
 
