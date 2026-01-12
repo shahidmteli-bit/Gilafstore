@@ -90,7 +90,8 @@ include __DIR__ . '/includes/new-header.php';
 <!-- Critical Inline CSS for Full-Width Hero Promo Billboard -->
 <style>
 /* GLOBAL: Hide VIEW button on all devices */
-.btn-outline[href*="product.php"] {
+.btn-danger[href*="product.php"],
+a.btn-danger {
     display: none !important;
 }
 
@@ -128,7 +129,8 @@ include __DIR__ . '/includes/new-header.php';
     }
     
     /* Hide VIEW button - keep only ADD TO CART */
-    .product-card-body .btn-outline {
+    .product-card-body .btn-danger,
+    .product-card-body a.btn[href*="product.php"] {
         display: none !important;
     }
     
