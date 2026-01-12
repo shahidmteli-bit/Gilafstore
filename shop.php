@@ -95,6 +95,28 @@ a.btn-danger {
     display: none !important;
 }
 
+/* MOBILE: Reduce top padding on shop page */
+@media (max-width: 768px) {
+    section.py-5 {
+        padding-top: 1rem !important;
+        padding-bottom: 3rem !important;
+    }
+    
+    .shop-breadcrumb {
+        margin-bottom: 1rem !important;
+    }
+    
+    .shop-page {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    .shop-products {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+}
+
 /* FORCE 2-COLUMN MOBILE PRODUCT GRID */
 @media (max-width: 768px) {
     .products-grid {
