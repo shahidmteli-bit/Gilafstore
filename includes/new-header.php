@@ -72,7 +72,7 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
 ?>
 
     <!-- Top Bar -->
-    <div class="top-bar">
+    <div class="top-bar desktop-utility-bar">
         <div class="container">
             <div style="display: flex; gap: 15px; align-items: center; justify-content: center;">
                 <span><i class="fas fa-certificate"></i> Certified Organic</span>
@@ -340,6 +340,21 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                         <i class="fas fa-envelope"></i>
                         <span>CONTACT US</span>
                     </a>
+                </div>
+                
+                <!-- Mobile Utility Section -->
+                <div class="mobile-utility-section">
+                    <div class="mobile-utility-item">
+                        <i class="fas fa-certificate"></i>
+                        <span>Certified Organic</span>
+                    </div>
+                    <div class="mobile-utility-divider"></div>
+                    <div class="mobile-utility-item clickable" onclick="openRegionModal(); closeMobileMenu();">
+                        <i class="fas fa-globe"></i>
+                        <span>Change Region</span>
+                        <span class="mobile-utility-separator">|</span>
+                        <span class="mobile-utility-currency"><?= $currentCurrency; ?> (<?= $currentCurrencySymbol; ?>)</span>
+                    </div>
                 </div>
             </nav>
             

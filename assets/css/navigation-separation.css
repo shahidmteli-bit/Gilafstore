@@ -150,6 +150,15 @@
 }
 
 /* ==========================================
+   TABLET & MOBILE - Hide Green Utility Bar
+   ========================================== */
+@media (max-width: 1024px) {
+    .desktop-utility-bar {
+        display: none !important;
+    }
+}
+
+/* ==========================================
    MOBILE NAVIGATION (768px and below)
    ========================================== */
 @media (max-width: 768px) {
@@ -377,8 +386,64 @@
         padding-left: 28px;
     }
     
+    /* Mobile Utility Section */
+    .mobile-utility-section {
+        margin-top: auto;
+        padding: 20px 24px;
+        background: #ffffff;
+        border-top: 2px solid #f0f0f0;
+    }
+    
+    .mobile-utility-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0;
+        font-size: 0.85rem;
+        color: #4a4a4a;
+    }
+    
+    .mobile-utility-item i {
+        font-size: 1rem;
+        color: #C5A059;
+        min-width: 20px;
+        text-align: center;
+    }
+    
+    .mobile-utility-item.clickable {
+        cursor: pointer;
+        transition: color 0.2s ease;
+    }
+    
+    .mobile-utility-item.clickable:active {
+        color: #1a1a1a;
+    }
+    
+    .mobile-utility-separator {
+        margin: 0 8px;
+        color: #ccc;
+    }
+    
+    .mobile-utility-currency {
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+    
+    .mobile-utility-divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 8px 0;
+    }
+    
     /* Prevent body scroll when menu is open */
     body.mobile-menu-open {
         overflow: hidden;
+    }
+}
+
+/* Desktop - Keep Green Bar Visible */
+@media (min-width: 1025px) {
+    .mobile-utility-section {
+        display: none !important;
     }
 }
