@@ -86,7 +86,7 @@ include __DIR__ . '/includes/new-header.php';
         <p class="section-subtitle">Curated for the Connoisseur</p>
         <div class="product-grid">
             <?php foreach ($trendingProducts as $product): ?>
-                <article class="product-card">
+                <article class="product-card" style="cursor: pointer;" onclick="window.location.href='<?= base_url('product.php?id=' . $product['id']); ?>'">
                     <div class="badge-container">
                         <?php if (isset($product['popularity']) && $product['popularity'] > 80): ?>
                             <div class="badge green">Bestseller</div>
@@ -97,11 +97,8 @@ include __DIR__ . '/includes/new-header.php';
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="product-image-wrapper">
-                        <a href="<?= base_url('product.php?id=' . $product['id']); ?>" 
-                           onclick="trackClick(<?= $product['id']; ?>, 'homepage'); return true;">
-                            <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="<?= htmlspecialchars($product['name']); ?>">
-                        </a>
+                    <div class="product-image-wrapper" onclick="event.stopPropagation(); trackClick(<?= $product['id']; ?>, 'homepage'); window.location.href='<?= base_url('product.php?id=' . $product['id']); ?>'" style="cursor: pointer;">
+                        <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="<?= htmlspecialchars($product['name']); ?>">
                         <div class="trust-overlay">
                             <i class="fas fa-award" style="color: var(--color-green);"></i> 
                             <i class="fas fa-flask" style="color: var(--color-green);"></i>
@@ -109,12 +106,8 @@ include __DIR__ . '/includes/new-header.php';
                     </div>
                     <div class="product-details">
                         <span class="product-cat"><?= htmlspecialchars($product['category_name'] ?? 'Premium'); ?></span>
-                        <h3 class="product-title">
-                            <a href="<?= base_url('product.php?id=' . $product['id']); ?>" 
-                               onclick="trackClick(<?= $product['id']; ?>, 'homepage'); return true;" 
-                               style="color: inherit; text-decoration: none;">
-                                <?= htmlspecialchars($product['name']); ?>
-                            </a>
+                        <h3 class="product-title" onclick="event.stopPropagation(); trackClick(<?= $product['id']; ?>, 'homepage'); window.location.href='<?= base_url('product.php?id=' . $product['id']); ?>'" style="cursor: pointer;">
+                            <?= htmlspecialchars($product['name']); ?>
                         </h3>
                         <span class="product-origin">Origin: Kashmir Valley</span>
                         <div class="price-row">
@@ -129,11 +122,11 @@ include __DIR__ . '/includes/new-header.php';
                                 <span class="product-price"><?= $convertedPrice; ?></span>
                             <?php endif; ?>
                         </div>
-                        <form action="<?= base_url('includes/cart.php'); ?>" method="post">
+                        <form action="<?= base_url('includes/cart.php'); ?>" method="post" onclick="event.stopPropagation();">
                             <input type="hidden" name="action" value="add">
                             <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>">
                             <input type="hidden" name="quantity" value="1">
-                            <button type="submit" class="add-btn">Add to Cart</button>
+                            <button type="submit" class="add-btn" onclick="event.stopPropagation();">Add to Cart</button>
                         </form>
                     </div>
                 </article>
