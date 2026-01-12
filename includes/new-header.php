@@ -54,6 +54,7 @@ $htmlLangDir = htmlspecialchars(get_language_direction());
     <!-- Mobile Navigation CSS -->
     <link rel="stylesheet" href="<?= asset_url('css/mobile-nav.css'); ?>?v=<?= time(); ?>">
     <link rel="stylesheet" href="<?= asset_url('css/mobile-menu-redesign.css'); ?>?v=<?= time(); ?>">
+    <link rel="stylesheet" href="<?= asset_url('css/navigation-separation.css'); ?>?v=<?= time(); ?>">
     
     <!-- Layout Fixes CSS - Comprehensive responsive and layout fixes -->
     <link rel="stylesheet" href="<?= asset_url('css/layout-fixes.css'); ?>">
@@ -239,7 +240,49 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                     <span>Taste • Culture • Craft</span>
                 </a>
             </div>
-            <nav class="nav-links">
+            <!-- Desktop Navigation -->
+            <nav class="nav-links desktop-nav">
+                <a href="<?= base_url('index.php'); ?>">HOME</a>
+                <a href="<?= base_url('shop.php'); ?>">SHOP</a>
+                <div class="dropdown">
+                    <span class="dropbtn">SHOP BY CATEGORY <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <div class="dropdown-content">
+                        <?php
+                        $categories = get_categories();
+                        foreach ($categories as $cat):
+                        ?>
+                            <a href="<?= base_url('shop.php?category=' . $cat['id']); ?>"><?= htmlspecialchars($cat['name']); ?></a>
+                        <?php endforeach; ?>
+                        <hr style="margin: 8px 0; border: none; border-top: 1px solid #e0e0e0;">
+                        <a href="<?= base_url('offers.php'); ?>">🎁 Offers & Deals</a>
+                        <a href="<?= base_url('gifting-hampers.php'); ?>">🎀 Gifting & Hampers</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <span class="dropbtn">TRACK <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="openTrackingModal(); return false;">Track Order</a>
+                        <?php if ($isLoggedIn): ?>
+                            <a href="<?= base_url('user/my_tickets.php'); ?>">Track Requests</a>
+                        <?php else: ?>
+                            <a href="#" onclick="openLoginModal(); return false;">Track Requests</a>
+                        <?php endif; ?>
+                        <a href="#locator">Track Stores</a>
+                        <a href="#verification">Authenticity Tracking</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <span class="dropbtn">OUR STORY <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></span>
+                    <div class="dropdown-content">
+                        <a href="<?= base_url('about-us.php'); ?>">About Us</a>
+                        <a href="<?= base_url('our-values.php'); ?>">Our Values</a>
+                        <a href="<?= base_url('blogs.php'); ?>">Blogs</a>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Mobile Navigation -->
+            <nav class="mobile-nav">
                 <!-- Mobile Menu Top Bar -->
                 <div class="mobile-menu-top-bar">
                     <button class="mobile-menu-action" onclick="toggleSearch(); closeMobileMenu();">

@@ -15,16 +15,16 @@ window.addEventListener('scroll', function() {
 const menuToggle = document.querySelector('.menu-toggle');
 const mobileMenuClose = document.querySelector('.mobile-menu-close');
 const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
-const navLinks = document.querySelector('.nav-links');
+const mobileNav = document.querySelector('.mobile-nav');
 
 function openMobileMenu() {
-    if (navLinks) navLinks.classList.add('mobile-open');
+    if (mobileNav) mobileNav.classList.add('mobile-open');
     if (mobileMenuOverlay) mobileMenuOverlay.classList.add('active');
     document.body.classList.add('mobile-menu-open');
 }
 
 function closeMobileMenu() {
-    if (navLinks) navLinks.classList.remove('mobile-open');
+    if (mobileNav) mobileNav.classList.remove('mobile-open');
     if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
     document.body.classList.remove('mobile-menu-open');
     // Close all submenu panels
