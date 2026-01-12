@@ -15,26 +15,26 @@
     .nav-links > a {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 16px 20px;
-        color: var(--color-text);
-        font-size: 0.95rem;
+        gap: 12px;
+        padding: 14px 20px;
+        color: #1A3C34 !important;
+        font-size: 0.9rem;
         font-weight: 600;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
         text-transform: none;
         transition: all 0.3s ease;
         position: relative;
+        background: transparent;
     }
     
     .nav-links > a::before {
         display: none;
     }
     
-    .nav-links > a:hover {
-        background: linear-gradient(90deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%);
-        color: var(--color-gold);
-        transform: translateX(0);
-        padding-left: 25px;
+    .nav-links > a:active,
+    .nav-links > a:focus {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.15) 0%, transparent 100%);
+        color: #C5A059 !important;
     }
     
     /* Icons for Menu Items */
@@ -67,16 +67,17 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        padding: 16px 20px;
-        color: var(--color-text);
-        font-size: 0.95rem;
+        padding: 14px 20px;
+        color: #1A3C34 !important;
+        font-size: 0.9rem;
         font-weight: 600;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.3px;
         text-transform: none;
         cursor: pointer;
         transition: all 0.3s ease;
         background: transparent;
         border: none;
+        text-align: left;
     }
     
     .nav-links .dropbtn::before {
@@ -141,24 +142,25 @@
     }
     
     .nav-links .dropdown-content a {
-        padding: 12px 20px 12px 60px;
-        font-size: 0.85rem;
+        padding: 11px 20px 11px 56px;
+        font-size: 0.82rem;
         font-weight: 500;
-        color: var(--color-text-light);
+        color: #6b6b6b !important;
         border-bottom: 1px solid rgba(26, 60, 52, 0.05);
-        letter-spacing: 0.3px;
+        letter-spacing: 0.2px;
         transition: all 0.3s ease;
+        background: transparent;
     }
     
     .nav-links .dropdown-content a::before {
         display: none;
     }
     
-    .nav-links .dropdown-content a:hover {
-        background: linear-gradient(90deg, rgba(197, 160, 89, 0.08) 0%, transparent 100%);
-        color: var(--color-gold);
-        padding-left: 65px;
-        transform: translateX(0);
+    .nav-links .dropdown-content a:active,
+    .nav-links .dropdown-content a:focus {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.12) 0%, transparent 100%);
+        color: #C5A059 !important;
+        padding-left: 60px;
     }
     
     .nav-links .dropdown-content hr {
@@ -167,12 +169,12 @@
         border-top: 1px solid rgba(26, 60, 52, 0.1);
     }
     
-    /* Hover Effects */
-    .nav-links .dropbtn:hover {
-        background: linear-gradient(90deg, rgba(197, 160, 89, 0.1) 0%, transparent 100%);
-        color: var(--color-gold);
-        transform: translateX(0);
-        padding-left: 25px;
+    /* Active/Focus Effects */
+    .nav-links .dropbtn:active,
+    .nav-links .dropbtn:focus {
+        background: linear-gradient(90deg, rgba(197, 160, 89, 0.15) 0%, transparent 100%);
+        color: #C5A059 !important;
+        outline: none;
     }
     
     /* Remove desktop hover behavior */
@@ -187,7 +189,7 @@
     /* Menu Footer - Optional Contact/Support */
     .mobile-menu-footer {
         margin-top: auto;
-        padding: 20px;
+        padding: 16px 20px;
         background: linear-gradient(135deg, rgba(26, 60, 52, 0.05) 0%, rgba(197, 160, 89, 0.05) 100%);
         border-top: 1px solid rgba(26, 60, 52, 0.1);
     }
@@ -196,15 +198,16 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 12px 0;
-        color: var(--color-text-light);
-        font-size: 0.85rem;
+        padding: 10px 0;
+        color: #6b6b6b !important;
+        font-size: 0.82rem;
         font-weight: 500;
         transition: color 0.3s ease;
     }
     
-    .mobile-menu-footer a:hover {
-        color: var(--color-gold);
+    .mobile-menu-footer a:active,
+    .mobile-menu-footer a:focus {
+        color: #C5A059 !important;
     }
     
     .mobile-menu-footer a i {
