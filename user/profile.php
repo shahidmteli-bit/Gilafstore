@@ -12,6 +12,27 @@ $activePage = 'dashboard';
 $userId = (int)$_SESSION['user']['id'];
 $user = get_user($userId);
 
+// Fetch primary address
+$db = get_db_connection();
+$primaryAddress = null;
+try {
+    $stmt = $db->prepare('SELECT * FROM user_addresses WHERE user_id = ? AND is_default = 1 LIMIT 1');
+    $stmt->execute([$userId]);
+    $primaryAddress = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$primaryAddress) {
+        $stmt = $db->prepare('SELECT * FROM user_addresses WHERE user_id = ? ORDER BY created_at DESC LIMIT 1');
+        $stmt->execute([$userId]);
+        $primaryAddress = $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+} catch (Exception $e) {
+    // No address found
+}
+
+// Split name into first and last
+$nameParts = explode(' ', $user['name'], 2);
+$firstName = $nameParts[0] ?? '';
+$lastName = $nameParts[1] ?? '';
+
 $errors = [];
 $success = false;
 
@@ -19,11 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate CSRF token
     require_csrf_token();
     
-    $name = trim($_POST['name'] ?? '');
+    $firstName = trim($_POST['first_name'] ?? '');
+    $lastName = trim($_POST['last_name'] ?? '');
+    $name = trim($firstName . ' ' . $lastName);
     $email = trim($_POST['email'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm_password'] ?? '';
 
     // Validate name
     $nameValidation = validate_name($name);
@@ -47,20 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Validate password if provided
-    if ($password) {
-        $passwordValidation = validate_password($password, 8);
-        if (!$passwordValidation['valid']) {
-            $errors['password'] = $passwordValidation['error'];
-        }
-        
-        if ($password !== $confirm) {
-            $errors['confirm_password'] = 'Passwords do not match';
-        }
-    }
-
     if (!$errors) {
-        if (update_user_profile($userId, $name, $email, $password ?: null, $phone ?: null)) {
+        if (update_user_profile($userId, $name, $email, null, $phone ?: null)) {
             $success = true;
             $user = get_user($userId);
             $_SESSION['flash'] = [
@@ -326,7 +335,80 @@ include __DIR__ . '/../includes/new-header.php';
         width: 100%;
     }
 }
+
+.address-display {
+    padding: var(--signup-space-4);
+    background: #f8f9fa;
+    border-radius: var(--signup-radius-sm);
+    border: 2px solid var(--signup-color-border);
+    color: #374151;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+.password-section {
+    margin-top: var(--signup-space-6);
+    padding-top: var(--signup-space-6);
+    border-top: 2px solid #e5e7eb;
+}
+
+.form-input[readonly] {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+    color: #6b7280;
+}
+
+.form-input[readonly]:focus {
+    border-color: var(--signup-color-border);
+    box-shadow: none;
+}
+
+.btn-secondary {
+    background: #6b7280;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4b5563;
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editBtn = document.getElementById('editProfileBtn');
+    const saveBtn = document.getElementById('saveChangesBtn');
+    const form = document.getElementById('profileForm');
+    const inputs = form.querySelectorAll('input[readonly]');
+    let isEditing = false;
+    
+    editBtn.addEventListener('click', function() {
+        isEditing = !isEditing;
+        
+        if (isEditing) {
+            // Enable editing
+            inputs.forEach(input => {
+                input.removeAttribute('readonly');
+            });
+            editBtn.textContent = 'Cancel';
+            editBtn.classList.remove('btn-outline');
+            editBtn.classList.add('btn-secondary');
+            saveBtn.style.display = 'block';
+        } else {
+            // Disable editing
+            inputs.forEach(input => {
+                input.setAttribute('readonly', 'readonly');
+            });
+            editBtn.textContent = 'Edit Profile';
+            editBtn.classList.remove('btn-secondary');
+            editBtn.classList.add('btn-outline');
+            saveBtn.style.display = 'none';
+            // Reset form to original values
+            form.reset();
+            location.reload();
+        }
+    });
+});
+</script>
 
 <section class="profile-page">
   <div class="profile-container">
@@ -340,7 +422,7 @@ include __DIR__ . '/../includes/new-header.php';
             <h1 class="content-title">Profile Overview</h1>
             <p class="content-subtitle">Manage your personal information and login credentials</p>
           </div>
-          <a href="<?= base_url('user/orders.php'); ?>" class="btn btn-outline">View Orders</a>
+          <button type="button" id="editProfileBtn" class="btn btn-outline">Edit Profile</button>
         </div>
         
         <div class="content-body">
@@ -348,47 +430,71 @@ include __DIR__ . '/../includes/new-header.php';
             <div class="alert alert-success">Profile updated successfully.</div>
           <?php endif; ?>
           
-          <form method="post" class="profile-form">
+          <form method="post" class="profile-form" id="profileForm">
             <?php csrf_field(); ?>
             
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Full Name <span style="color: #ef4444;">*</span></label>
-                <input type="text" name="name" class="form-input" value="<?= htmlspecialchars($_POST['name'] ?? $user['name']); ?>" required minlength="2" maxlength="100" />
+                <label class="form-label">First Name <span style="color: #ef4444;">*</span></label>
+                <input type="text" name="first_name" class="form-input" value="<?= htmlspecialchars($_POST['first_name'] ?? $firstName); ?>" required minlength="2" maxlength="50" readonly />
                 <?php if (!empty($errors['name'])): ?><span class="form-error"><?= htmlspecialchars($errors['name']); ?></span><?php endif; ?>
               </div>
               
               <div class="form-group">
-                <label class="form-label">Email Address <span style="color: #ef4444;">*</span></label>
-                <input type="email" name="email" class="form-input" value="<?= htmlspecialchars($_POST['email'] ?? $user['email']); ?>" required />
-                <?php if (!empty($errors['email'])): ?><span class="form-error"><?= htmlspecialchars($errors['email']); ?></span><?php endif; ?>
+                <label class="form-label">Last Name <span style="color: #ef4444;">*</span></label>
+                <input type="text" name="last_name" class="form-input" value="<?= htmlspecialchars($_POST['last_name'] ?? $lastName); ?>" required minlength="2" maxlength="50" readonly />
               </div>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label">Phone Number</label>
-              <input type="tel" name="phone" class="form-input" value="<?= htmlspecialchars($_POST['phone'] ?? $user['phone'] ?? ''); ?>" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" maxlength="10" />
-              <small style="color: #6b7280; font-size: 0.8125rem; margin-top: 4px; display: block;">Enter 10-digit Indian mobile number</small>
-              <?php if (!empty($errors['phone'])): ?><span class="form-error"><?= htmlspecialchars($errors['phone']); ?></span><?php endif; ?>
             </div>
             
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">New Password</label>
-                <input type="password" name="password" class="form-input" placeholder="Leave blank to keep current" minlength="8" />
-                <small style="color: #6b7280; font-size: 0.8125rem; margin-top: 4px; display: block;">Minimum 8 characters with uppercase, lowercase, numbers, and special characters</small>
-                <?php if (!empty($errors['password'])): ?><span class="form-error"><?= htmlspecialchars($errors['password']); ?></span><?php endif; ?>
+                <label class="form-label">Email Address <span style="color: #ef4444;">*</span></label>
+                <input type="email" name="email" class="form-input" value="<?= htmlspecialchars($_POST['email'] ?? $user['email']); ?>" required readonly />
+                <?php if (!empty($errors['email'])): ?><span class="form-error"><?= htmlspecialchars($errors['email']); ?></span><?php endif; ?>
               </div>
               
               <div class="form-group">
-                <label class="form-label">Confirm Password</label>
-                <input type="password" name="confirm_password" class="form-input" placeholder="Leave blank to keep current" minlength="8" />
-                <?php if (!empty($errors['confirm_password'])): ?><span class="form-error"><?= htmlspecialchars($errors['confirm_password']); ?></span><?php endif; ?>
+                <label class="form-label">Phone Number</label>
+                <input type="tel" name="phone" class="form-input" value="<?= htmlspecialchars($_POST['phone'] ?? $user['phone'] ?? ''); ?>" placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" maxlength="10" readonly />
+                <small style="color: #6b7280; font-size: 0.8125rem; margin-top: 4px; display: block;">Enter 10-digit Indian mobile number</small>
+                <?php if (!empty($errors['phone'])): ?><span class="form-error"><?= htmlspecialchars($errors['phone']); ?></span><?php endif; ?>
               </div>
             </div>
             
-            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <div class="form-group">
+              <label class="form-label">Primary Address</label>
+              <div class="address-display">
+                <?php if ($primaryAddress): ?>
+                  <?php 
+                    $addressParts = array_filter([
+                      $primaryAddress['flat_number'] ?? '',
+                      $primaryAddress['address_line1'] ?? '',
+                      $primaryAddress['address_line2'] ?? '',
+                      $primaryAddress['landmark'] ?? '',
+                      $primaryAddress['city'] ?? '',
+                      $primaryAddress['state'] ?? '',
+                      $primaryAddress['zip_code'] ?? ''
+                    ]);
+                    echo htmlspecialchars(implode(', ', $addressParts));
+                  ?>
+                <?php else: ?>
+                  <span style="color: #9ca3af;">No address saved. <a href="<?= base_url('user/manage_addresses.php'); ?>" style="color: #1A3C34; font-weight: 600;">Add Address</a></span>
+                <?php endif; ?>
+              </div>
+              <small style="color: #6b7280; font-size: 0.8125rem; margin-top: 4px; display: block;">
+                <a href="<?= base_url('user/manage_addresses.php'); ?>" style="color: #1A3C34; font-weight: 600; text-decoration: none;">Manage Addresses</a>
+              </small>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="saveChangesBtn" style="display: none;">Save Changes</button>
           </form>
+          
+          <!-- Change Password Section -->
+          <div class="password-section">
+            <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #1A3C34;">Change Password</h3>
+            <p style="color: #6b7280; font-size: 0.9375rem; margin-bottom: 1rem;">Update your account password securely</p>
+            <a href="<?= base_url('user/change_password.php'); ?>" class="btn btn-outline" style="display: inline-block; width: auto;">Change Password</a>
+          </div>
           
           <!-- Feature Cards -->
           <div class="feature-grid">
