@@ -546,7 +546,7 @@ a.btn-danger {
         <!-- Products Grid -->
         <div class="products-grid">
           <?php foreach ($products as $product): ?>
-            <div class="product-card animate-fadeIn" data-product-url="<?= base_url('product.php?id=' . (int)$product['id']); ?>" data-product-id="<?= (int)$product['id']; ?>" tabindex="0" role="link" aria-label="View details for <?= htmlspecialchars($product['name']); ?>">
+            <div class="product-card animate-fadeIn" data-product-url="<?= base_url('product.php?id=' . (int)$product['id']); ?>" data-product-id="<?= (int)$product['id']; ?>" tabindex="0" role="link" aria-label="View details for <?= htmlspecialchars($product['name']); ?>" style="cursor: pointer;">
               <div class="product-card-image">
                 <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="<?= htmlspecialchars($product['name']); ?>">
                 <?php if (isset($product['is_new']) && $product['is_new']): ?>
@@ -576,12 +576,12 @@ a.btn-danger {
                   <?php endif; ?>
                 </div>
                 <div style="display: flex; gap: var(--space-2);">
-                  <a href="<?= base_url('product.php?id=' . $product['id']); ?>" class="btn btn-sm btn-danger">VIEW</a>
-                  <form action="<?= base_url('shop.php'); ?>" method="post" style="display: inline;">
+                  <a href="<?= base_url('product.php?id=' . $product['id']); ?>" class="btn btn-sm btn-danger" onclick="event.stopPropagation();">VIEW</a>
+                  <form action="<?= base_url('shop.php'); ?>" method="post" style="display: inline;" onclick="event.stopPropagation();">
                     <input type="hidden" name="action" value="add_to_cart" />
                     <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>" />
                     <input type="hidden" name="quantity" value="1" />
-                    <button type="submit" class="btn btn-sm btn-success">ADD TO CART</button>
+                    <button type="submit" class="btn btn-sm btn-success" onclick="event.stopPropagation();">ADD TO CART</button>
                   </form>
                 </div>
               </div>
