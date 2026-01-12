@@ -1008,6 +1008,7 @@ include __DIR__ . '/../includes/delete-modal.php';
         
         <form id="addressForm">
             <input type="hidden" id="addressId" name="id">
+            <input type="hidden" name="csrf_token" value="<?= generate_csrf_token(); ?>">
             
             <div class="form-group">
                 <label>Address Type *</label>
@@ -1263,6 +1264,12 @@ document.getElementById('addressForm').addEventListener('submit', function(e) {
     const formData = new FormData(this);
     const addressId = document.getElementById('addressId').value;
     formData.append('action', addressId ? 'edit' : 'add');
+    
+    // Ensure CSRF token is included
+    if (!formData.has('csrf_token')) {
+        const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+        formData.append('csrf_token', csrfToken);
+    }
     
     fetch('manage_addresses.php', {
         method: 'POST',
