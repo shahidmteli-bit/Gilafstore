@@ -19,6 +19,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="profile-avatar">
             <?= strtoupper(substr($user['name'], 0, 1)); ?>
         </div>
+        <div class="profile-welcome">Welcome back</div>
         <div class="profile-name"><?= htmlspecialchars($user['name']); ?></div>
         <div class="profile-email"><?= htmlspecialchars($user['email']); ?></div>
     </div>
@@ -86,6 +87,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     font-weight: 700;
     color: #C5A059;
     position: relative;
+}
+
+.profile-welcome {
+    color: rgba(197, 160, 89, 0.9);
+    font-size: 0.8125rem;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+    letter-spacing: 0.5px;
 }
 
 .profile-name {
