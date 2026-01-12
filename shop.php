@@ -89,6 +89,11 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Critical Inline CSS for Full-Width Hero Promo Billboard -->
 <style>
+/* GLOBAL: Hide VIEW button on all devices */
+.btn-outline[href*="product.php"] {
+    display: none !important;
+}
+
 /* FORCE 2-COLUMN MOBILE PRODUCT GRID */
 @media (max-width: 768px) {
     .products-grid {
@@ -122,19 +127,16 @@ include __DIR__ . '/includes/new-header.php';
         width: 100% !important;
     }
     
-    .product-card-body .btn {
+    /* Hide VIEW button - keep only ADD TO CART */
+    .product-card-body .btn-outline {
+        display: none !important;
+    }
+    
+    .product-card-body .btn-primary {
         width: 100% !important;
-        padding: 8px 10px !important;
-        font-size: 11px !important;
+        padding: 10px !important;
+        font-size: 12px !important;
         white-space: nowrap !important;
-    }
-    
-    .btn-outline {
-        padding: 8px 10px !important;
-    }
-    
-    .btn-primary {
-        padding: 8px 10px !important;
     }
 }
 
