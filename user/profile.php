@@ -371,9 +371,191 @@ include __DIR__ . '/../includes/new-header.php';
 .btn-secondary:hover {
     background: #4b5563;
 }
+
+/* Modern Professional Button Styles */
+#editProfileBtn {
+    background: linear-gradient(135deg, #C5A059 0%, #D4AF6A 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#editProfileBtn:hover {
+    background: linear-gradient(135deg, #D4AF6A 0%, #C5A059 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(197, 160, 89, 0.4);
+}
+
+#editProfileBtn.btn-secondary {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+#editProfileBtn.btn-secondary:hover {
+    background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.4);
+}
+
+.password-section .btn {
+    background: linear-gradient(135deg, #1A3C34 0%, #2d5a4e 100%);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(26, 60, 52, 0.3);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.password-section .btn:hover {
+    background: linear-gradient(135deg, #2d5a4e 0%, #1A3C34 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(26, 60, 52, 0.4);
+}
+
+/* Toast Notification Styles */
+.toast-container {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.toast {
+    background: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    max-width: 500px;
+    animation: slideDown 0.3s ease, slideUp 0.3s ease 2.7s;
+    pointer-events: auto;
+}
+
+.toast.success {
+    border-left: 4px solid #10b981;
+}
+
+.toast.error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.toast.success .toast-icon {
+    background: #d1fae5;
+    color: #10b981;
+}
+
+.toast.error .toast-icon {
+    background: #fee2e2;
+    color: #ef4444;
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@media (max-width: 640px) {
+    .toast-container {
+        top: 80px;
+        left: 10px;
+        right: 10px;
+        transform: none;
+    }
+    
+    .toast {
+        min-width: auto;
+        width: 100%;
+    }
+}
 </style>
 
 <script>
+// Toast Notification System
+function showToast(message, type = 'success') {
+    // Create toast container if it doesn't exist
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    const icon = document.createElement('div');
+    icon.className = 'toast-icon';
+    icon.textContent = type === 'success' ? '✓' : '✕';
+    
+    const messageEl = document.createElement('div');
+    messageEl.className = 'toast-message';
+    messageEl.textContent = message;
+    
+    toast.appendChild(icon);
+    toast.appendChild(messageEl);
+    container.appendChild(toast);
+    
+    // Remove toast after animation
+    setTimeout(() => {
+        toast.remove();
+        if (container.children.length === 0) {
+            container.remove();
+        }
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const editBtn = document.getElementById('editProfileBtn');
     const saveBtn = document.getElementById('saveChangesBtn');
@@ -427,7 +609,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         <div class="content-body">
           <?php if ($success): ?>
-            <div class="alert alert-success">Profile updated successfully.</div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                showToast('Profile updated successfully!', 'success');
+              });
+            </script>
           <?php endif; ?>
           
           <form method="post" class="profile-form" id="profileForm">
