@@ -3,6 +3,40 @@
    Clean, Modern Style (Inspired by koshurindia.com)
    ========================================= */
 
+/* Desktop: Hide all mobile menu elements */
+@media (min-width: 769px) {
+    .mobile-menu-top-bar,
+    .mobile-menu-list,
+    .mobile-submenu-panel,
+    .mobile-menu-item-wrapper {
+        display: none !important;
+    }
+    
+    /* Restore desktop navigation */
+    .nav-links {
+        display: flex !important;
+        position: static !important;
+        width: auto !important;
+        height: auto !important;
+        background: transparent !important;
+        flex-direction: row !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        box-shadow: none !important;
+        left: auto !important;
+    }
+    
+    /* Show desktop dropdowns */
+    .nav-links .dropdown {
+        display: block !important;
+        position: relative;
+    }
+    
+    .nav-links .dropdown:hover .dropdown-content {
+        display: block;
+    }
+}
+
 @media (max-width: 768px) {
     /* Mobile Menu Top Bar */
     .mobile-menu-top-bar {
@@ -91,20 +125,14 @@
         color: #999;
     }
     
-    /* Remove old mobile menu styling */
-    .nav-links > a::after,
-    .nav-links .dropbtn::after {
+    /* Hide old dropdown structure on mobile only */
+    .nav-links .dropdown {
         display: none !important;
     }
     
-    .nav-links > a,
-    .nav-links .dropbtn {
-        padding: 0 !important;
-        border: none !important;
-    }
-    
-    /* Hide old dropdown structure */
-    .nav-links .dropdown {
+    /* Remove icon styling from mobile menu items */
+    .nav-links > a::after,
+    .nav-links .dropbtn::after {
         display: none !important;
     }
     
