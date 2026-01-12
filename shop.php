@@ -95,23 +95,23 @@ a.btn-danger {
     display: none !important;
 }
 
-/* MOBILE: Remove ALL top padding/margin on shop page */
+/* MOBILE: Use negative margin to create tight professional layout */
 @media (max-width: 768px) {
     section.py-5 {
         padding-top: 0 !important;
         padding-bottom: 3rem !important;
-        margin-top: 0 !important;
+        margin-top: -20px !important;
     }
     
     section.py-5 .container {
-        padding-top: 0 !important;
+        padding-top: 0.75rem !important;
         margin-top: 0 !important;
     }
     
     .shop-breadcrumb {
         margin-top: 0 !important;
         margin-bottom: 1rem !important;
-        padding-top: 0.5rem !important;
+        padding-top: 0 !important;
     }
     
     .shop-page {
