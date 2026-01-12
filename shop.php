@@ -95,10 +95,10 @@ a.btn-danger {
     display: none !important;
 }
 
-/* MOBILE: Reduce top padding on shop page */
+/* MOBILE: Remove top padding on shop page */
 @media (max-width: 768px) {
     section.py-5 {
-        padding-top: 1rem !important;
+        padding-top: 0 !important;
         padding-bottom: 3rem !important;
     }
     
