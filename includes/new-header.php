@@ -58,6 +58,9 @@ $htmlLangDir = htmlspecialchars(get_language_direction());
     
     <!-- Layout Fixes CSS - Comprehensive responsive and layout fixes -->
     <link rel="stylesheet" href="<?= asset_url('css/layout-fixes.css'); ?>">
+    
+    <!-- Tablet Layout Fixes - Dedicated tablet optimization (768px-1024px only) -->
+    <link rel="stylesheet" href="<?= asset_url('css/tablet-layout-fixes.css'); ?>?v=<?= time(); ?>">
 </head>
 <body class="page-<?= htmlspecialchars($activePage ?? ''); ?>">
 
