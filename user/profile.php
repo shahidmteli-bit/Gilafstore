@@ -72,6 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (update_user_profile($userId, $name, $email, null, $phone ?: null)) {
             $success = true;
             $user = get_user($userId);
+            // Update session with fresh user data
+            $_SESSION['user'] = $user;
+            // Update name parts for display
+            $nameParts = explode(' ', $user['name'], 2);
+            $firstName = $nameParts[0] ?? '';
+            $lastName = $nameParts[1] ?? '';
             // Flash message removed - using toast notification only
         } else {
             $errors['email'] = 'Email already in use by another account';
