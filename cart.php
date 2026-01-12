@@ -71,8 +71,17 @@ include __DIR__ . '/includes/new-header.php';
 /* Mobile: Reduce top padding on cart page */
 @media (max-width: 768px) {
   section.py-5 {
-    margin-top: -50px !important;
-    padding-top: 10px !important;
+    margin-top: -75px !important;
+    padding-top: 0 !important;
+  }
+  
+  .container {
+    padding-top: 0.5rem !important;
+  }
+  
+  .section-title {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 }
 
