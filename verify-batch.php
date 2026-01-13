@@ -32,26 +32,16 @@ if (!empty($batchCode)) {
         $batch = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($batch) {
-            // Log verification (non-critical - don't fail if logging fails)
-            try {
-                log_batch_verification($batch['id'], $batch['batch_code'], 'manual_entry');
-            } catch (Exception $logError) {
-                error_log("Batch verification logging failed: " . $logError->getMessage());
-                // Continue with verification even if logging fails
-            }
+            // Log verification
+            log_batch_verification($batch['id'], $batch['batch_code'], 'manual_entry');
             
             // Get approver name if approved
             $approverName = null;
             if ($batch['quality_approved'] && $batch['quality_approver_id']) {
-                try {
-                    $approverStmt = $db->prepare("SELECT name FROM users WHERE id = :id");
-                    $approverStmt->execute([':id' => $batch['quality_approver_id']]);
-                    $approver = $approverStmt->fetch(PDO::FETCH_ASSOC);
-                    $approverName = $approver ? $approver['name'] : 'Admin';
-                } catch (Exception $approverError) {
-                    error_log("Failed to fetch approver name: " . $approverError->getMessage());
-                    $approverName = 'Quality Team';
-                }
+                $approverStmt = $db->prepare("SELECT name FROM users WHERE id = :id");
+                $approverStmt->execute([':id' => $batch['quality_approver_id']]);
+                $approver = $approverStmt->fetch(PDO::FETCH_ASSOC);
+                $approverName = $approver ? $approver['name'] : 'Admin';
             }
             
             $verificationResult = [

@@ -166,66 +166,39 @@ function check_expiring_batches() {
  * Log batch verification
  */
 function log_batch_verification($batchCodeId, $batchCode, $method = 'manual_entry') {
-    try {
-        $db = get_db_connection();
-        
-        // Create batch_verifications table if it doesn't exist
-        $db->exec("CREATE TABLE IF NOT EXISTS batch_verifications (
-            id INT PRIMARY KEY AUTO_INCREMENT,
-            batch_code_id INT NOT NULL,
-            batch_code VARCHAR(100) NOT NULL,
-            ip_address VARCHAR(45),
-            user_agent TEXT,
-            verification_method VARCHAR(50) DEFAULT 'manual_entry',
-            language VARCHAR(10) DEFAULT 'en',
-            country VARCHAR(100),
-            city VARCHAR(100),
-            verified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_batch_code (batch_code),
-            INDEX idx_batch_code_id (batch_code_id),
-            INDEX idx_verified_at (verified_at)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
-        
-        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
-        $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? null;
-        $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en';
-        $language = substr($language, 0, 2);
-        
-        // Get geolocation (simplified - you can integrate with IP geolocation API)
-        $country = null;
-        $city = null;
-        
-        $sql = "INSERT INTO batch_verifications 
-                (batch_code_id, batch_code, ip_address, user_agent, verification_method, language, country, city) 
-                VALUES (:batch_code_id, :batch_code, :ip_address, :user_agent, :method, :language, :country, :city)";
-        
-        $stmt = $db->prepare($sql);
-        $stmt->execute([
-            ':batch_code_id' => $batchCodeId,
-            ':batch_code' => $batchCode,
-            ':ip_address' => $ipAddress,
-            ':user_agent' => $userAgent,
-            ':method' => $method,
-            ':language' => $language,
-            ':country' => $country,
-            ':city' => $city
-        ]);
-        
-        $verificationId = $db->lastInsertId();
-        
-        // Check for suspicious activity (wrapped in try-catch to prevent failures)
-        try {
-            check_suspicious_verification($batchCodeId, $batchCode, $ipAddress);
-        } catch (Exception $e) {
-            error_log("Suspicious verification check failed: " . $e->getMessage());
-        }
-        
-        return $verificationId;
-    } catch (Exception $e) {
-        error_log("Batch verification logging error: " . $e->getMessage());
-        // Return null but don't throw - logging is non-critical
-        return null;
-    }
+    $db = get_db_connection();
+    
+    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
+    $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? null;
+    $language = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en';
+    $language = substr($language, 0, 2);
+    
+    // Get geolocation (simplified - you can integrate with IP geolocation API)
+    $country = null;
+    $city = null;
+    
+    $sql = "INSERT INTO batch_verifications 
+            (batch_code_id, batch_code, ip_address, user_agent, verification_method, language, country, city) 
+            VALUES (:batch_code_id, :batch_code, :ip_address, :user_agent, :method, :language, :country, :city)";
+    
+    $stmt = $db->prepare($sql);
+    $stmt->execute([
+        ':batch_code_id' => $batchCodeId,
+        ':batch_code' => $batchCode,
+        ':ip_address' => $ipAddress,
+        ':user_agent' => $userAgent,
+        ':method' => $method,
+        ':language' => $language,
+        ':country' => $country,
+        ':city' => $city
+    ]);
+    
+    $verificationId = $db->lastInsertId();
+    
+    // Check for suspicious activity
+    check_suspicious_verification($batchCodeId, $batchCode, $ipAddress);
+    
+    return $verificationId;
 }
 
 /**
