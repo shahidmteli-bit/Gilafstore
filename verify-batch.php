@@ -32,8 +32,8 @@ if (!empty($batchCode)) {
         $batch = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($batch) {
-            // Log verification
-            log_batch_verification($batch['id'], $batch['batch_code'], 'manual_entry');
+            // Log verification (temporarily disabled due to permission issue)
+            // log_batch_verification($batch['id'], $batch['batch_code'], 'manual_entry');
             
             // Get approver name if approved
             $approverName = null;
