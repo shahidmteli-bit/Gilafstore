@@ -385,20 +385,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.focus();
                 }, 100);
             });
-            
-            // Prevent zoom on focus (iOS)
-            input.addEventListener('focus', function() {
-                const viewport = document.querySelector('meta[name="viewport"]');
-                if (viewport) {
-                    const originalContent = viewport.getAttribute('content');
-                    viewport.setAttribute('content', originalContent + ', maximum-scale=1.0');
-                    
-                    // Restore original viewport on blur
-                    this.addEventListener('blur', function() {
-                        viewport.setAttribute('content', originalContent);
-                    }, { once: true });
-                }
-            });
         });
     }
 });
