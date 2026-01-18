@@ -32,7 +32,7 @@ include __DIR__ . '/includes/new-header.php';
 </section>
 
 <!-- Marquee Trust Bar -->
-<section class="features-marquee">
+<section class="features-marquee" style="padding: 11px 0 !important;">
     <div class="marquee-track">
         <div class="marquee-item">
             <i class="fas fa-leaf"></i> 
