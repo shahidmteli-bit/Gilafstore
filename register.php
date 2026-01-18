@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include __DIR__ . '/includes/new-header.php';
 ?>
 
-<link rel="stylesheet" href="<?= asset_url('css/signup-page.css'); ?>">
+<link rel="stylesheet" href="<?= asset_url('css/signup-page.css'); ?>?v=<?= time(); ?>">
 
 <main class="signup-page" role="main">
     <div class="signup-container">

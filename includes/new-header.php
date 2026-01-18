@@ -429,10 +429,10 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
                         </div>
                     </form>
                 </div>
+                <a href="<?= base_url('contact.php'); ?>" title="Support">
+                    <i class="fas fa-headset"></i>
+                </a>
                 <?php if ($isLoggedIn): ?>
-                    <a href="<?= base_url('user/create_ticket.php'); ?>" title="Support">
-                        <i class="fas fa-headset"></i>
-                    </a>
                     <a href="<?= base_url('user/profile.php'); ?>" title="<?= htmlspecialchars($userName); ?>">
                         <i class="fas fa-user"></i>
                     </a>

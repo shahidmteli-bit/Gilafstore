@@ -114,6 +114,10 @@ $RECYCLE.BIN/
 archive/
 deleted_files_*/
 
+# ============ WINDSURF LOCAL BACKUPS ============
+# Local-only version history (Windsurf accessible only)
+.windsurf-backups/
+
 # ============ DATABASE FILES ============
 # SQL Dumps (Keep schema files, ignore data dumps)
 *_dump.sql
