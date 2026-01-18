@@ -15,11 +15,6 @@ $trendingProducts = enrich_products_with_discounts($trendingProducts);
 include __DIR__ . '/includes/new-header.php';
 ?>
 
-<!-- DEPLOYMENT TEST BANNER - WILL BE REMOVED -->
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; text-align: center; font-size: 18px; font-weight: bold; border-bottom: 5px solid #ffd700; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; z-index: 9999;">
-    🚀 DEPLOYMENT TEST - Timestamp: <?= date('Y-m-d H:i:s'); ?> - Commit: 9a4c34b - If you see this, GitHub sync is working! 🚀
-</div>
-
 <!-- Hero Section -->
 <section class="hero">
     <div class="container hero-content">
