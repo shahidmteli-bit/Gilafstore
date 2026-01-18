@@ -613,12 +613,26 @@
         z-index: 2;
         -webkit-transform: translateZ(0);
         transform: translateZ(0);
+        padding-right: 40px !important;
+        -webkit-user-select: text !important;
+        user-select: text !important;
+        pointer-events: auto !important;
     }
     
     .signup-password-toggle {
         z-index: 3;
         pointer-events: auto;
         -webkit-tap-highlight-color: transparent;
+        width: 32px !important;
+        height: 32px !important;
+        right: 2px !important;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 4px !important;
+    }
+    
+    .signup-password-toggle i {
+        font-size: 12px !important;
+        pointer-events: none;
     }
     
     .signup-submit {
