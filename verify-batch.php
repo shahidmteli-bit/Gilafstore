@@ -21,14 +21,18 @@ if (!empty($batchCode)) {
     try {
         $db = get_db_connection();
         
-        // Fetch batch details
+        // Clean and normalize batch code
+        $cleanBatchCode = strtoupper(trim($batchCode));
+        
+        // Fetch batch details with case-insensitive search
         $stmt = $db->prepare("
             SELECT bc.*, p.image as product_image, p.price as product_price
             FROM batch_codes bc
             LEFT JOIN products p ON p.id = bc.product_id
-            WHERE bc.batch_code = :batch_code
+            WHERE UPPER(bc.batch_code) = :batch_code
+            AND (bc.is_active = 1 OR bc.is_active IS NULL)
         ");
-        $stmt->execute([':batch_code' => trim($batchCode)]);
+        $stmt->execute([':batch_code' => $cleanBatchCode]);
         $batch = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($batch) {
@@ -37,7 +41,7 @@ if (!empty($batchCode)) {
             
             // Get approver name if approved
             $approverName = null;
-            if ($batch['quality_approved'] && $batch['quality_approver_id']) {
+            if (!empty($batch['quality_approved']) && !empty($batch['quality_approver_id'])) {
                 $approverStmt = $db->prepare("SELECT name FROM users WHERE id = :id");
                 $approverStmt->execute([':id' => $batch['quality_approver_id']]);
                 $approver = $approverStmt->fetch(PDO::FETCH_ASSOC);
@@ -53,8 +57,13 @@ if (!empty($batchCode)) {
         } else {
             $error = 'not_found';
         }
+    } catch (PDOException $e) {
+        error_log("Batch verification database error: " . $e->getMessage());
+        error_log("Batch code attempted: " . $batchCode);
+        $error = 'system_error';
     } catch (Exception $e) {
         error_log("Batch verification error: " . $e->getMessage());
+        error_log("Batch code attempted: " . $batchCode);
         $error = 'system_error';
     }
 }
