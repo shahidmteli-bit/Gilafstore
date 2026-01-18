@@ -602,6 +602,25 @@
         font-size: 0.875rem;
     }
     
+    /* Mobile password input fixes */
+    .signup-input-wrap {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .signup-input--password {
+        position: relative;
+        z-index: 2;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+    
+    .signup-password-toggle {
+        z-index: 3;
+        pointer-events: auto;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
     .signup-submit {
         height: 42px;
         margin-top: 8px;

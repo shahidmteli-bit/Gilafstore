@@ -211,6 +211,10 @@ include __DIR__ . '/includes/new-header.php';
                                 placeholder="Create a strong password"
                                 autocomplete="new-password"
                                 minlength="8"
+                                inputmode="text"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
                                 required
                                 aria-required="true"
                             />
@@ -252,6 +256,10 @@ include __DIR__ . '/includes/new-header.php';
                                 class="signup-input signup-input--password <?= !empty($errors['confirm_password']) ? 'signup-input--error' : '' ?>"
                                 placeholder="Re-enter your password"
                                 autocomplete="new-password"
+                                inputmode="text"
+                                autocorrect="off"
+                                autocapitalize="off"
+                                spellcheck="false"
                                 required
                                 aria-required="true"
                             />
@@ -364,6 +372,35 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('phone').addEventListener('input', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
+    
+    // Mobile password input fix - ensure proper focus and keyboard behavior
+    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
+        
+        passwordInputs.forEach(input => {
+            // Ensure focus works properly on mobile
+            input.addEventListener('touchstart', function(e) {
+                // Allow default touch behavior for focusing
+                setTimeout(() => {
+                    this.focus();
+                }, 100);
+            });
+            
+            // Prevent zoom on focus (iOS)
+            input.addEventListener('focus', function() {
+                const viewport = document.querySelector('meta[name="viewport"]');
+                if (viewport) {
+                    const originalContent = viewport.getAttribute('content');
+                    viewport.setAttribute('content', originalContent + ', maximum-scale=1.0');
+                    
+                    // Restore original viewport on blur
+                    this.addEventListener('blur', function() {
+                        viewport.setAttribute('content', originalContent);
+                    }, { once: true });
+                }
+            });
+        });
+    }
 });
 </script>
 
