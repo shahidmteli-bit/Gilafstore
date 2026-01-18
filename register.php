@@ -373,18 +373,46 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
     
-    // Mobile password input fix - ensure proper focus and keyboard behavior
-    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    // Mobile & Tablet password input fix - comprehensive solution
+    if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+        (window.innerWidth <= 1024 && 'ontouchstart' in window)) {
+        
         const passwordInputs = document.querySelectorAll('input[type="password"]');
+        const passwordToggles = document.querySelectorAll('.signup-password-toggle');
         
         passwordInputs.forEach(input => {
-            // Ensure focus works properly on mobile
+            // Remove any conflicting attributes
+            input.removeAttribute('readonly');
+            
+            // Ensure proper touch handling
             input.addEventListener('touchstart', function(e) {
-                // Allow default touch behavior for focusing
-                setTimeout(() => {
-                    this.focus();
-                }, 100);
+                e.stopPropagation();
+                this.focus();
+            }, { passive: true });
+            
+            // Ensure focus on tap
+            input.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.focus();
             });
+            
+            // Prevent any overlay interference
+            input.style.position = 'relative';
+            input.style.zIndex = '10';
+            input.style.pointerEvents = 'auto';
+            input.style.webkitUserSelect = 'text';
+            input.style.userSelect = 'text';
+        });
+        
+        // Ensure password toggle doesn't interfere with input
+        passwordToggles.forEach(toggle => {
+            toggle.style.zIndex = '11';
+            toggle.style.pointerEvents = 'auto';
+            
+            // Prevent toggle from blocking input
+            toggle.addEventListener('touchstart', function(e) {
+                e.stopPropagation();
+            }, { passive: true });
         });
     }
 });
