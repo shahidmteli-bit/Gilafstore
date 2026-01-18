@@ -736,7 +736,7 @@ body.scrolled .top-bar { display: none; }
     border-bottom: 1px solid #eaeaea;
     overflow: hidden;
     white-space: nowrap;
-    padding: 30px 0; 
+    padding: 22px 0; 
     position: relative;
     width: 100vw; 
     max-width: 100%;
@@ -1145,7 +1145,7 @@ footer { background-color: var(--color-green); color: white; padding: 80px 0 30p
         box-shadow: 0 0 0 1px rgba(197, 160, 89, 0.3);
     }
 
-    .features-marquee { padding: 40px 0; }
+    .features-marquee { padding: 30px 0; }
     .marquee-item { margin: 0 20px; }
     .marquee-item i { font-size: 1.5rem; }
     .marquee-title { font-size: 1rem; }
