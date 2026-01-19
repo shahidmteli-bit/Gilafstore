@@ -269,6 +269,10 @@ include __DIR__ . '/../includes/admin_header.php';
 
 <script>
 // Weight-Price Management System with Image Upload Visibility
+// IMPORTANT: weightPrices must be outside DOMContentLoaded to persist
+let weightPrices = []; // Array to store weights with prices
+let weightToDelete = null;
+
 document.addEventListener('DOMContentLoaded', function() {
   const cardsContainer = document.getElementById('weightPriceCardsContainer');
   const addWeightBtn = document.getElementById('addWeightBtn');
@@ -277,9 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const newWeightPrice = document.getElementById('newWeightPrice');
   const weightsDataInput = document.getElementById('weightsData');
   const defaultPriceHidden = document.getElementById('defaultPriceHidden');
-  
-  let weightPrices = []; // Array to store weights with prices
-  let weightToDelete = null;
+  const addProductModal = document.getElementById('addProductModal');
   
   // Image upload visibility
   document.querySelectorAll('.image-input').forEach(input => {
@@ -491,6 +493,30 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
       alertDiv.remove();
     }, 5000);
+  }
+  
+  // Reset form and weightPrices when modal is closed
+  if (addProductModal) {
+    addProductModal.addEventListener('hidden.bs.modal', function() {
+      console.log('Modal closed - resetting form and weightPrices');
+      weightPrices = [];
+      renderWeightPriceCards();
+      
+      // Reset form
+      const form = addProductModal.querySelector('form');
+      if (form) {
+        form.reset();
+        // Clear image status indicators
+        document.querySelectorAll('.image-status').forEach(el => el.classList.add('d-none'));
+        document.querySelectorAll('.image-input').forEach(el => el.classList.remove('border-success'));
+      }
+    });
+    
+    // Initialize when modal is shown
+    addProductModal.addEventListener('shown.bs.modal', function() {
+      console.log('Modal opened - initializing weightPrices:', weightPrices);
+      renderWeightPriceCards();
+    });
   }
   
   // Initialize
