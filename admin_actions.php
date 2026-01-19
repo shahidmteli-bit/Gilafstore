@@ -174,10 +174,10 @@ try {
             $description = trim($_POST['description'] ?? '');
             $categoryId = (int)($_POST['category_id'] ?? 0);
             $price = (float)($_POST['price'] ?? 0);
-            $stock = (int)($_POST['stock'] ?? 0);
             $ean = trim($_POST['ean'] ?? '');
+            $weightsDataJson = trim($_POST['weights_data'] ?? '');
 
-            if (!$productId || $name === '' || $description === '' || !$categoryId || $price < 0 || $stock < 0) {
+            if (!$productId || $name === '' || !$categoryId) {
                 throw new RuntimeException('Please fill in all product fields correctly');
             }
 
@@ -186,15 +186,77 @@ try {
                 $image = handle_file_upload($_FILES['image']);
             }
 
+            // Update basic product info
             admin_update_product($productId, [
                 'name' => $name,
                 'description' => $description,
                 'category_id' => $categoryId,
                 'price' => $price,
-                'stock' => $stock,
                 'ean' => $ean,
                 'image' => $image,
             ]);
+            
+            // Handle weights update
+            if ($weightsDataJson) {
+                $weightsData = json_decode($weightsDataJson, true);
+                $db = get_db_connection();
+                
+                // Delete removed weights
+                if (!empty($weightsData['deleted'])) {
+                    foreach ($weightsData['deleted'] as $weightId) {
+                        $stmt = $db->prepare("DELETE FROM product_weights WHERE id = ? AND product_id = ?");
+                        $stmt->execute([$weightId, $productId]);
+                    }
+                }
+                
+                // Update/Insert weights
+                if (!empty($weightsData['weights'])) {
+                    foreach ($weightsData['weights'] as $index => $weight) {
+                        if ($weight['is_new']) {
+                            // Insert new weight
+                            $stmt = $db->prepare("
+                                INSERT INTO product_weights 
+                                (product_id, weight_value, weight_unit, display_weight, price, is_default, sort_order)
+                                VALUES (?, ?, ?, ?, ?, ?, ?)
+                            ");
+                            $stmt->execute([
+                                $productId,
+                                $weight['value'],
+                                $weight['unit'],
+                                $weight['display'],
+                                $weight['price'],
+                                $weight['is_default'],
+                                $index
+                            ]);
+                        } else {
+                            // Update existing weight
+                            $stmt = $db->prepare("
+                                UPDATE product_weights 
+                                SET weight_value = ?, weight_unit = ?, display_weight = ?, price = ?, is_default = ?, sort_order = ?
+                                WHERE id = ? AND product_id = ?
+                            ");
+                            $stmt->execute([
+                                $weight['value'],
+                                $weight['unit'],
+                                $weight['display'],
+                                $weight['price'],
+                                $weight['is_default'],
+                                $index,
+                                $weight['id'],
+                                $productId
+                            ]);
+                        }
+                    }
+                    
+                    // Update product's default price
+                    $defaultWeight = array_filter($weightsData['weights'], fn($w) => $w['is_default'] == 1);
+                    if (!empty($defaultWeight)) {
+                        $defaultWeight = reset($defaultWeight);
+                        $stmt = $db->prepare("UPDATE products SET price = ?, net_weight = ? WHERE id = ?");
+                        $stmt->execute([$defaultWeight['price'], $defaultWeight['display'], $productId]);
+                    }
+                }
+            }
 
             redirect_with_message('/admin/product_edit.php?id=' . $productId, 'Product updated successfully');
             break;

@@ -11,6 +11,12 @@ if (!$product) {
     redirect_with_message(base_url('admin/manage_products.php'), 'Product not found', 'danger');
 }
 
+// Fetch all weights for this product
+$db = get_db_connection();
+$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, is_default, sort_order FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+$stmt->execute([$productId]);
+$productWeights = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $pageTitle = 'Edit Product — Admin';
 $adminPage = 'products';
 $categories = admin_get_categories();
@@ -47,18 +53,85 @@ include __DIR__ . '/../includes/admin_header.php';
               <?php endforeach; ?>
             </select>
           </div>
-          <div class="col-md-6">
-            <label class="form-label">Price (₹)</label>
-            <input type="number" name="price" class="form-control" value="<?= htmlspecialchars($product['price']); ?>" step="0.01" required />
+          <div class="col-12">
+            <label class="form-label">Product Weights & Prices <span class="text-danger">*</span></label>
+            
+            <!-- Display existing weights as editable cards -->
+            <div id="existingWeightsContainer" class="mb-3">
+              <?php foreach ($productWeights as $index => $weight): ?>
+                <div class="card border-success mb-2" data-weight-id="<?= $weight['id']; ?>">
+                  <div class="card-body p-3">
+                    <div class="row g-2 align-items-center">
+                      <div class="col-md-3">
+                        <label class="form-label small mb-1">Weight</label>
+                        <input type="number" class="form-control form-control-sm weight-value" value="<?= $weight['weight_value']; ?>" step="0.01" min="0.01" data-weight-id="<?= $weight['id']; ?>">
+                      </div>
+                      <div class="col-md-2">
+                        <label class="form-label small mb-1">Unit</label>
+                        <select class="form-select form-select-sm weight-unit" data-weight-id="<?= $weight['id']; ?>">
+                          <option value="g" <?= $weight['weight_unit'] === 'g' ? 'selected' : ''; ?>>g</option>
+                          <option value="kg" <?= $weight['weight_unit'] === 'kg' ? 'selected' : ''; ?>>kg</option>
+                        </select>
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label small mb-1">Price (₹)</label>
+                        <input type="number" class="form-control form-control-sm weight-price" value="<?= $weight['price']; ?>" step="0.01" min="0" data-weight-id="<?= $weight['id']; ?>">
+                      </div>
+                      <div class="col-md-2">
+                        <?php if ($weight['is_default'] == 1): ?>
+                          <span class="badge bg-primary mt-4">Default</span>
+                        <?php else: ?>
+                          <button type="button" class="btn btn-sm btn-outline-primary mt-4 set-default-btn" data-weight-id="<?= $weight['id']; ?>">Set Default</button>
+                        <?php endif; ?>
+                      </div>
+                      <div class="col-md-2">
+                        <button type="button" class="btn btn-sm btn-outline-danger mt-4 delete-weight-btn" data-weight-id="<?= $weight['id']; ?>">
+                          <i class="fas fa-trash"></i> Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            
+            <!-- Add new weight section -->
+            <div class="card border-primary" style="background-color: #f8f9fa;">
+              <div class="card-body p-3">
+                <h6 class="mb-2">Add New Weight</h6>
+                <div class="row g-2 align-items-end">
+                  <div class="col-md-3">
+                    <label class="form-label small mb-1">Weight</label>
+                    <input type="number" id="newWeightValue" class="form-control form-control-sm" step="0.01" min="0.01" placeholder="Enter weight">
+                  </div>
+                  <div class="col-md-2">
+                    <label class="form-label small mb-1">Unit</label>
+                    <select id="newWeightUnit" class="form-select form-select-sm">
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label small mb-1">Price (₹)</label>
+                    <input type="number" id="newWeightPrice" class="form-control form-control-sm" step="0.01" min="0" placeholder="Enter price">
+                  </div>
+                  <div class="col-md-4">
+                    <button type="button" class="btn btn-primary btn-sm w-100" id="addNewWeightBtn">
+                      <i class="fas fa-plus"></i> Add Weight
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <input type="hidden" name="weights_data" id="weightsDataInput">
+            <input type="hidden" name="price" id="defaultPriceHidden">
+            <small class="text-muted d-block mt-2">Each weight can have its own price. Stock is managed via Batch Codes.</small>
           </div>
           <div class="mb-3">
             <label class="form-label">GST Rate (%)</label>
             <input type="number" class="form-control" name="gst_rate" value="<?= htmlspecialchars($product['gst_rate'] ?? 5.00); ?>" step="0.01" min="0" max="100" />
             <small class="text-muted">Default: 5% for food items. Enter 0 for no GST.</small>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Stock</label>
-            <input type="number" name="stock" class="form-control" min="0" value="<?= (int)$product['stock']; ?>" required />
           </div>
           <div class="col-md-6">
             <label class="form-label">EAN Number</label>
@@ -86,6 +159,179 @@ include __DIR__ . '/../includes/admin_header.php';
     </div>
   </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const productId = <?= $productId; ?>;
+  let weightsToDelete = [];
+  
+  // Handle weight value/unit/price changes
+  document.querySelectorAll('.weight-value, .weight-unit, .weight-price').forEach(input => {
+    input.addEventListener('change', function() {
+      console.log('Weight data changed for ID:', this.dataset.weightId);
+    });
+  });
+  
+  // Handle delete weight button
+  document.querySelectorAll('.delete-weight-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const weightId = this.dataset.weightId;
+      const card = this.closest('.card');
+      
+      if (confirm('Are you sure you want to delete this weight?')) {
+        weightsToDelete.push(weightId);
+        card.remove();
+        console.log('Weight marked for deletion:', weightId);
+      }
+    });
+  });
+  
+  // Handle set default button
+  document.querySelectorAll('.set-default-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const weightId = this.dataset.weightId;
+      
+      // Remove all default badges and show "Set Default" buttons
+      document.querySelectorAll('.badge.bg-primary').forEach(badge => {
+        const parent = badge.parentElement;
+        badge.remove();
+        parent.innerHTML = '<button type="button" class="btn btn-sm btn-outline-primary mt-4 set-default-btn" data-weight-id="' + parent.closest('.card').dataset.weightId + '">Set Default</button>';
+      });
+      
+      // Set this as default
+      this.parentElement.innerHTML = '<span class="badge bg-primary mt-4">Default</span>';
+      console.log('Set default weight:', weightId);
+    });
+  });
+  
+  // Handle add new weight
+  document.getElementById('addNewWeightBtn').addEventListener('click', function() {
+    const value = parseFloat(document.getElementById('newWeightValue').value);
+    const unit = document.getElementById('newWeightUnit').value;
+    const price = parseFloat(document.getElementById('newWeightPrice').value);
+    
+    if (!value || value <= 0) {
+      alert('Please enter a valid weight');
+      return;
+    }
+    
+    if (!price || price <= 0) {
+      alert('Please enter a valid price');
+      return;
+    }
+    
+    // Create new weight card
+    const container = document.getElementById('existingWeightsContainer');
+    const newCard = document.createElement('div');
+    newCard.className = 'card border-success mb-2';
+    newCard.dataset.weightId = 'new_' + Date.now();
+    newCard.dataset.isNew = 'true';
+    
+    newCard.innerHTML = `
+      <div class="card-body p-3">
+        <div class="row g-2 align-items-center">
+          <div class="col-md-3">
+            <label class="form-label small mb-1">Weight</label>
+            <input type="number" class="form-control form-control-sm weight-value" value="${value}" step="0.01" min="0.01" data-weight-id="${newCard.dataset.weightId}">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label small mb-1">Unit</label>
+            <select class="form-select form-select-sm weight-unit" data-weight-id="${newCard.dataset.weightId}">
+              <option value="g" ${unit === 'g' ? 'selected' : ''}>g</option>
+              <option value="kg" ${unit === 'kg' ? 'selected' : ''}>kg</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small mb-1">Price (₹)</label>
+            <input type="number" class="form-control form-control-sm weight-price" value="${price}" step="0.01" min="0" data-weight-id="${newCard.dataset.weightId}">
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-outline-primary mt-4 set-default-btn" data-weight-id="${newCard.dataset.weightId}">Set Default</button>
+          </div>
+          <div class="col-md-2">
+            <button type="button" class="btn btn-sm btn-outline-danger mt-4 delete-weight-btn" data-weight-id="${newCard.dataset.weightId}">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    container.appendChild(newCard);
+    
+    // Attach event listeners to new buttons
+    newCard.querySelector('.delete-weight-btn').addEventListener('click', function() {
+      if (confirm('Are you sure you want to delete this weight?')) {
+        newCard.remove();
+      }
+    });
+    
+    newCard.querySelector('.set-default-btn').addEventListener('click', function() {
+      document.querySelectorAll('.badge.bg-primary').forEach(badge => {
+        const parent = badge.parentElement;
+        badge.remove();
+        parent.innerHTML = '<button type="button" class="btn btn-sm btn-outline-primary mt-4 set-default-btn" data-weight-id="' + parent.closest('.card').dataset.weightId + '">Set Default</button>';
+      });
+      this.parentElement.innerHTML = '<span class="badge bg-primary mt-4">Default</span>';
+    });
+    
+    // Clear inputs
+    document.getElementById('newWeightValue').value = '';
+    document.getElementById('newWeightPrice').value = '';
+    document.getElementById('newWeightValue').focus();
+  });
+  
+  // Handle form submission
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Collect all weight data
+    const weightsData = [];
+    let defaultWeightId = null;
+    
+    document.querySelectorAll('#existingWeightsContainer .card').forEach(card => {
+      const weightId = card.dataset.weightId;
+      const isNew = card.dataset.isNew === 'true';
+      const value = parseFloat(card.querySelector('.weight-value').value);
+      const unit = card.querySelector('.weight-unit').value;
+      const price = parseFloat(card.querySelector('.weight-price').value);
+      const isDefault = card.querySelector('.badge.bg-primary') !== null;
+      
+      if (isDefault) {
+        defaultWeightId = weightId;
+      }
+      
+      weightsData.push({
+        id: isNew ? null : weightId,
+        value: value,
+        unit: unit,
+        display: value + ' ' + unit,
+        price: price,
+        is_default: isDefault ? 1 : 0,
+        is_new: isNew
+      });
+    });
+    
+    // Set hidden inputs
+    document.getElementById('weightsDataInput').value = JSON.stringify({
+      weights: weightsData,
+      deleted: weightsToDelete
+    });
+    
+    // Set default price
+    const defaultWeight = weightsData.find(w => w.is_default === 1);
+    if (defaultWeight) {
+      document.getElementById('defaultPriceHidden').value = defaultWeight.price;
+    }
+    
+    console.log('Submitting weights data:', weightsData);
+    console.log('Deleted weights:', weightsToDelete);
+    
+    // Submit form
+    this.submit();
+  });
+});
+</script>
 
 <?php
 include __DIR__ . '/../includes/admin_footer.php';
