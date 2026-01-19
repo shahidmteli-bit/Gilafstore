@@ -415,6 +415,9 @@ document.addEventListener('DOMContentLoaded', function() {
   document.querySelector('form[action*="admin_actions.php"]').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    console.log('Form submit - weightPrices array:', weightPrices);
+    console.log('weightPrices.length:', weightPrices.length);
+    
     // Clear previous validation errors
     document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
     
@@ -435,8 +438,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Validate weights and prices
+    console.log('Checking weightPrices.length:', weightPrices.length);
     if (weightPrices.length === 0) {
+      console.log('ERROR: No weights added');
       errors.push('Please add at least one weight with price');
+    } else {
+      console.log('SUCCESS: Weights found:', weightPrices);
     }
     
     // Validate images
