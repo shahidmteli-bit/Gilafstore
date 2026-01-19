@@ -13,7 +13,7 @@ $products = admin_get_products();
 $db = get_db_connection();
 $productWeights = [];
 foreach ($products as $product) {
-    $stmt = $db->prepare("SELECT display_weight, price FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+    $stmt = $db->prepare("SELECT id, display_weight, price FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
     $stmt->execute([$product['id']]);
     $productWeights[$product['id']] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -127,7 +127,7 @@ include __DIR__ . '/../includes/admin_header.php';
                       <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Edit
                       </button>
-                      <ul class="dropdown-menu">
+                      <ul class="dropdown-menu shadow-sm" style="min-width: 250px;">
                         <li><h6 class="dropdown-header">Edit Product</h6></li>
                         <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>">
                           <i class="fas fa-edit me-2"></i>Edit All Details
@@ -138,11 +138,14 @@ include __DIR__ . '/../includes/admin_header.php';
                           $weights = $productWeights[$product['id']] ?? [];
                           if (!empty($weights)):
                             foreach ($weights as $weight):
+                              // Ensure weight has required fields
+                              if (isset($weight['id']) && isset($weight['display_weight']) && isset($weight['price'])):
                         ?>
                           <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>">
-                            <i class="fas fa-weight me-2"></i><?= htmlspecialchars($weight['display_weight']); ?> - ₹<?= number_format($weight['price'], 2); ?>
+                            <i class="fas fa-weight me-2"></i><?= htmlspecialchars($weight['display_weight']); ?> - ₹<?= number_format((float)$weight['price'], 2); ?>
                           </a></li>
                         <?php 
+                              endif;
                             endforeach;
                           else:
                         ?>
