@@ -63,9 +63,9 @@ include __DIR__ . '/../includes/admin_header.php';
     <?php endif; ?>
 
     <div class="card shadow-3 border-0">
-      <div class="card-body">
-        <div class="table-responsive">
-          <table class="table align-middle mb-0" style="position: relative; z-index: 1;">
+      <div class="card-body" style="overflow: visible;">
+        <div class="table-responsive" style="overflow: visible;">
+          <table class="table align-middle mb-0">
             <thead class="table-light">
               <tr>
                 <th>Product</th>
@@ -77,7 +77,7 @@ include __DIR__ . '/../includes/admin_header.php';
             </thead>
             <tbody>
               <?php foreach ($products as $product): ?>
-                <tr style="position: relative; z-index: auto;">
+                <tr>
                   <td>
                     <div class="d-flex align-items-center gap-3">
                       <img src="<?= asset_url('images/products/' . ltrim($product['image'], '/')); ?>" alt="<?= htmlspecialchars($product['name']); ?>" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
