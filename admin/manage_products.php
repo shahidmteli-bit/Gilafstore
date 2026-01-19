@@ -223,6 +223,30 @@ include __DIR__ . '/../includes/admin_header.php';
   </div>
 </div>
 
+<!-- Delete Weight Confirmation Modal -->
+<div class="modal fade" id="deleteWeightModal" tabindex="-1" aria-labelledby="deleteWeightModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteWeightModalLabel">
+          <i class="fas fa-exclamation-triangle me-2"></i>Confirm Delete
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">Are you sure you want to remove <strong id="deleteWeightText">this weight</strong> from the product?</p>
+        <p class="text-muted small mb-0 mt-2">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteWeight">
+          <i class="fas fa-trash me-1"></i>Delete Weight
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?php include 'pricing_modal.php'; ?>
 
 <script>
@@ -250,11 +274,30 @@ document.addEventListener('DOMContentLoaded', function() {
     updateRemoveButtons();
   });
   
-  // Remove weight row
+  // Remove weight row with confirmation
+  let weightToRemove = null;
+  
   weightsContainer.addEventListener('click', function(e) {
     if (e.target.closest('.remove-weight')) {
-      e.target.closest('.weight-input-row').remove();
+      weightToRemove = e.target.closest('.weight-input-row');
+      const weightValue = weightToRemove.querySelector('.weight-value').value;
+      const weightUnit = weightToRemove.querySelector('.weight-unit').value;
+      const displayWeight = weightValue && weightUnit ? `${weightValue} ${weightUnit}` : 'this weight';
+      
+      // Show confirmation modal
+      document.getElementById('deleteWeightText').textContent = displayWeight;
+      const deleteModal = new bootstrap.Modal(document.getElementById('deleteWeightModal'));
+      deleteModal.show();
+    }
+  });
+  
+  // Confirm delete weight
+  document.getElementById('confirmDeleteWeight').addEventListener('click', function() {
+    if (weightToRemove) {
+      weightToRemove.remove();
       updateRemoveButtons();
+      weightToRemove = null;
+      bootstrap.Modal.getInstance(document.getElementById('deleteWeightModal')).hide();
     }
   });
   
