@@ -80,6 +80,32 @@ try {
                 throw new Exception('Batch code already exists. Please use a unique code.');
             }
             
+            // Phase 2B: Check for duplicate batch (same product, weight, MFG, EXP)
+            $weightId = !empty($_POST['weight_id']) ? (int)$_POST['weight_id'] : null;
+            
+            $duplicateCheck = $db->prepare("
+                SELECT batch_code, status 
+                FROM batch_codes 
+                WHERE product_id = :product_id 
+                AND net_weight = :net_weight 
+                AND manufacturing_date = :mfg_date 
+                AND expiry_date = :exp_date
+                AND is_active = 1
+                LIMIT 1
+            ");
+            
+            $duplicateCheck->execute([
+                ':product_id' => $productId,
+                ':net_weight' => $netWeight,
+                ':mfg_date' => $mfgDate,
+                ':exp_date' => $expDate
+            ]);
+            
+            $duplicate = $duplicateCheck->fetch(PDO::FETCH_ASSOC);
+            if ($duplicate) {
+                throw new Exception('DUPLICATE_BATCH|Batch already created for this product with same weight, manufacturing date, and expiry date. Existing batch: ' . $duplicate['batch_code'] . ' (Status: ' . ucfirst($duplicate['status']) . ')');
+            }
+            
             // Handle lab report file upload
             $labReportFile = null;
             if ($hasLabReport && !empty($_FILES['lab_report_file']['name'])) {

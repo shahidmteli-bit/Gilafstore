@@ -491,7 +491,7 @@ body {
                 <h5 class="modal-title"><i class="fas fa-barcode"></i> Generate New Batch Code</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <form action="<?= base_url('admin/batch_actions.php'); ?>" method="post" enctype="multipart/form-data">
+            <form action="<?= base_url('admin/batch_actions.php'); ?>" method="post" enctype="multipart/form-data" id="addBatchForm">
                 <div class="modal-body">
                     <input type="hidden" name="action" value="create">
                     
@@ -534,17 +534,23 @@ body {
                         
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Net Weight *</label>
-                            <input type="text" name="net_weight" id="netWeightInput" class="form-control" placeholder="Auto-filled from product" readonly required style="background-color: #f8f9fa;">
-                            <small class="text-muted">Automatically populated from product</small>
+                            <select name="weight_id" id="weightSelect" class="form-select" required onchange="updateNetWeight(); generateBatchCode();">
+                                <option value="">Select product first...</option>
+                            </select>
+                            <input type="hidden" name="net_weight" id="netWeightHidden" value="">
+                            <small class="text-muted">Select from available product weights</small>
                         </div>
                     </div>
                     <input type="hidden" name="category_id" id="categoryIdHidden" value="">
                     <input type="hidden" name="product_name" id="productNameHidden" value="">
                     
+                    <!-- Active Batches Display -->
+                    <div id="activeBatchesContainer" class="mb-3"></div>
+                    
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Manufacturing Date *</label>
-                            <input type="date" name="manufacturing_date" id="mfgDateInput" class="form-control" required onchange="generateBatchCode()">
+                            <input type="date" name="manufacturing_date" id="mfgDateInput" class="form-control" required onchange="generateBatchCode(); calculateExpiryFromShelfLife();">
                         </div>
                         
                         <div class="col-md-4 mb-3">
@@ -560,8 +566,24 @@ body {
                         </div>
                         
                         <div class="col-md-4 mb-3">
+                            <label class="form-label">Shelf Life (Optional)</label>
+                            <div class="input-group">
+                                <input type="number" id="shelfLifeValue" class="form-control" placeholder="Enter shelf life" min="1" onchange="calculateExpiryFromShelfLife()">
+                                <select id="shelfLifeUnit" class="form-select" style="max-width: 100px;" onchange="calculateExpiryFromShelfLife()">
+                                    <option value="days">Days</option>
+                                    <option value="months" selected>Months</option>
+                                    <option value="years">Years</option>
+                                </select>
+                            </div>
+                            <small class="text-muted">Auto-calculate expiry date</small>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
                             <label class="form-label">Expiry Date *</label>
-                            <input type="date" name="expiry_date" class="form-control" required>
+                            <input type="date" name="expiry_date" id="expiryDateInput" class="form-control" required>
+                            <small class="text-muted">Set manually or use shelf life calculator above</small>
                         </div>
                     </div>
                     
@@ -658,6 +680,8 @@ body {
         </div>
     </div>
 </div>
+
+<?php include 'duplicate_batch_modal.php'; ?>
 
 <!-- Edit Batch Modal -->
 <div class="modal fade" id="editBatchModal" tabindex="-1">
@@ -770,17 +794,123 @@ function loadProductsByCode() {
 function loadProductDetails() {
     const productSelect = document.getElementById('productSelect');
     const selectedOption = productSelect.options[productSelect.selectedIndex];
+    const weightSelect = document.getElementById('weightSelect');
     
     if (selectedOption.value) {
+        const productId = selectedOption.value;
         const productName = selectedOption.getAttribute('data-name');
-        const netWeight = selectedOption.getAttribute('data-weight');
         
         document.getElementById('productNameHidden').value = productName || '';
-        document.getElementById('netWeightInput').value = netWeight || '';
+        
+        // Load weights for this product via AJAX
+        fetch('<?= base_url('admin/get_product_weights.php'); ?>?product_id=' + productId)
+            .then(response => response.json())
+            .then(data => {
+                weightSelect.innerHTML = '<option value="">Select weight...</option>';
+                
+                if (data.success && data.weights.length > 0) {
+                    data.weights.forEach(weight => {
+                        const option = document.createElement('option');
+                        option.value = weight.id;
+                        option.textContent = weight.display_weight;
+                        option.setAttribute('data-weight', weight.display_weight);
+                        if (weight.is_default == 1) {
+                            option.selected = true;
+                        }
+                        weightSelect.appendChild(option);
+                    });
+                    
+                    // Trigger weight update if default selected
+                    if (weightSelect.value) {
+                        updateNetWeight();
+                    }
+                } else {
+                    weightSelect.innerHTML = '<option value="">No weights available</option>';
+                }
+                
+                // Load active batches for this product
+                loadActiveBatches(productId);
+            })
+            .catch(error => {
+                console.error('Error loading weights:', error);
+                weightSelect.innerHTML = '<option value="">Error loading weights</option>';
+            });
     } else {
         document.getElementById('productNameHidden').value = '';
-        document.getElementById('netWeightInput').value = '';
+        weightSelect.innerHTML = '<option value="">Select product first...</option>';
+        document.getElementById('netWeightHidden').value = '';
+        document.getElementById('activeBatchesContainer').innerHTML = '';
     }
+}
+
+// Update hidden net_weight field when weight is selected
+function updateNetWeight() {
+    const weightSelect = document.getElementById('weightSelect');
+    const selectedOption = weightSelect.options[weightSelect.selectedIndex];
+    
+    if (selectedOption.value) {
+        const displayWeight = selectedOption.getAttribute('data-weight');
+        document.getElementById('netWeightHidden').value = displayWeight || '';
+    } else {
+        document.getElementById('netWeightHidden').value = '';
+    }
+}
+
+// Load active batches for selected product
+function loadActiveBatches(productId) {
+    fetch('<?= base_url('admin/get_active_batches.php'); ?>?product_id=' + productId)
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('activeBatchesContainer');
+            
+            if (data.success && data.batches.length > 0) {
+                let html = '<div class="alert alert-info"><strong>Active Batches for this Product:</strong><ul class="mb-0 mt-2">';
+                data.batches.forEach(batch => {
+                    html += `<li><strong>${batch.product_name} ${batch.net_weight}</strong> = ${batch.batch_code} (${batch.status})</li>`;
+                });
+                html += '</ul></div>';
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = '<div class="alert alert-secondary"><small>No active batches found for this product.</small></div>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading active batches:', error);
+        });
+}
+
+// Shelf life calculator
+function calculateExpiryFromShelfLife() {
+    const mfgDate = document.getElementById('mfgDateInput').value;
+    const shelfLifeValue = parseInt(document.getElementById('shelfLifeValue').value);
+    const shelfLifeUnit = document.getElementById('shelfLifeUnit').value;
+    const expiryInput = document.getElementById('expiryDateInput');
+    
+    if (!mfgDate || !shelfLifeValue || shelfLifeValue <= 0) {
+        return;
+    }
+    
+    const mfg = new Date(mfgDate);
+    let expiry = new Date(mfg);
+    
+    switch(shelfLifeUnit) {
+        case 'days':
+            expiry.setDate(expiry.getDate() + shelfLifeValue);
+            break;
+        case 'months':
+            expiry.setMonth(expiry.getMonth() + shelfLifeValue);
+            break;
+        case 'years':
+            expiry.setFullYear(expiry.getFullYear() + shelfLifeValue);
+            break;
+    }
+    
+    // Format date as YYYY-MM-DD for input
+    const year = expiry.getFullYear();
+    const month = String(expiry.getMonth() + 1).padStart(2, '0');
+    const day = String(expiry.getDate()).padStart(2, '0');
+    
+    expiryInput.value = `${year}-${month}-${day}`;
 }
 
 // Auto-generate Batch Code
@@ -1549,6 +1679,56 @@ function closeReleaseForSaleModal() {
         setTimeout(() => modal.remove(), 300);
     }
 }
+
+// Phase 2B: Handle duplicate batch detection
+document.addEventListener('DOMContentLoaded', function() {
+    const addBatchForm = document.getElementById('addBatchForm');
+    
+    if (addBatchForm) {
+        addBatchForm.addEventListener('submit', function(e) {
+            // Form will submit normally, but we check for errors in URL params after redirect
+        });
+    }
+    
+    // Check for duplicate batch error in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    
+    if (error && error.startsWith('DUPLICATE_BATCH')) {
+        const parts = error.split('|');
+        if (parts.length > 1) {
+            const message = parts[1];
+            
+            // Extract batch code and status from message
+            const batchCodeMatch = message.match(/Existing batch: ([^\s]+)/);
+            const statusMatch = message.match(/Status: ([^)]+)/);
+            
+            // Get form data from URL params
+            const productName = urlParams.get('product_name') || 'Unknown Product';
+            const netWeight = urlParams.get('net_weight') || 'Unknown';
+            const mfgDate = urlParams.get('mfg_date') || 'Unknown';
+            const expDate = urlParams.get('exp_date') || 'Unknown';
+            
+            // Populate modal
+            document.getElementById('dupProduct').textContent = productName;
+            document.getElementById('dupWeight').textContent = netWeight;
+            document.getElementById('dupMfgDate').textContent = mfgDate;
+            document.getElementById('dupExpDate').textContent = expDate;
+            document.getElementById('dupBatchCode').textContent = batchCodeMatch ? batchCodeMatch[1] : 'Unknown';
+            document.getElementById('dupStatus').textContent = statusMatch ? statusMatch[1] : 'Active';
+            
+            // Show modal
+            const duplicateModal = new bootstrap.Modal(document.getElementById('duplicateBatchModal'));
+            duplicateModal.show();
+            
+            // Clean URL after showing modal
+            duplicateModal._element.addEventListener('hidden.bs.modal', function() {
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+            });
+        }
+    }
+});
 </script>
 
 <?php include __DIR__ . '/../includes/admin_footer.php'; ?>
