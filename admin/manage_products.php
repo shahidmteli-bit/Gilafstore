@@ -431,7 +431,13 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Form validation and submission
-  document.querySelector('form[action*="admin_actions.php"]').addEventListener('submit', function(e) {
+  const addProductForm = document.querySelector('#addProductModal form');
+  if (!addProductForm) {
+    console.error('Add product form not found!');
+    return;
+  }
+  
+  addProductForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
     console.log('Form submit - weightPrices array:', weightPrices);
