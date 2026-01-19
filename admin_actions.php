@@ -127,8 +127,10 @@ try {
             // Create product with default weight and price
             $productId = admin_create_product([
                 'name' => $name,
+                'description' => '', // Empty description - not used in new system
                 'category_id' => $categoryId,
                 'price' => $defaultPrice,
+                'stock' => $stockQuantity,
                 'stock_quantity' => $stockQuantity,
                 'image_1' => $image1,
                 'image_2' => $image2,
