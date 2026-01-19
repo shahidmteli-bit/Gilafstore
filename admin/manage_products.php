@@ -350,6 +350,10 @@ document.addEventListener('DOMContentLoaded', function() {
       price: price
     });
     
+    console.log('✅ Weight added to array:', {value, unit, price});
+    console.log('Current weightPrices array:', weightPrices);
+    console.log('Array length:', weightPrices.length);
+    
     // Clear inputs
     newWeightValue.value = '';
     newWeightPrice.value = '';
