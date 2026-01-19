@@ -65,7 +65,7 @@ include __DIR__ . '/../includes/admin_header.php';
     <div class="card shadow-3 border-0">
       <div class="card-body">
         <div class="table-responsive">
-          <table class="table align-middle mb-0">
+          <table class="table align-middle mb-0" style="position: relative; z-index: 1;">
             <thead class="table-light">
               <tr>
                 <th>Product</th>
@@ -77,7 +77,7 @@ include __DIR__ . '/../includes/admin_header.php';
             </thead>
             <tbody>
               <?php foreach ($products as $product): ?>
-                <tr>
+                <tr style="position: relative; z-index: auto;">
                   <td>
                     <div class="d-flex align-items-center gap-3">
                       <img src="<?= asset_url('images/products/' . ltrim($product['image'], '/')); ?>" alt="<?= htmlspecialchars($product['name']); ?>" class="rounded" style="width: 60px; height: 60px; object-fit: cover;" />
@@ -127,7 +127,7 @@ include __DIR__ . '/../includes/admin_header.php';
                       <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Edit
                       </button>
-                      <ul class="dropdown-menu shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0;">
+                      <ul class="dropdown-menu shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0; z-index: 1050; position: absolute;">
                         <li><h6 class="dropdown-header" style="color: #495057; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px;">Edit Product</h6></li>
                         <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>" style="padding: 10px 16px; font-size: 14px; color: #212529;">
                           <i class="fas fa-edit me-2" style="color: #0d6efd; width: 18px;"></i>Edit All Details
