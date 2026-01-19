@@ -127,7 +127,7 @@ include __DIR__ . '/../includes/admin_header.php';
                       <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Edit
                       </button>
-                      <ul class="dropdown-menu shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0; z-index: 1050; position: absolute;">
+                      <ul class="dropdown-menu shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0; z-index: 1050; position: absolute; background-color: #ffffff; border: 1px solid rgba(0,0,0,0.15);">
                         <li><h6 class="dropdown-header" style="color: #495057; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px;">Edit Product</h6></li>
                         <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>" style="padding: 10px 16px; font-size: 14px; color: #212529;">
                           <i class="fas fa-edit me-2" style="color: #0d6efd; width: 18px;"></i>Edit All Details
