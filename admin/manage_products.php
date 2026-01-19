@@ -437,7 +437,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Validate weights and prices
     if (weightPrices.length === 0) {
       errors.push('Please add at least one weight with price');
-      newWeightValue.classList.add('is-invalid');
     }
     
     // Validate images
