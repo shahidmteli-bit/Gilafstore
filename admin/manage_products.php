@@ -165,11 +165,11 @@ include __DIR__ . '/../includes/admin_header.php';
             </div>
             <div class="col-md-12">
               <label class="form-label">Product Weights</label>
-              <div id="weightsContainer">
-                <div class="weight-input-row mb-2">
-                  <div class="input-group">
-                    <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required />
-                    <select class="form-select weight-unit" style="max-width: 100px;" required>
+              <div id="weightsContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                <div class="weight-input-row">
+                  <div class="input-group" style="width: auto;">
+                    <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required style="width: 120px;" />
+                    <select class="form-select weight-unit" style="width: 70px;" required>
                       <option value="g">g</option>
                       <option value="kg">kg</option>
                     </select>
@@ -177,9 +177,9 @@ include __DIR__ . '/../includes/admin_header.php';
                   </div>
                 </div>
               </div>
-              <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addWeightBtn"><i class="fas fa-plus"></i> Add Weight</button>
+              <button type="button" class="btn btn-outline-primary btn-sm" id="addWeightBtn"><i class="fas fa-plus"></i> ADD WEIGHT</button>
               <input type="hidden" name="weights" id="weightsData" />
-              <small class="text-muted d-block mt-1">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
+              <small class="text-muted d-block mt-2">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
             </div>
             <div class="col-md-12">
               <label class="form-label">Product Price</label>
@@ -235,11 +235,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Add new weight input row
   addWeightBtn.addEventListener('click', function() {
     const newRow = document.createElement('div');
-    newRow.className = 'weight-input-row mb-2';
+    newRow.className = 'weight-input-row';
     newRow.innerHTML = `
-      <div class="input-group">
-        <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required />
-        <select class="form-select weight-unit" style="max-width: 100px;" required>
+      <div class="input-group" style="width: auto;">
+        <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required style="width: 120px;" />
+        <select class="form-select weight-unit" style="width: 70px;" required>
           <option value="g">g</option>
           <option value="kg">kg</option>
         </select>
