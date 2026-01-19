@@ -165,21 +165,23 @@ include __DIR__ . '/../includes/admin_header.php';
             </div>
             <div class="col-md-12">
               <label class="form-label">Product Weights</label>
-              <div id="weightsContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-                <div class="weight-input-row">
-                  <div class="input-group" style="width: auto;">
-                    <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required style="width: 120px;" />
-                    <select class="form-select weight-unit" style="width: 70px;" required>
-                      <option value="g">g</option>
-                      <option value="kg">kg</option>
-                    </select>
-                    <button type="button" class="btn btn-outline-danger remove-weight" disabled><i class="fas fa-times"></i></button>
-                  </div>
-                </div>
+              <!-- Display added weights as badges -->
+              <div id="weightBadgesContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; min-height: 40px;">
+                <!-- Weight badges will appear here -->
               </div>
-              <button type="button" class="btn btn-outline-primary btn-sm" id="addWeightBtn"><i class="fas fa-plus"></i> ADD WEIGHT</button>
+              <!-- Single input for adding new weight -->
+              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                <input type="number" id="newWeightValue" class="form-control" step="0.01" min="0.01" placeholder="Enter weight" style="width: 140px;" />
+                <select id="newWeightUnit" class="form-select" style="width: 80px;">
+                  <option value="g">g</option>
+                  <option value="kg">kg</option>
+                </select>
+                <button type="button" class="btn btn-outline-primary btn-sm" id="addWeightBtn">
+                  <i class="fas fa-plus"></i> ADD WEIGHT
+                </button>
+              </div>
               <input type="hidden" name="weights" id="weightsData" />
-              <small class="text-muted d-block mt-2">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
+              <small class="text-muted d-block">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
             </div>
             <div class="col-md-12">
               <label class="form-label">Product Price</label>
@@ -250,42 +252,72 @@ include __DIR__ . '/../includes/admin_header.php';
 <?php include 'pricing_modal.php'; ?>
 
 <script>
-// Multiple Weights Management
+// Weight Badge Management System
 document.addEventListener('DOMContentLoaded', function() {
-  const weightsContainer = document.getElementById('weightsContainer');
+  const badgesContainer = document.getElementById('weightBadgesContainer');
   const addWeightBtn = document.getElementById('addWeightBtn');
+  const newWeightValue = document.getElementById('newWeightValue');
+  const newWeightUnit = document.getElementById('newWeightUnit');
   const weightsDataInput = document.getElementById('weightsData');
   
-  // Add new weight input row
+  let weights = []; // Array to store all weights
+  let weightToDelete = null;
+  
+  // Add new weight as badge
   addWeightBtn.addEventListener('click', function() {
-    const newRow = document.createElement('div');
-    newRow.className = 'weight-input-row';
-    newRow.innerHTML = `
-      <div class="input-group" style="width: auto;">
-        <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required style="width: 120px;" />
-        <select class="form-select weight-unit" style="width: 70px;" required>
-          <option value="g">g</option>
-          <option value="kg">kg</option>
-        </select>
-        <button type="button" class="btn btn-outline-danger remove-weight"><i class="fas fa-times"></i></button>
-      </div>
-    `;
-    weightsContainer.appendChild(newRow);
-    updateRemoveButtons();
+    const value = parseFloat(newWeightValue.value);
+    const unit = newWeightUnit.value;
+    
+    if (!value || value <= 0) {
+      alert('Please enter a valid weight');
+      return;
+    }
+    
+    const displayWeight = value + ' ' + unit;
+    
+    // Check for duplicate
+    if (weights.some(w => w.value === value && w.unit === unit)) {
+      alert('This weight already exists');
+      return;
+    }
+    
+    // Add to weights array
+    weights.push({ value: value, unit: unit, display: displayWeight });
+    
+    // Clear input
+    newWeightValue.value = '';
+    newWeightValue.focus();
+    
+    // Render badges
+    renderWeightBadges();
   });
   
-  // Remove weight row with confirmation
-  let weightToRemove = null;
+  // Render weight badges
+  function renderWeightBadges() {
+    badgesContainer.innerHTML = '';
+    
+    weights.forEach((weight, index) => {
+      const badge = document.createElement('div');
+      badge.className = 'badge bg-light text-dark border d-flex align-items-center gap-2';
+      badge.style.padding = '8px 12px';
+      badge.style.fontSize = '14px';
+      badge.style.fontWeight = '500';
+      badge.innerHTML = `
+        <span>${weight.display}</span>
+        <button type="button" class="btn-close btn-close-sm" data-index="${index}" style="font-size: 10px; padding: 0; width: 12px; height: 12px;"></button>
+      `;
+      badgesContainer.appendChild(badge);
+    });
+  }
   
-  weightsContainer.addEventListener('click', function(e) {
-    if (e.target.closest('.remove-weight')) {
-      weightToRemove = e.target.closest('.weight-input-row');
-      const weightValue = weightToRemove.querySelector('.weight-value').value;
-      const weightUnit = weightToRemove.querySelector('.weight-unit').value;
-      const displayWeight = weightValue && weightUnit ? `${weightValue} ${weightUnit}` : 'this weight';
+  // Remove weight badge with confirmation
+  badgesContainer.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-close')) {
+      const index = parseInt(e.target.dataset.index);
+      weightToDelete = index;
       
       // Show confirmation modal
-      document.getElementById('deleteWeightText').textContent = displayWeight;
+      document.getElementById('deleteWeightText').textContent = weights[index].display;
       const deleteModal = new bootstrap.Modal(document.getElementById('deleteWeightModal'));
       deleteModal.show();
     }
@@ -293,40 +325,24 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Confirm delete weight
   document.getElementById('confirmDeleteWeight').addEventListener('click', function() {
-    if (weightToRemove) {
-      weightToRemove.remove();
-      updateRemoveButtons();
-      weightToRemove = null;
+    if (weightToDelete !== null) {
+      weights.splice(weightToDelete, 1);
+      renderWeightBadges();
+      weightToDelete = null;
       bootstrap.Modal.getInstance(document.getElementById('deleteWeightModal')).hide();
     }
   });
   
-  // Update remove buttons state (disable if only one weight)
-  function updateRemoveButtons() {
-    const rows = weightsContainer.querySelectorAll('.weight-input-row');
-    const removeButtons = weightsContainer.querySelectorAll('.remove-weight');
-    removeButtons.forEach(btn => {
-      btn.disabled = rows.length === 1;
-    });
-  }
+  // Allow Enter key to add weight
+  newWeightValue.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addWeightBtn.click();
+    }
+  });
   
   // Collect weights data before form submission
   document.querySelector('form[action*="admin_actions.php"]').addEventListener('submit', function(e) {
-    const weights = [];
-    const rows = weightsContainer.querySelectorAll('.weight-input-row');
-    
-    rows.forEach(row => {
-      const value = row.querySelector('.weight-value').value;
-      const unit = row.querySelector('.weight-unit').value;
-      if (value && parseFloat(value) > 0) {
-        weights.push({
-          value: parseFloat(value),
-          unit: unit,
-          display: value + ' ' + unit
-        });
-      }
-    });
-    
     if (weights.length === 0) {
       e.preventDefault();
       alert('Please add at least one weight for the product');
