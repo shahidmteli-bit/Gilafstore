@@ -175,6 +175,45 @@ include __DIR__ . '/../includes/admin_header.php';
   </div>
 </section>
 
+<!-- Dropdown Backdrop -->
+<div id="dropdownBackdrop" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.95); z-index: 1040;"></div>
+
+<style>
+  .btn-group.show .dropdown-menu {
+    z-index: 1060 !important;
+  }
+  .btn-group.show {
+    position: relative;
+    z-index: 1050 !important;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const backdrop = document.getElementById('dropdownBackdrop');
+  
+  // Show backdrop when any edit dropdown opens
+  document.querySelectorAll('.btn-group .dropdown-toggle').forEach(function(toggle) {
+    toggle.addEventListener('show.bs.dropdown', function() {
+      backdrop.style.display = 'block';
+      this.closest('.btn-group').style.zIndex = '1050';
+    });
+    
+    toggle.addEventListener('hide.bs.dropdown', function() {
+      backdrop.style.display = 'none';
+      this.closest('.btn-group').style.zIndex = '';
+    });
+  });
+  
+  // Close dropdown when clicking backdrop
+  backdrop.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown-menu.show').forEach(function(menu) {
+      bootstrap.Dropdown.getInstance(menu.previousElementSibling)?.hide();
+    });
+  });
+});
+</script>
+
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
