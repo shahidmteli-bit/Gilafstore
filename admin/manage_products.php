@@ -141,8 +141,8 @@ include __DIR__ . '/../includes/admin_header.php';
                               // Ensure weight has required fields
                               if (isset($weight['id']) && isset($weight['display_weight']) && isset($weight['price'])):
                         ?>
-                          <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>">
-                            <i class="fas fa-weight me-2"></i><?= htmlspecialchars($weight['display_weight']); ?> - ₹<?= number_format((float)$weight['price'], 2); ?>
+                          <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>" target="_blank" style="font-size: 14px; padding: 8px 16px;">
+                            <i class="fas fa-weight me-2"></i><strong><?= htmlspecialchars($weight['display_weight']); ?></strong> - ₹<?= number_format((float)$weight['price'], 2); ?>
                           </a></li>
                         <?php 
                               endif;
