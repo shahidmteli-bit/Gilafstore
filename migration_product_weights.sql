@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `product_weights` (
   `weight_value` DECIMAL(10,2) NOT NULL,
   `weight_unit` VARCHAR(10) NOT NULL DEFAULT 'g',
   `display_weight` VARCHAR(50) NOT NULL,
+  `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00,
   `is_default` TINYINT(1) DEFAULT 0,
   `sort_order` INT(11) DEFAULT 0,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
