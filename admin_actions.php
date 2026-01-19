@@ -87,24 +87,31 @@ try {
     switch ($action) {
         case 'create_product':
             $name = trim($_POST['name'] ?? '');
-            $description = trim($_POST['description'] ?? '');
             $categoryId = (int)($_POST['category_id'] ?? 0);
-            $costPrice = (float)($_POST['cost_price'] ?? 0);
-            $sellingPrice = (float)($_POST['selling_price'] ?? 0);
+            $price = (float)($_POST['price'] ?? 0);
             $stockQuantity = (int)($_POST['stock_quantity'] ?? 0);
-            $highlights = trim($_POST['highlights'] ?? '');
+            $weightsJson = trim($_POST['weights'] ?? '');
             
-            // Handle weight from new simplified form
-            $weightValue = (float)($_POST['weight_value'] ?? 0);
-            $weightUnit = trim($_POST['weight_unit'] ?? 'g');
-            $netWeight = $weightValue > 0 ? $weightValue . $weightUnit : '';
-            
-            // Set unit_type to net_weight by default (since we only use weight now)
-            $unitType = 'net_weight';
-
-            if ($name === '' || $description === '' || !$categoryId || $costPrice < 0 || $sellingPrice < 0 || $stockQuantity < 0) {
+            // Validate basic fields
+            if ($name === '' || !$categoryId) {
                 throw new RuntimeException('Please fill in all product fields correctly');
             }
+            
+            // Validate and parse weights JSON
+            $weights = [];
+            if ($weightsJson) {
+                $weights = json_decode($weightsJson, true);
+                if (!is_array($weights) || empty($weights)) {
+                    throw new RuntimeException('Please add at least one weight with price');
+                }
+            } else {
+                throw new RuntimeException('Please add at least one weight with price');
+            }
+            
+            // Get default weight and price from first weight
+            $defaultWeight = $weights[0];
+            $netWeight = $defaultWeight['display'];
+            $defaultPrice = $defaultWeight['price'];
 
             // Handle image uploads (minimum 2, maximum 4)
             $image1 = handle_file_upload($_FILES['image_1'] ?? []);
@@ -117,24 +124,44 @@ try {
                 throw new RuntimeException('At least 2 product images are required');
             }
 
-            admin_create_product([
+            // Create product with default weight and price
+            $productId = admin_create_product([
                 'name' => $name,
-                'description' => $description,
                 'category_id' => $categoryId,
-                'unit_type' => $unitType,
-                'cost_price' => $costPrice,
-                'selling_price' => $sellingPrice,
-                'price' => $sellingPrice, // Keep for backward compatibility
+                'price' => $defaultPrice,
                 'stock_quantity' => $stockQuantity,
-                'stock' => $stockQuantity, // Keep for backward compatibility
                 'image_1' => $image1,
                 'image_2' => $image2,
                 'image_3' => $image3,
                 'image_4' => $image4,
-                'image' => $image1, // Keep for backward compatibility
-                'highlights' => $highlights,
+                'image' => $image1,
                 'net_weight' => $netWeight,
             ]);
+            
+            // Insert all weights into product_weights table
+            if ($productId) {
+                $db = get_db_connection();
+                
+                foreach ($weights as $index => $weight) {
+                    $isDefault = ($index === 0) ? 1 : 0;
+                    
+                    $stmt = $db->prepare("
+                        INSERT INTO product_weights 
+                        (product_id, weight_value, weight_unit, display_weight, price, is_default, sort_order)
+                        VALUES (:product_id, :weight_value, :weight_unit, :display_weight, :price, :is_default, :sort_order)
+                    ");
+                    
+                    $stmt->execute([
+                        ':product_id' => $productId,
+                        ':weight_value' => $weight['value'],
+                        ':weight_unit' => $weight['unit'],
+                        ':display_weight' => $weight['display'],
+                        ':price' => $weight['price'],
+                        ':is_default' => $isDefault,
+                        ':sort_order' => $index
+                    ]);
+                }
+            }
 
             redirect_with_message('/admin/manage_products.php', 'Product created successfully');
             break;
