@@ -183,9 +183,20 @@ include __DIR__ . '/../includes/admin_header.php';
     pointer-events: none;
   }
 
+  /* Active row (with open Edit dropdown) remains fully interactive and on top */
   tbody.edit-dropdown-locked tr.edit-dropdown-active-row,
   tbody.edit-dropdown-locked tr.edit-dropdown-active-row * {
     pointer-events: auto;
+  }
+
+  /* Visually hide inactive rows while dropdown is open (layout unchanged) */
+  tbody.edit-dropdown-locked tr:not(.edit-dropdown-active-row) {
+    opacity: 0;
+  }
+
+  tbody.edit-dropdown-locked tr.edit-dropdown-active-row {
+    position: relative;
+    z-index: 2;
   }
 </style>
 
