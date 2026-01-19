@@ -127,13 +127,13 @@ include __DIR__ . '/../includes/admin_header.php';
                       <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Edit
                       </button>
-                      <ul class="dropdown-menu shadow-sm" style="min-width: 250px;">
-                        <li><h6 class="dropdown-header">Edit Product</h6></li>
-                        <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>">
-                          <i class="fas fa-edit me-2"></i>Edit All Details
+                      <ul class="dropdown-menu shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0;">
+                        <li><h6 class="dropdown-header" style="color: #495057; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px;">Edit Product</h6></li>
+                        <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>" style="padding: 10px 16px; font-size: 14px; color: #212529;">
+                          <i class="fas fa-edit me-2" style="color: #0d6efd; width: 18px;"></i>Edit All Details
                         </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><h6 class="dropdown-header">Edit By Weight</h6></li>
+                        <li><hr class="dropdown-divider" style="margin: 8px 0;"></li>
+                        <li><h6 class="dropdown-header" style="color: #495057; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 16px;">Edit By Weight</h6></li>
                         <?php 
                           $weights = $productWeights[$product['id']] ?? [];
                           if (!empty($weights)):
@@ -141,15 +141,16 @@ include __DIR__ . '/../includes/admin_header.php';
                               // Ensure weight has required fields
                               if (isset($weight['id']) && isset($weight['display_weight']) && isset($weight['price'])):
                         ?>
-                          <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>" target="_blank" style="font-size: 14px; padding: 8px 16px;">
-                            <i class="fas fa-weight me-2"></i><strong><?= htmlspecialchars($weight['display_weight']); ?></strong> - ₹<?= number_format((float)$weight['price'], 2); ?>
+                          <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>" style="padding: 10px 16px; font-size: 14px; color: #212529; display: flex; align-items: center; justify-content: space-between;">
+                            <span><i class="fas fa-weight me-2" style="color: #6c757d; width: 18px;"></i><strong style="color: #0d6efd;"><?= htmlspecialchars($weight['display_weight']); ?></strong></span>
+                            <span style="color: #198754; font-weight: 600;">₹<?= number_format((float)$weight['price'], 2); ?></span>
                           </a></li>
                         <?php 
                               endif;
                             endforeach;
                           else:
                         ?>
-                          <li><span class="dropdown-item text-muted">No weights available</span></li>
+                          <li><span class="dropdown-item text-muted" style="padding: 10px 16px; font-size: 14px;">No weights available</span></li>
                         <?php endif; ?>
                       </ul>
                     </div>
