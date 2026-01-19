@@ -277,6 +277,15 @@ let weightToDelete = null;
 console.log('=== PRODUCT ADD SCRIPT LOADED - VERSION 2.0 ===');
 console.log('Script timestamp:', '<?= date('Y-m-d H:i:s'); ?>');
 
+// TEMPORARY: Visible confirmation that new code loaded
+setTimeout(function() {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#00ff00;color:#000;padding:10px;text-align:center;z-index:99999;font-weight:bold;';
+  banner.textContent = '✅ NEW CODE LOADED - VERSION 2.0 - ' + '<?= date('H:i:s'); ?>';
+  document.body.appendChild(banner);
+  setTimeout(() => banner.remove(), 3000);
+}, 500);
+
 document.addEventListener('DOMContentLoaded', function() {
   const cardsContainer = document.getElementById('weightPriceCardsContainer');
   const addWeightBtn = document.getElementById('addWeightBtn');
