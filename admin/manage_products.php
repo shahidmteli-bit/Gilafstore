@@ -123,7 +123,33 @@ include __DIR__ . '/../includes/admin_header.php';
                     </button>
                   </td>
                   <td>
-                    <a href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>" class="btn btn-sm btn-outline-primary rounded-pill">Edit</a>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Edit
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><h6 class="dropdown-header">Edit Product</h6></li>
+                        <li><a class="dropdown-item" href="<?= base_url('admin/product_edit.php?id=' . (int)$product['id']); ?>">
+                          <i class="fas fa-edit me-2"></i>Edit All Details
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Edit By Weight</h6></li>
+                        <?php 
+                          $weights = $productWeights[$product['id']] ?? [];
+                          if (!empty($weights)):
+                            foreach ($weights as $weight):
+                        ?>
+                          <li><a class="dropdown-item" href="<?= base_url('admin/product_weight_edit.php?product_id=' . (int)$product['id'] . '&weight_id=' . (int)$weight['id']); ?>">
+                            <i class="fas fa-weight me-2"></i><?= htmlspecialchars($weight['display_weight']); ?> - ₹<?= number_format($weight['price'], 2); ?>
+                          </a></li>
+                        <?php 
+                            endforeach;
+                          else:
+                        ?>
+                          <li><span class="dropdown-item text-muted">No weights available</span></li>
+                        <?php endif; ?>
+                      </ul>
+                    </div>
                     <form action="<?= base_url('admin_actions.php'); ?>" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
                       <input type="hidden" name="action" value="delete_product" />
                       <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>" />

@@ -261,6 +261,45 @@ try {
             redirect_with_message('/admin/product_edit.php?id=' . $productId, 'Product updated successfully');
             break;
 
+        case 'update_product_weight':
+            $productId = (int)($_POST['product_id'] ?? 0);
+            $weightId = (int)($_POST['weight_id'] ?? 0);
+            $weightValue = (float)($_POST['weight_value'] ?? 0);
+            $weightUnit = trim($_POST['weight_unit'] ?? 'g');
+            $price = (float)($_POST['price'] ?? 0);
+            $ean = trim($_POST['ean'] ?? '');
+            $isDefault = isset($_POST['is_default']) ? 1 : 0;
+
+            if (!$productId || !$weightId || $weightValue <= 0 || $price < 0) {
+                throw new RuntimeException('Please fill in all required fields correctly');
+            }
+
+            $db = get_db_connection();
+            
+            // If setting as default, remove default from other weights
+            if ($isDefault) {
+                $stmt = $db->prepare("UPDATE product_weights SET is_default = 0 WHERE product_id = ?");
+                $stmt->execute([$productId]);
+            }
+            
+            // Update the weight
+            $displayWeight = $weightValue . ' ' . $weightUnit;
+            $stmt = $db->prepare("
+                UPDATE product_weights 
+                SET weight_value = ?, weight_unit = ?, display_weight = ?, price = ?, ean = ?, is_default = ?
+                WHERE id = ? AND product_id = ?
+            ");
+            $stmt->execute([$weightValue, $weightUnit, $displayWeight, $price, $ean, $isDefault, $weightId, $productId]);
+            
+            // If this is now the default weight, update product's main price and net_weight
+            if ($isDefault) {
+                $stmt = $db->prepare("UPDATE products SET price = ?, net_weight = ? WHERE id = ?");
+                $stmt->execute([$price, $displayWeight, $productId]);
+            }
+
+            redirect_with_message('/admin/product_weight_edit.php?product_id=' . $productId . '&weight_id=' . $weightId, 'Weight updated successfully');
+            break;
+
         case 'delete_product':
             $productId = (int)($_POST['product_id'] ?? 0);
             if (!$productId) {

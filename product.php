@@ -22,6 +22,12 @@ $reviews = get_reviews_for_product($productId);
 $highlights = get_product_highlights($productId);
 $variants = get_product_variants($productId);
 $batchDetails = get_batch_details_for_product($productId);
+
+// Fetch all weights for this product
+$db = get_db_connection();
+$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, is_default FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+$stmt->execute([$productId]);
+$productWeights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $fssaiLicense = get_site_setting('fssai_license_number', '12724064000335');
 $returnPolicy = get_site_setting('return_policy', 'Returns allowed only for damaged, defective, or incorrect products within 7 days of delivery');
 $userHasPurchased = isset($_SESSION['user']) ? user_has_purchased_product((int)$_SESSION['user']['id'], $productId) : false;
@@ -169,17 +175,17 @@ include __DIR__ . '/includes/new-header.php';
           <span class="product-delivery-price">₹70</span>
         </div>
         
-        <?php if ($variants && count($variants) > 0): ?>
+        <?php if (!empty($productWeights)): ?>
         <div class="product-size-selector">
-          <label class="size-selector-label">Select Size</label>
+          <label class="size-selector-label">Select Weight</label>
           <div class="size-options">
-            <?php foreach ($variants as $index => $variant): ?>
-              <button class="size-option <?= $index === 0 ? 'active' : ''; ?>" 
-                      data-variant-id="<?= $variant['id']; ?>" 
-                      data-price="<?= $variant['price']; ?>"
-                      data-stock="<?= $variant['stock']; ?>"
-                      onclick="selectVariant(this)">
-                <?= htmlspecialchars($variant['size']); ?>
+            <?php foreach ($productWeights as $index => $weight): ?>
+              <button class="size-option <?= $weight['is_default'] == 1 ? 'active' : ''; ?>" 
+                      data-weight-id="<?= $weight['id']; ?>" 
+                      data-price="<?= $weight['price']; ?>"
+                      data-weight="<?= htmlspecialchars($weight['display_weight']); ?>"
+                      onclick="selectWeight(this)">
+                <?= htmlspecialchars($weight['display_weight']); ?>
               </button>
             <?php endforeach; ?>
           </div>
@@ -189,6 +195,10 @@ include __DIR__ . '/includes/new-header.php';
         <form action="<?= base_url('cart.php'); ?>" method="post" id="productForm">
           <input type="hidden" name="action" value="add" />
           <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>" />
+          <input type="hidden" name="weight_id" id="selectedWeightId" value="<?php 
+            $defaultWeight = array_filter($productWeights, fn($w) => $w['is_default'] == 1);
+            echo !empty($defaultWeight) ? reset($defaultWeight)['id'] : ($productWeights[0]['id'] ?? '');
+          ?>" />
           <input type="hidden" name="quantity" value="1" />
           
           <div class="product-actions">
@@ -349,9 +359,9 @@ function toggleReturnPolicy(element) {
   element.classList.toggle('open');
 }
 
-// Select product variant
-function selectVariant(button) {
-  // Remove active class from all size options
+// Select product weight with dynamic pricing
+function selectWeight(button) {
+  // Remove active class from all weight options
   document.querySelectorAll('.size-option').forEach(opt => {
     opt.classList.remove('active');
   });
@@ -359,16 +369,29 @@ function selectVariant(button) {
   // Add active class to selected option
   button.classList.add('active');
   
-  // Update price
+  // Get weight data
+  const weightId = button.getAttribute('data-weight-id');
   const price = button.getAttribute('data-price');
+  const weight = button.getAttribute('data-weight');
+  
+  // Update hidden input for selected weight
+  const weightIdInput = document.getElementById('selectedWeightId');
+  if (weightIdInput) {
+    weightIdInput.value = weightId;
+  }
+  
+  // Update price display
   const priceElement = document.querySelector('.product-price');
   if (priceElement && price) {
     priceElement.innerHTML = '<span class="product-price-symbol">₹</span>' + parseFloat(price).toFixed(0);
   }
   
-  // Update stock info (if you have a stock display element)
-  const stock = button.getAttribute('data-stock');
-  console.log('Selected variant - Price: ₹' + price + ', Stock: ' + stock);
+  console.log('Selected weight: ' + weight + ' - Price: ₹' + price);
+}
+
+// Legacy function for backward compatibility
+function selectVariant(button) {
+  selectWeight(button);
 }
 
 // Buy Now functionality
