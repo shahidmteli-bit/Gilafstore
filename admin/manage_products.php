@@ -76,13 +76,7 @@ include __DIR__ . '/../includes/admin_header.php';
               </tr>
             </thead>
             <tbody>
-              <?php 
-                $totalProducts = count($products);
-                $currentIndex = 0;
-                foreach ($products as $product): 
-                  $currentIndex++;
-                  $isNearBottom = ($currentIndex >= $totalProducts - 1); // Last 2 rows
-              ?>
+              <?php foreach ($products as $product): ?>
                 <tr style="position: relative; z-index: auto;">
                   <td>
                     <div class="d-flex align-items-center gap-3">
@@ -129,7 +123,7 @@ include __DIR__ . '/../includes/admin_header.php';
                     </button>
                   </td>
                   <td>
-                    <div class="btn-group <?= $isNearBottom ? 'dropup' : ''; ?>" role="group">
+                    <div class="btn-group dropup" role="group">
                       <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Edit
                       </button>
