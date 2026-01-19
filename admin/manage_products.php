@@ -164,52 +164,68 @@ include __DIR__ . '/../includes/admin_header.php';
               </select>
             </div>
             <div class="col-md-12">
-              <label class="form-label">Product Weights</label>
-              <!-- Display added weights as badges -->
-              <div id="weightBadgesContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; min-height: 40px;">
-                <!-- Weight badges will appear here -->
+              <label class="form-label">Product Weights & Prices <span class="text-danger">*</span></label>
+              <!-- Display added weights with prices as cards -->
+              <div id="weightPriceCardsContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px;">
+                <!-- Weight-price cards will appear here -->
               </div>
-              <!-- Single input for adding new weight -->
-              <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
-                <input type="number" id="newWeightValue" class="form-control" step="0.01" min="0.01" placeholder="Enter weight" style="width: 140px;" />
-                <select id="newWeightUnit" class="form-select" style="width: 80px;">
-                  <option value="g">g</option>
-                  <option value="kg">kg</option>
-                </select>
-                <button type="button" class="btn btn-outline-primary btn-sm" id="addWeightBtn">
-                  <i class="fas fa-plus"></i> ADD WEIGHT
-                </button>
+              <!-- Single input for adding new weight with price -->
+              <div class="card border-primary" style="background-color: #f8f9fa;">
+                <div class="card-body p-3">
+                  <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                      <label class="form-label small mb-1">Weight <span class="text-danger">*</span></label>
+                      <input type="number" id="newWeightValue" class="form-control form-control-sm" step="0.01" min="0.01" placeholder="Enter weight" />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label small mb-1">Unit</label>
+                      <select id="newWeightUnit" class="form-select form-select-sm">
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label small mb-1">Price <span class="text-danger">*</span></label>
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text">₹</span>
+                        <input type="number" id="newWeightPrice" class="form-control" step="0.01" min="0" placeholder="Enter price" />
+                      </div>
+                    </div>
+                    <div class="col-md-3">
+                      <button type="button" class="btn btn-primary btn-sm w-100" id="addWeightBtn">
+                        <i class="fas fa-plus"></i> ADD WEIGHT
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
               <input type="hidden" name="weights" id="weightsData" />
-              <small class="text-muted d-block">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
-            </div>
-            <div class="col-md-12">
-              <label class="form-label">Product Price</label>
-              <div class="input-group">
-                <span class="input-group-text">₹</span>
-                <input type="number" name="price" class="form-control" step="0.01" min="0" placeholder="Enter price" required />
-              </div>
+              <input type="hidden" name="price" id="defaultPriceHidden" />
               <input type="hidden" name="stock_quantity" value="0" />
-              <small class="text-info d-block mt-1"><i class="bi bi-info-circle"></i> Stock is managed via Batch Codes</small>
+              <small class="text-muted d-block mt-2"><i class="bi bi-info-circle"></i> Each weight must have its own price. Stock is managed via Batch Codes.</small>
             </div>
             <div class="col-12">
               <label class="form-label">Product Images (Minimum 2, Maximum 4)</label>
               <div class="row g-2">
                 <div class="col-md-3">
                   <label class="form-label small">Image 1 <span class="text-danger">*</span></label>
-                  <input type="file" name="image_1" class="form-control" accept="image/*" required />
+                  <input type="file" name="image_1" id="image_1" class="form-control image-input" accept="image/*" required />
+                  <small class="text-success d-none image-status" id="status_image_1"><i class="fas fa-check-circle"></i> <span class="filename"></span></small>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label small">Image 2 <span class="text-danger">*</span></label>
-                  <input type="file" name="image_2" class="form-control" accept="image/*" required />
+                  <input type="file" name="image_2" id="image_2" class="form-control image-input" accept="image/*" required />
+                  <small class="text-success d-none image-status" id="status_image_2"><i class="fas fa-check-circle"></i> <span class="filename"></span></small>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label small">Image 3 <span class="text-muted">(Optional)</span></label>
-                  <input type="file" name="image_3" class="form-control" accept="image/*" />
+                  <input type="file" name="image_3" id="image_3" class="form-control image-input" accept="image/*" />
+                  <small class="text-success d-none image-status" id="status_image_3"><i class="fas fa-check-circle"></i> <span class="filename"></span></small>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label small">Image 4 <span class="text-muted">(Optional)</span></label>
-                  <input type="file" name="image_4" class="form-control" accept="image/*" />
+                  <input type="file" name="image_4" id="image_4" class="form-control image-input" accept="image/*" />
+                  <small class="text-success d-none image-status" id="status_image_4"><i class="fas fa-check-circle"></i> <span class="filename"></span></small>
                 </div>
               </div>
               <small class="text-muted">Upload at least 2 images, up to 4 images. Images will be displayed as a slider/carousel on product page</small>
@@ -252,72 +268,119 @@ include __DIR__ . '/../includes/admin_header.php';
 <?php include 'pricing_modal.php'; ?>
 
 <script>
-// Weight Badge Management System
+// Weight-Price Management System with Image Upload Visibility
 document.addEventListener('DOMContentLoaded', function() {
-  const badgesContainer = document.getElementById('weightBadgesContainer');
+  const cardsContainer = document.getElementById('weightPriceCardsContainer');
   const addWeightBtn = document.getElementById('addWeightBtn');
   const newWeightValue = document.getElementById('newWeightValue');
   const newWeightUnit = document.getElementById('newWeightUnit');
+  const newWeightPrice = document.getElementById('newWeightPrice');
   const weightsDataInput = document.getElementById('weightsData');
+  const defaultPriceHidden = document.getElementById('defaultPriceHidden');
   
-  let weights = []; // Array to store all weights
+  let weightPrices = []; // Array to store weights with prices
   let weightToDelete = null;
   
-  // Add new weight as badge
+  // Image upload visibility
+  document.querySelectorAll('.image-input').forEach(input => {
+    input.addEventListener('change', function() {
+      const statusEl = document.getElementById('status_' + this.id);
+      const filenameEl = statusEl.querySelector('.filename');
+      
+      if (this.files && this.files[0]) {
+        const fileName = this.files[0].name;
+        const fileSize = (this.files[0].size / 1024).toFixed(1) + ' KB';
+        filenameEl.textContent = fileName + ' (' + fileSize + ')';
+        statusEl.classList.remove('d-none');
+        this.classList.add('border-success');
+      } else {
+        statusEl.classList.add('d-none');
+        this.classList.remove('border-success');
+      }
+    });
+  });
+  
+  // Add new weight with price
   addWeightBtn.addEventListener('click', function() {
     const value = parseFloat(newWeightValue.value);
     const unit = newWeightUnit.value;
+    const price = parseFloat(newWeightPrice.value);
     
+    // Validation
     if (!value || value <= 0) {
-      alert('Please enter a valid weight');
+      showValidationError('Please enter a valid weight');
+      newWeightValue.focus();
+      return;
+    }
+    
+    if (!price || price <= 0) {
+      showValidationError('Please enter a valid price for this weight');
+      newWeightPrice.focus();
       return;
     }
     
     const displayWeight = value + ' ' + unit;
     
-    // Check for duplicate
-    if (weights.some(w => w.value === value && w.unit === unit)) {
-      alert('This weight already exists');
+    // Check for duplicate weight
+    if (weightPrices.some(w => w.value === value && w.unit === unit)) {
+      showValidationError('This weight already exists');
       return;
     }
     
-    // Add to weights array
-    weights.push({ value: value, unit: unit, display: displayWeight });
+    // Add to array
+    weightPrices.push({ 
+      value: value, 
+      unit: unit, 
+      display: displayWeight,
+      price: price
+    });
     
-    // Clear input
+    // Clear inputs
     newWeightValue.value = '';
+    newWeightPrice.value = '';
     newWeightValue.focus();
     
-    // Render badges
-    renderWeightBadges();
+    // Render cards
+    renderWeightPriceCards();
   });
   
-  // Render weight badges
-  function renderWeightBadges() {
-    badgesContainer.innerHTML = '';
+  // Render weight-price cards
+  function renderWeightPriceCards() {
+    cardsContainer.innerHTML = '';
     
-    weights.forEach((weight, index) => {
-      const badge = document.createElement('div');
-      badge.className = 'badge bg-light text-dark border d-flex align-items-center gap-2';
-      badge.style.padding = '8px 12px';
-      badge.style.fontSize = '14px';
-      badge.style.fontWeight = '500';
-      badge.innerHTML = `
-        <span>${weight.display}</span>
-        <button type="button" class="btn-close btn-close-sm" data-index="${index}" style="font-size: 10px; padding: 0; width: 12px; height: 12px;"></button>
+    if (weightPrices.length === 0) {
+      cardsContainer.innerHTML = '<div class="alert alert-warning mb-0"><i class="fas fa-exclamation-triangle"></i> No weights added yet. Please add at least one weight with price.</div>';
+      return;
+    }
+    
+    weightPrices.forEach((wp, index) => {
+      const card = document.createElement('div');
+      card.className = 'card border-success';
+      card.innerHTML = `
+        <div class="card-body p-2 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-success" style="font-size: 14px; padding: 6px 12px;">${wp.display}</span>
+            <span class="text-dark"><strong>Price:</strong> ₹${wp.price.toFixed(2)}</span>
+            ${index === 0 ? '<span class="badge bg-primary">Default</span>' : ''}
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-danger" data-index="${index}">
+            <i class="fas fa-trash"></i> Remove
+          </button>
+        </div>
       `;
-      badgesContainer.appendChild(badge);
+      cardsContainer.appendChild(card);
     });
   }
   
-  // Remove weight badge with confirmation
-  badgesContainer.addEventListener('click', function(e) {
-    if (e.target.classList.contains('btn-close')) {
-      const index = parseInt(e.target.dataset.index);
+  // Remove weight-price with confirmation
+  cardsContainer.addEventListener('click', function(e) {
+    const btn = e.target.closest('button[data-index]');
+    if (btn) {
+      const index = parseInt(btn.dataset.index);
       weightToDelete = index;
       
       // Show confirmation modal
-      document.getElementById('deleteWeightText').textContent = weights[index].display;
+      document.getElementById('deleteWeightText').textContent = weightPrices[index].display + ' (₹' + weightPrices[index].price + ')';
       const deleteModal = new bootstrap.Modal(document.getElementById('deleteWeightModal'));
       deleteModal.show();
     }
@@ -326,8 +389,8 @@ document.addEventListener('DOMContentLoaded', function() {
   // Confirm delete weight
   document.getElementById('confirmDeleteWeight').addEventListener('click', function() {
     if (weightToDelete !== null) {
-      weights.splice(weightToDelete, 1);
-      renderWeightBadges();
+      weightPrices.splice(weightToDelete, 1);
+      renderWeightPriceCards();
       weightToDelete = null;
       bootstrap.Modal.getInstance(document.getElementById('deleteWeightModal')).hide();
     }
@@ -337,26 +400,95 @@ document.addEventListener('DOMContentLoaded', function() {
   newWeightValue.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
+      newWeightPrice.focus();
+    }
+  });
+  
+  newWeightPrice.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
       addWeightBtn.click();
     }
   });
   
-  // Collect weights data before form submission
+  // Form validation and submission
   document.querySelector('form[action*="admin_actions.php"]').addEventListener('submit', function(e) {
-    if (weights.length === 0) {
-      e.preventDefault();
-      alert('Please add at least one weight for the product');
+    e.preventDefault();
+    
+    // Clear previous validation errors
+    document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    
+    let errors = [];
+    
+    // Validate product name
+    const productName = this.querySelector('input[name="name"]');
+    if (!productName.value.trim()) {
+      errors.push('Product name is required');
+      productName.classList.add('is-invalid');
+    }
+    
+    // Validate category
+    const category = this.querySelector('select[name="category_id"]');
+    if (!category.value) {
+      errors.push('Category (C-CODE) is required');
+      category.classList.add('is-invalid');
+    }
+    
+    // Validate weights and prices
+    if (weightPrices.length === 0) {
+      errors.push('Please add at least one weight with price');
+      newWeightValue.classList.add('is-invalid');
+    }
+    
+    // Validate images
+    const image1 = this.querySelector('input[name="image_1"]');
+    const image2 = this.querySelector('input[name="image_2"]');
+    
+    if (!image1.files || !image1.files[0]) {
+      errors.push('Image 1 is required');
+      image1.classList.add('is-invalid');
+    }
+    
+    if (!image2.files || !image2.files[0]) {
+      errors.push('Image 2 is required');
+      image2.classList.add('is-invalid');
+    }
+    
+    // Show errors if any
+    if (errors.length > 0) {
+      showValidationError(errors.join('\n'));
       return false;
     }
     
-    weightsDataInput.value = JSON.stringify(weights);
+    // Prepare data for submission
+    weightsDataInput.value = JSON.stringify(weightPrices);
+    
+    // Set default price (first weight's price)
+    defaultPriceHidden.value = weightPrices[0].price;
+    
+    // Submit form
+    this.submit();
   });
   
-  // Initialize Bootstrap tooltips
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
+  // Show validation error
+  function showValidationError(message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed';
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+    alertDiv.innerHTML = `
+      <strong><i class="fas fa-exclamation-circle"></i> Validation Error</strong><br>
+      ${message.replace(/\n/g, '<br>')}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 5000);
+  }
+  
+  // Initialize
+  renderWeightPriceCards();
 });
 </script>
 
