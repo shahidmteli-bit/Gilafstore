@@ -269,9 +269,13 @@ include __DIR__ . '/../includes/admin_header.php';
 
 <script>
 // Weight-Price Management System with Image Upload Visibility
+// VERSION: 2.0 - CACHE BUST - <?= time(); ?>
 // IMPORTANT: weightPrices must be outside DOMContentLoaded to persist
 let weightPrices = []; // Array to store weights with prices
 let weightToDelete = null;
+
+console.log('=== PRODUCT ADD SCRIPT LOADED - VERSION 2.0 ===');
+console.log('Script timestamp:', '<?= date('Y-m-d H:i:s'); ?>');
 
 document.addEventListener('DOMContentLoaded', function() {
   const cardsContainer = document.getElementById('weightPriceCardsContainer');
