@@ -9,6 +9,15 @@ $adminPage = 'products';
 $categories = admin_get_categories();
 $products = admin_get_products();
 
+// Fetch all weights for each product
+$db = get_db_connection();
+$productWeights = [];
+foreach ($products as $product) {
+    $stmt = $db->prepare("SELECT display_weight, price FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+    $stmt->execute([$product['id']]);
+    $productWeights[$product['id']] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 // Check if new product system columns exist
 $systemNeedsUpdate = false;
 try {
@@ -87,9 +96,11 @@ include __DIR__ . '/../includes/admin_header.php';
                   </td>
                   <td>
                     <?php 
-                      $netWeight = $product['net_weight'] ?? '';
-                      if ($netWeight) {
-                        echo '<span class="badge bg-info">' . htmlspecialchars($netWeight) . '</span>';
+                      $weights = $productWeights[$product['id']] ?? [];
+                      if (!empty($weights)) {
+                        foreach ($weights as $weight) {
+                          echo '<span class="badge bg-info me-1 mb-1" style="font-size: 0.85rem;">' . htmlspecialchars($weight['display_weight']) . '</span>';
+                        }
                       } else {
                         echo '<span class="text-muted">Not set</span>';
                       }
