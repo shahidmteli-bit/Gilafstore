@@ -124,7 +124,7 @@ include __DIR__ . '/../includes/admin_header.php';
                   </td>
                   <td>
                     <div class="btn-group" role="group">
-                      <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-boundary="viewport" aria-expanded="false">
+                      <button type="button" class="btn btn-sm btn-outline-primary rounded-pill dropdown-toggle product-edit-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-boundary="viewport" aria-expanded="false">
                         Edit
                       </button>
                       <ul class="dropdown-menu dropdown-menu-end shadow" style="min-width: 280px; border-radius: 8px; padding: 8px 0; z-index: 9999; background-color: #ffffff; border: 1px solid rgba(0,0,0,0.15); max-height: 400px; overflow-y: auto;">
@@ -173,7 +173,51 @@ include __DIR__ . '/../includes/admin_header.php';
       </div>
     </div>
   </div>
+</div>
 </section>
+
+<style>
+  /* When an Edit dropdown is open, make all other rows non-interactive */
+  tbody.edit-dropdown-locked tr,
+  tbody.edit-dropdown-locked tr * {
+    pointer-events: none;
+  }
+
+  tbody.edit-dropdown-locked tr.edit-dropdown-active-row,
+  tbody.edit-dropdown-locked tr.edit-dropdown-active-row * {
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var tableBody = document.querySelector('table.table.align-middle tbody');
+  if (!tableBody) return;
+
+  var toggles = document.querySelectorAll('.product-edit-toggle');
+
+  toggles.forEach(function (toggle) {
+    toggle.addEventListener('show.bs.dropdown', function () {
+      var row = this.closest('tr');
+      if (!row) return;
+
+      // Lock all rows, then unlock only the active one
+      tableBody.classList.add('edit-dropdown-locked');
+      tableBody.querySelectorAll('.edit-dropdown-active-row').forEach(function (r) {
+        r.classList.remove('edit-dropdown-active-row');
+      });
+      row.classList.add('edit-dropdown-active-row');
+    });
+
+    toggle.addEventListener('hide.bs.dropdown', function () {
+      tableBody.classList.remove('edit-dropdown-locked');
+      tableBody.querySelectorAll('.edit-dropdown-active-row').forEach(function (r) {
+        r.classList.remove('edit-dropdown-active-row');
+      });
+    });
+  });
+});
+</script>
 
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
