@@ -163,32 +163,32 @@ include __DIR__ . '/../includes/admin_header.php';
                 <?php endforeach; ?>
               </select>
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Weight</label>
-              <div class="input-group">
-                <input type="number" name="weight_value" id="weightValue" class="form-control" step="0.01" min="0.01" placeholder="Enter weight" required onkeyup="updateWeightDisplay()" />
-                <select name="weight_unit" id="weightUnit" class="form-select" style="max-width: 100px;" required onchange="updateWeightDisplay()">
-                  <option value="g">g</option>
-                  <option value="kg">kg</option>
-                </select>
+            <div class="col-md-12">
+              <label class="form-label">Product Weights</label>
+              <div id="weightsContainer">
+                <div class="weight-input-row mb-2">
+                  <div class="input-group">
+                    <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required />
+                    <select class="form-select weight-unit" style="max-width: 100px;" required>
+                      <option value="g">g</option>
+                      <option value="kg">kg</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-danger remove-weight" disabled><i class="fas fa-times"></i></button>
+                  </div>
+                </div>
               </div>
-              <input type="hidden" name="net_weight" id="finalNetWeight" />
-              <small class="text-muted">Final: <strong id="weightDisplay">Not set</strong></small>
+              <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="addWeightBtn"><i class="fas fa-plus"></i> Add Weight</button>
+              <input type="hidden" name="weights" id="weightsData" />
+              <small class="text-muted d-block mt-1">Add multiple weights for this product (e.g., 250g, 500g, 1kg)</small>
             </div>
             <div class="col-md-12">
-              <label class="form-label">Pricing & Discount</label>
-              <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#pricingModal">
-                <i class="bi bi-percent"></i> Set Pricing & Discount
-              </button>
-              <input type="hidden" name="cost_price" id="costPrice" value="0" />
-              <input type="hidden" name="selling_price" id="sellingPrice" value="0" />
+              <label class="form-label">Product Price</label>
+              <div class="input-group">
+                <span class="input-group-text">₹</span>
+                <input type="number" name="price" class="form-control" step="0.01" min="0" placeholder="Enter price" required />
+              </div>
               <input type="hidden" name="stock_quantity" value="0" />
-              <small class="text-muted" id="pricingSummary">Not set</small>
               <small class="text-info d-block mt-1"><i class="bi bi-info-circle"></i> Stock is managed via Batch Codes</small>
-            </div>
-            <div class="col-12">
-              <label class="form-label">Description</label>
-              <textarea name="description" class="form-control" rows="3" required></textarea>
             </div>
             <div class="col-12">
               <label class="form-label">Product Images (Minimum 2, Maximum 4)</label>
@@ -212,11 +212,6 @@ include __DIR__ . '/../includes/admin_header.php';
               </div>
               <small class="text-muted">Upload at least 2 images, up to 4 images. Images will be displayed as a slider/carousel on product page</small>
             </div>
-            <div class="col-12">
-              <label class="form-label">Bullet Points / Key Highlights</label>
-              <textarea name="highlights" class="form-control" rows="4" placeholder="• 100% Pure and Natural&#10;• Lab Tested for Quality&#10;• Premium Grade A&#10;• Direct from Kashmir" required></textarea>
-              <small class="text-muted">Enter key product highlights in bullet-point format</small>
-            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -231,25 +226,74 @@ include __DIR__ . '/../includes/admin_header.php';
 <?php include 'pricing_modal.php'; ?>
 
 <script>
-// Update weight display
-function updateWeightDisplay() {
-  const weightValue = parseFloat(document.getElementById('weightValue').value) || 0;
-  const weightUnit = document.getElementById('weightUnit').value;
-  const display = document.getElementById('weightDisplay');
-  const finalInput = document.getElementById('finalNetWeight');
-  
-  if (weightValue > 0) {
-    const finalWeight = weightValue + ' ' + weightUnit;
-    finalInput.value = weightValue + weightUnit;
-    display.textContent = finalWeight;
-  } else {
-    display.textContent = 'Not set';
-    finalInput.value = '';
-  }
-}
-
-// Initialize Bootstrap tooltips
+// Multiple Weights Management
 document.addEventListener('DOMContentLoaded', function() {
+  const weightsContainer = document.getElementById('weightsContainer');
+  const addWeightBtn = document.getElementById('addWeightBtn');
+  const weightsDataInput = document.getElementById('weightsData');
+  
+  // Add new weight input row
+  addWeightBtn.addEventListener('click', function() {
+    const newRow = document.createElement('div');
+    newRow.className = 'weight-input-row mb-2';
+    newRow.innerHTML = `
+      <div class="input-group">
+        <input type="number" class="form-control weight-value" step="0.01" min="0.01" placeholder="Enter weight" required />
+        <select class="form-select weight-unit" style="max-width: 100px;" required>
+          <option value="g">g</option>
+          <option value="kg">kg</option>
+        </select>
+        <button type="button" class="btn btn-outline-danger remove-weight"><i class="fas fa-times"></i></button>
+      </div>
+    `;
+    weightsContainer.appendChild(newRow);
+    updateRemoveButtons();
+  });
+  
+  // Remove weight row
+  weightsContainer.addEventListener('click', function(e) {
+    if (e.target.closest('.remove-weight')) {
+      e.target.closest('.weight-input-row').remove();
+      updateRemoveButtons();
+    }
+  });
+  
+  // Update remove buttons state (disable if only one weight)
+  function updateRemoveButtons() {
+    const rows = weightsContainer.querySelectorAll('.weight-input-row');
+    const removeButtons = weightsContainer.querySelectorAll('.remove-weight');
+    removeButtons.forEach(btn => {
+      btn.disabled = rows.length === 1;
+    });
+  }
+  
+  // Collect weights data before form submission
+  document.querySelector('form[action*="admin_actions.php"]').addEventListener('submit', function(e) {
+    const weights = [];
+    const rows = weightsContainer.querySelectorAll('.weight-input-row');
+    
+    rows.forEach(row => {
+      const value = row.querySelector('.weight-value').value;
+      const unit = row.querySelector('.weight-unit').value;
+      if (value && parseFloat(value) > 0) {
+        weights.push({
+          value: parseFloat(value),
+          unit: unit,
+          display: value + ' ' + unit
+        });
+      }
+    });
+    
+    if (weights.length === 0) {
+      e.preventDefault();
+      alert('Please add at least one weight for the product');
+      return false;
+    }
+    
+    weightsDataInput.value = JSON.stringify(weights);
+  });
+  
+  // Initialize Bootstrap tooltips
   var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
   var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
