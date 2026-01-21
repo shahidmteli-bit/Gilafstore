@@ -34,8 +34,7 @@ try {
             b.is_active
         FROM batch_codes b
         WHERE b.product_id = :product_id
-        AND b.is_active = 1
-        AND b.status IN ('production', 'quality_check', 'approved', 'in_stock')
+        AND b.status IN ('production', 'quality_testing', 'quality_approved', 'released_for_sale', 'in_distribution')
         ORDER BY b.created_at DESC
     ");
     

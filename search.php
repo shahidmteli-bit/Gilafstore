@@ -153,11 +153,24 @@ include __DIR__ . '/includes/new-header.php';
                                         <?= htmlspecialchars($product['name']); ?>
                                     </a>
                                 </h3>
+                                <?php $weightsDisplay = get_product_weights_display($product['id']); ?>
+                                <?php if (!empty($weightsDisplay)): ?>
+                                    <span class="product-weights"><?= htmlspecialchars($weightsDisplay); ?></span>
+                                <?php endif; ?>
                                 <span class="product-origin">Origin: Kashmir Valley</span>
                                 <div class="price-row">
-                                    <span class="product-price dynamic-price" data-price-inr="<?= htmlspecialchars($product['price']); ?>">
-                                        <?= display_price($product['price'], $currentCurrency, $currentCurrencySymbol); ?>
-                                    </span>
+                                    <?php 
+                                        $priceRange = get_product_price_range($product['id']);
+                                        if ($priceRange['has_range']) {
+                                            $minPrice = display_price($priceRange['min_price'], $currentCurrency, $currentCurrencySymbol);
+                                            $maxPrice = display_price($priceRange['max_price'], $currentCurrency, $currentCurrencySymbol);
+                                    ?>
+                                        <span class="product-price"><?= $minPrice; ?> – <?= $maxPrice; ?></span>
+                                    <?php } else { ?>
+                                        <span class="product-price dynamic-price" data-price-inr="<?= htmlspecialchars($priceRange['min_price']); ?>">
+                                            <?= display_price($priceRange['min_price'], $currentCurrency, $currentCurrencySymbol); ?>
+                                        </span>
+                                    <?php } ?>
                                 </div>
                                 <form action="<?= base_url('includes/cart.php'); ?>" method="post">
                                     <input type="hidden" name="action" value="add">

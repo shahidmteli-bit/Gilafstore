@@ -17,6 +17,33 @@ if (!isset($_SESSION['order_success'])) {
 
 $orderData = $_SESSION['order_success'];
 
+// Record promo code usage before clearing it
+$appliedPromo = get_applied_promo_code();
+if ($appliedPromo && isset($appliedPromo['id'])) {
+    $userId = $_SESSION['user']['id'] ?? null;
+    $userEmail = $_SESSION['user']['email'] ?? null;
+    $userPhone = $_SESSION['user']['phone'] ?? null;
+    $discountAmount = $orderData['promo_discount'] ?? $appliedPromo['discount_amount'] ?? 0;
+    $orderId = $orderData['db_order_id'] ?? null; // Database order ID if available
+    
+    // Get user's order count for tracking
+    $orderCount = 0;
+    if ($userId) {
+        $orderCountResult = db_fetch("SELECT COUNT(*) as count FROM orders WHERE user_id = ?", [$userId]);
+        $orderCount = $orderCountResult ? (int)$orderCountResult['count'] : 0;
+    }
+    
+    record_promo_usage($appliedPromo['id'], $userId, $orderId, $discountAmount, $userEmail, $userPhone, $orderCount);
+}
+
+// Clear promo code after successful payment
+clear_promo_after_payment();
+
+// Clear buy_now session if this was a Buy Now order
+if (isset($_SESSION['buy_now'])) {
+    unset($_SESSION['buy_now']);
+}
+
 // Track purchase events for analytics
 if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
     if (isset($orderData['items']) && is_array($orderData['items'])) {

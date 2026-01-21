@@ -38,11 +38,7 @@
     width: 100%;
     max-width: 600px;
     height: auto;
-    border-radius: 16px;
-    border: 1px solid #e9ecef;
-    background: #ffffff;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    display: block;
 }
 
 .product-thumbnail-list {
@@ -749,3 +745,96 @@
 .product-info-card form button[type="submit"] {
     display: none !important;
 }
+
+/* ============================================
+   PRODUCT IMAGE ZOOM (Amazon/Flipkart Style)
+   ============================================ */
+.product-image-zoom-container {
+    position: relative;
+    display: block;
+    width: 100%;
+}
+
+.product-main-image-wrapper {
+    position: relative;
+    overflow: visible;
+    cursor: crosshair;
+    border-radius: 16px;
+    border: 1px solid #e9ecef;
+    background: #ffffff;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.product-main-image-wrapper .product-main-image {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    transition: none;
+}
+
+.zoom-lens {
+    position: absolute;
+    border: 2px solid #d4af37;
+    width: 150px;
+    height: 150px;
+    background-color: rgba(212, 175, 55, 0.1);
+    pointer-events: none;
+    display: none;
+    z-index: 10;
+    border-radius: 4px;
+}
+
+.zoom-result {
+    position: absolute;
+    top: 0;
+    left: calc(100% + 20px);
+    width: 450px;
+    height: 450px;
+    border: 1px solid #e9ecef;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    display: none;
+    z-index: 9999;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.product-main-image-wrapper:hover .zoom-lens,
+.product-main-image-wrapper:hover + .zoom-result,
+.product-main-image-wrapper.zoom-active .zoom-lens,
+.zoom-result.zoom-active {
+    display: block;
+}
+
+/* Hide zoom result on smaller screens where there's no space */
+@media (max-width: 991px) {
+    .zoom-result {
+        display: none !important;
+    }
+    .zoom-lens {
+        display: none !important;
+    }
+    .product-main-image-wrapper {
+        cursor: default;
+    }
+}
+
+/* Mobile: disable zoom entirely */
+@media (max-width: 767px) {
+    .zoom-result,
+    .zoom-lens {
+        display: none !important;
+    }
+    .product-main-image-wrapper {
+        cursor: default;
+    }
+}
+

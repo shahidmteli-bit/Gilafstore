@@ -5,21 +5,19 @@
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
-                    <div class="logo" style="text-align: left;">
-                        <h1>GILAF STORE</h1>
-                        <span>Taste • Culture • Craft</span>
+                    <div class="logo" style="text-align: left; max-width: fit-content;">
+                        <h1 style="font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 5px;">GILAF STORE</h1>
+                        <span style="font-size: 0.6rem; letter-spacing: 3.5px; display: block; text-align: center;">TASTE • CULTURE • CRAFT</span>
                     </div>
-                    <p>
-                        A premium D2C brand by Gilaf Foods & Spices.<br>
-                        Regd. Office: Srinagar, Kashmir, India.<br>
-                        <br>
-                        <a href="mailto:gilafstore@gmail.com" style="color: var(--color-gold);">gilafstore@gmail.com</a>
+                    <p style="white-space: nowrap;">
+                        A premium D2C brand<br>by Gilaf Foods & Spices.<br>
+                        Registered Office:<br>Sopore, Baramulla, J&K – 193201, India
                     </p>
                     <div class="social-icons" style="margin-top: 20px;">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.instagram.com/gilafstore?igsh=MXN5eHg4emhmMWtmZQ==" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.facebook.com/share/1D8xHnuELW/" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://wa.me/919419404670" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.linkedin.com/company/gilafstore/" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
                 
@@ -38,7 +36,7 @@
                     <h4>SUPPORT</h4>
                     <ul>
                         <li><a href="#" onclick="openTrackingModal(); return false;">Track Order</a></li>
-                        <li><a href="#">Shipping & Logistics</a></li>
+                        <li><a href="<?= base_url('shipping-policy.php'); ?>">Shipping & Logistics</a></li>
                         <li><a href="#verification">Authenticity Check</a></li>
                         <li><a href="http://localhost/Gilaf%20Ecommerce%20website/user/create_ticket.php">Contact Us</a></li>
                         <li><a href="http://localhost/Gilaf%20Ecommerce%20website/apply-distributor.php">Become a Distributor</a></li>
@@ -51,7 +49,6 @@
                     <ul>
                         <li><a href="<?= base_url('privacy-policy.php'); ?>">Privacy Policy</a></li>
                         <li><a href="<?= base_url('terms-conditions.php'); ?>">Terms & Conditions</a></li>
-                        <li><a href="<?= base_url('shipping-policy.php'); ?>">Shipping Policy</a></li>
                         <li><a href="<?= base_url('refund-return-policy.php'); ?>">Refund & Return Policy</a></li>
                         <li><a href="<?= base_url('order-cancellation-policy.php'); ?>">Order Cancellation Policy</a></li>
                         <li><a href="<?= base_url('payment-policy.php'); ?>">Payment Policy</a></li>

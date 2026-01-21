@@ -17,7 +17,7 @@ include __DIR__ . '/includes/new-header.php';
     .policy-hero {
         background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
         color: white;
-        padding: 120px 20px;
+        padding: 20px 0px;
         text-align: center;
         position: relative;
         overflow: hidden;

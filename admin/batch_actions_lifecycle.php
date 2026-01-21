@@ -111,6 +111,27 @@ try {
                 throw new Exception('Release Officer Name is required');
             }
             
+            // EAN Validation: Check if product weight has valid EAN before release
+            $ean = '';
+            if (!empty($batch['weight_id'])) {
+                $eanStmt = $db->prepare("SELECT ean FROM product_weights WHERE id = ?");
+                $eanStmt->execute([$batch['weight_id']]);
+                $eanData = $eanStmt->fetch(PDO::FETCH_ASSOC);
+                $ean = $eanData['ean'] ?? '';
+            } elseif (!empty($batch['net_weight']) && !empty($batch['product_id'])) {
+                $eanStmt = $db->prepare("SELECT ean FROM product_weights WHERE product_id = ? AND display_weight = ?");
+                $eanStmt->execute([$batch['product_id'], $batch['net_weight']]);
+                $eanData = $eanStmt->fetch(PDO::FETCH_ASSOC);
+                $ean = $eanData['ean'] ?? '';
+            }
+            
+            if (empty($ean)) {
+                throw new Exception('EAN number is required. Please add the EAN in Edit Product Weight before releasing this batch for sale.');
+            }
+            if (!preg_match('/^[0-9]{8,13}$/', $ean)) {
+                throw new Exception('Invalid EAN format. EAN must be 8-13 numeric digits. Please update the EAN in Edit Product Weight.');
+            }
+            
             $sql = "UPDATE batch_codes 
                     SET status = 'released_for_sale',
                         released_for_sale = 1,

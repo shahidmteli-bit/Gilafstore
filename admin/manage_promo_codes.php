@@ -361,11 +361,19 @@ include __DIR__ . '/../includes/admin_header.php';
             </div>
           </div>
           
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Usage Limit</label>
-            <input type="number" class="form-control" name="usage_limit" 
-                   min="1" placeholder="Leave empty for unlimited uses">
-            <small class="text-muted">Total number of times this code can be used</small>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Usage Limit</label>
+              <input type="number" class="form-control" name="usage_limit" 
+                     min="1" placeholder="Leave empty for unlimited uses">
+              <small class="text-muted">Total number of times this code can be used</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Usage Limit Per User</label>
+              <input type="number" class="form-control" name="usage_limit_per_user" 
+                     min="1" placeholder="Leave empty for unlimited">
+              <small class="text-muted">Max uses per single user</small>
+            </div>
           </div>
           
           <div class="row">
@@ -500,9 +508,17 @@ include __DIR__ . '/../includes/admin_header.php';
             </div>
           </div>
           
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Usage Limit</label>
-            <input type="number" class="form-control" name="usage_limit" id="editUsageLimit" min="1">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Usage Limit</label>
+              <input type="number" class="form-control" name="usage_limit" id="editUsageLimit" min="1">
+              <small class="text-muted">Total number of times this code can be used</small>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-semibold">Usage Limit Per User</label>
+              <input type="number" class="form-control" name="usage_limit_per_user" id="editUsageLimitPerUser" min="1">
+              <small class="text-muted">Max uses per single user</small>
+            </div>
           </div>
           
           <div class="row">
@@ -653,6 +669,7 @@ function editPromo(promo) {
   document.getElementById('editMinOrder').value = promo.min_order_value;
   document.getElementById('editMaxDiscount').value = promo.max_discount || '';
   document.getElementById('editUsageLimit').value = promo.usage_limit || '';
+  document.getElementById('editUsageLimitPerUser').value = promo.usage_limit_per_user || '';
   document.getElementById('editValidFrom').value = promo.valid_from.replace(' ', 'T');
   document.getElementById('editValidUntil').value = promo.valid_until.replace(' ', 'T');
   document.getElementById('editIsActive').checked = promo.is_active == 1;

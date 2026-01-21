@@ -546,46 +546,49 @@ a.btn-danger {
         <!-- Products Grid -->
         <div class="products-grid">
           <?php foreach ($products as $product): ?>
-            <div class="product-card animate-fadeIn" data-product-url="<?= base_url('product.php?id=' . (int)$product['id']); ?>" data-product-id="<?= (int)$product['id']; ?>" tabindex="0" role="link" aria-label="View details for <?= htmlspecialchars($product['name']); ?>" style="cursor: pointer;">
-              <div class="product-card-image">
+            <article class="product-card animate-fadeIn" data-product-url="<?= base_url('product.php?id=' . (int)$product['id']); ?>" data-product-id="<?= (int)$product['id']; ?>" tabindex="0" role="link" aria-label="View details for <?= htmlspecialchars($product['name']); ?>" style="cursor: pointer;">
+              <div class="product-image-wrapper" onclick="event.stopPropagation(); window.location.href='<?= base_url('product.php?id=' . $product['id']); ?>'" style="cursor: pointer;">
                 <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="<?= htmlspecialchars($product['name']); ?>">
-                <?php if (isset($product['is_new']) && $product['is_new']): ?>
-                  <span class="product-card-badge">NEW</span>
+                <div class="trust-overlay">
+                  <i class="fas fa-award" style="color: var(--color-green);"></i> 
+                  <i class="fas fa-flask" style="color: var(--color-green);"></i>
+                </div>
+              </div>
+              <div class="product-details">
+                <span class="product-cat"><?= htmlspecialchars($product['category_name'] ?? 'Premium'); ?></span>
+                <h3 class="product-title" onclick="event.stopPropagation(); window.location.href='<?= base_url('product.php?id=' . $product['id']); ?>'" style="cursor: pointer;">
+                  <?= htmlspecialchars($product['name']); ?>
+                </h3>
+                <?php $weightsDisplay = get_product_weights_display($product['id']); ?>
+                <?php if (!empty($weightsDisplay)): ?>
+                  <span class="product-weights"><?= htmlspecialchars($weightsDisplay); ?></span>
                 <?php endif; ?>
-              </div>
-              <div class="product-card-body">
-                <div class="product-card-category"><?= htmlspecialchars($product['category_name'] ?? 'Product'); ?></div>
-                <h3 class="product-card-title"><?= htmlspecialchars($product['name']); ?></h3>
-                <div class="product-card-meta">
-                  <span>⭐ 4.8</span>
-                  <span>•</span>
-                  <span>120 reviews</span>
-                </div>
-                <div class="product-card-price">
+                <span class="product-origin">Origin: Kashmir Valley</span>
+                <div class="price-row">
                   <?php 
-                    $convertedPrice = convert_currency($product['price'], $currentCurrency);
-                    $displayPrice = display_price($product['price'], $currentCurrency, $currentCurrencySymbol);
+                    $priceRange = get_product_price_range($product['id']);
+                    if ($priceRange['has_range']) {
+                      $minPrice = display_price($priceRange['min_price'], $currentCurrency, $currentCurrencySymbol);
+                      $maxPrice = display_price($priceRange['max_price'], $currentCurrency, $currentCurrencySymbol);
                   ?>
-                  <span class="product-card-price-current"><?= $displayPrice; ?></span>
-                  <?php if (isset($product['original_price']) && $product['original_price'] > $product['price']): 
-                    $convertedOriginal = convert_currency($product['original_price'], $currentCurrency);
-                    $displayOriginal = display_price($product['original_price'], $currentCurrency, $currentCurrencySymbol);
+                    <span class="product-price"><?= $minPrice; ?> – <?= $maxPrice; ?></span>
+                  <?php } else {
+                      $displayPrice = display_price($priceRange['min_price'], $currentCurrency, $currentCurrencySymbol);
                   ?>
-                    <span class="product-card-price-original"><?= $displayOriginal; ?></span>
-                    <span class="product-card-discount"><?= round((($product['original_price'] - $product['price']) / $product['original_price']) * 100); ?>% OFF</span>
-                  <?php endif; ?>
+                    <?php if (isset($product['original_price']) && $product['original_price'] > $product['price']): ?>
+                      <span class="product-price-original"><?= display_price($product['original_price'], $currentCurrency, $currentCurrencySymbol); ?></span>
+                    <?php endif; ?>
+                    <span class="product-price"><?= $displayPrice; ?></span>
+                  <?php } ?>
                 </div>
-                <div style="display: flex; gap: var(--space-2);">
-                  <a href="<?= base_url('product.php?id=' . $product['id']); ?>" class="btn btn-sm btn-danger" onclick="event.stopPropagation();">VIEW</a>
-                  <form action="<?= base_url('shop.php'); ?>" method="post" style="display: inline;" onclick="event.stopPropagation();">
-                    <input type="hidden" name="action" value="add_to_cart" />
-                    <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>" />
-                    <input type="hidden" name="quantity" value="1" />
-                    <button type="submit" class="btn btn-sm btn-success" onclick="event.stopPropagation();">ADD TO CART</button>
-                  </form>
-                </div>
+                <form action="<?= base_url('shop.php'); ?>" method="post" onclick="event.stopPropagation();">
+                  <input type="hidden" name="action" value="add_to_cart">
+                  <input type="hidden" name="product_id" value="<?= (int)$product['id']; ?>">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="add-btn" onclick="event.stopPropagation();">Add to Cart</button>
+                </form>
               </div>
-            </div>
+            </article>
           <?php endforeach; ?>
         </div>
 

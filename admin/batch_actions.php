@@ -68,9 +68,35 @@ try {
             $labReportUrl = trim($_POST['lab_report_url'] ?? '');
             $hasLabReport = isset($_POST['has_lab_report']) ? 1 : 0;
             $isActive = isset($_POST['is_active']) ? 1 : 0;
+            $weightId = !empty($_POST['weight_id']) ? (int)$_POST['weight_id'] : null;
             
             if (empty($batchCode) || empty($productName) || empty($netWeight) || empty($mfgDate) || empty($expDate)) {
                 throw new Exception('Please fill in all required fields.');
+            }
+            
+            // EAN Validation: Fetch EAN from product_weights and validate
+            $ean = '';
+            if ($weightId) {
+                $eanStmt = $db->prepare("SELECT ean FROM product_weights WHERE id = ?");
+                $eanStmt->execute([$weightId]);
+                $eanData = $eanStmt->fetch(PDO::FETCH_ASSOC);
+                $ean = $eanData['ean'] ?? '';
+            }
+            
+            // Block batch creation if EAN is missing or invalid
+            if (empty($ean)) {
+                throw new Exception('EAN number is required. Please add the EAN in Edit Product Weight to generate a batch.');
+            }
+            if (!preg_match('/^[0-9]{8,13}$/', $ean)) {
+                throw new Exception('Invalid EAN format. EAN must be 8-13 numeric digits. Please update the EAN in Edit Product Weight.');
+            }
+            
+            // Verify batch code ends with correct EAN suffix (JavaScript already appends it)
+            $eanSuffix = substr($ean, -2);
+            $expectedSuffix = '-' . $eanSuffix;
+            if (substr($batchCode, -3) !== $expectedSuffix) {
+                // Append only if not already present
+                $batchCode = $batchCode . '-' . $eanSuffix;
             }
             
             // Check if batch code already exists
@@ -80,8 +106,7 @@ try {
                 throw new Exception('Batch code already exists. Please use a unique code.');
             }
             
-            // Phase 2B: Check for duplicate batch (same product, weight, MFG, EXP)
-            $weightId = !empty($_POST['weight_id']) ? (int)$_POST['weight_id'] : null;
+            // Phase 2B: Check for duplicate batch (same product, weight, mfg_date, shift)
             
             $duplicateCheck = $db->prepare("
                 SELECT batch_code, status 
@@ -89,7 +114,7 @@ try {
                 WHERE product_id = :product_id 
                 AND net_weight = :net_weight 
                 AND manufacturing_date = :mfg_date 
-                AND expiry_date = :exp_date
+                AND shift = :shift
                 AND is_active = 1
                 LIMIT 1
             ");
@@ -98,7 +123,7 @@ try {
                 ':product_id' => $productId,
                 ':net_weight' => $netWeight,
                 ':mfg_date' => $mfgDate,
-                ':exp_date' => $expDate
+                ':shift' => $shift
             ]);
             
             $duplicate = $duplicateCheck->fetch(PDO::FETCH_ASSOC);
@@ -152,12 +177,12 @@ try {
             
             $stmt = $db->prepare("
                 INSERT INTO batch_codes 
-                (batch_code, product_id, product_name, net_weight, manufacturing_date, expiry_date, shift, country_of_origin, 
+                (batch_code, product_id, product_name, net_weight, weight_id, manufacturing_date, expiry_date, shift, country_of_origin, 
                  lab_report_url, is_active, status, category_id, total_units_manufactured, units_sold, units_remaining, 
                  is_lab_tested, is_organic, quality_approved, quality_approver_id, quality_approved_at, 
                  released_for_sale, releaser_id, released_at, created_at) 
                 VALUES 
-                (:batch_code, :product_id, :product_name, :net_weight, :mfg_date, :exp_date, :shift, :country, 
+                (:batch_code, :product_id, :product_name, :net_weight, :weight_id, :mfg_date, :exp_date, :shift, :country, 
                  :lab_report, :is_active, :status, :category_id, :total_units, :units_sold, :units_remaining, 
                  :is_lab_tested, :is_organic, :quality_approved, :quality_approver_id, :quality_approved_at,
                  :released_for_sale, :releaser_id, :released_at, NOW())
@@ -168,6 +193,7 @@ try {
                 ':product_id' => $productId,
                 ':product_name' => $productName,
                 ':net_weight' => $netWeight,
+                ':weight_id' => $weightId,
                 ':mfg_date' => $mfgDate,
                 ':exp_date' => $expDate,
                 ':shift' => $shift,

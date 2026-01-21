@@ -351,6 +351,7 @@ body {
                     <th>SPECIFICATION</th>
                     <th>TIMELINE</th>
                     <th>STATUS</th>
+                    <th>EAN</th>
                     <th>CERTIFICATIONS</th>
                     <th>QR CODE</th>
                     <th>CONTROLS</th>
@@ -359,7 +360,7 @@ body {
             <tbody>
                         <?php if (empty($batches)): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-5 text-muted">
+                                <td colspan="9" class="text-center py-5 text-muted">
                                     <i class="fas fa-barcode fa-3x mb-3 d-block"></i>
                                     No batch codes generated yet. Click "Generate New Batch" to create one.
                                 </td>
@@ -392,6 +393,26 @@ body {
                                     <!-- Status -->
                                     <td>
                                         <?= get_batch_status_badge($batch['status'] ?? 'production'); ?>
+                                    </td>
+                                    
+                                    <!-- EAN -->
+                                    <td>
+                                        <?php 
+                                        // Fetch EAN from product_weights
+                                        $batchEan = '';
+                                        if (!empty($batch['weight_id'])) {
+                                            $eanData = db_fetch("SELECT ean FROM product_weights WHERE id = ?", [$batch['weight_id']]);
+                                            $batchEan = $eanData['ean'] ?? '';
+                                        } elseif (!empty($batch['net_weight']) && !empty($batch['product_id'])) {
+                                            $eanData = db_fetch("SELECT ean FROM product_weights WHERE product_id = ? AND display_weight = ?", [$batch['product_id'], $batch['net_weight']]);
+                                            $batchEan = $eanData['ean'] ?? '';
+                                        }
+                                        ?>
+                                        <?php if (!empty($batchEan)): ?>
+                                        <span style="font-size: 0.85rem; font-weight: 500;"><?= htmlspecialchars($batchEan); ?></span>
+                                        <?php else: ?>
+                                        <span style="color: #9ca3af;">-</span>
+                                        <?php endif; ?>
                                     </td>
                                     
                                     <!-- Certifications -->
@@ -524,7 +545,7 @@ body {
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Select Product *</label>
                             <select name="product_id" id="productSelect" class="form-select" required onchange="loadProductDetails(); generateBatchCode();">
                                 <option value="">First select C-Code...</option>
@@ -532,13 +553,20 @@ body {
                             <small class="text-muted">Products filtered by selected C-Code</small>
                         </div>
                         
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Net Weight *</label>
                             <select name="weight_id" id="weightSelect" class="form-select" required onchange="updateNetWeight(); generateBatchCode();">
                                 <option value="">Select product first...</option>
                             </select>
                             <input type="hidden" name="net_weight" id="netWeightHidden" value="">
                             <small class="text-muted">Select from available product weights</small>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">EAN/Barcode <span class="text-danger">*</span></label>
+                            <input type="text" id="eanDisplay" class="form-control" readonly placeholder="Auto-filled from product">
+                            <small class="text-muted">Required for batch generation (8-13 digits)</small>
+                            <div class="invalid-feedback" id="eanError">EAN is required. Add it in Edit Product Weight.</div>
                         </div>
                     </div>
                     <input type="hidden" name="category_id" id="categoryIdHidden" value="">
@@ -752,6 +780,31 @@ body {
 </div>
 
 <script>
+// Form validation for batch generation - EAN is mandatory
+document.getElementById('addBatchForm').addEventListener('submit', function(e) {
+    const eanDisplay = document.getElementById('eanDisplay');
+    const ean = eanDisplay.value.trim();
+    const eanRegex = /^[0-9]{8,13}$/;
+    
+    // Validate EAN is present and valid
+    if (!ean) {
+        e.preventDefault();
+        eanDisplay.classList.add('is-invalid');
+        alert('EAN number is required. Please add the EAN in Edit Product Weight to generate a batch.');
+        return false;
+    }
+    
+    if (!eanRegex.test(ean)) {
+        e.preventDefault();
+        eanDisplay.classList.add('is-invalid');
+        alert('Invalid EAN format. EAN must be 8-13 numeric digits. Please update the EAN in Edit Product Weight.');
+        return false;
+    }
+    
+    eanDisplay.classList.remove('is-invalid');
+    return true;
+});
+
 // Load products filtered by C-Code
 function loadProductsByCode() {
     const codeSelect = document.getElementById('categoryCodeSelect');
@@ -803,25 +856,50 @@ function loadProductDetails() {
         document.getElementById('productNameHidden').value = productName || '';
         
         // Load weights for this product via AJAX
-        fetch('<?= base_url('admin/get_product_weights.php'); ?>?product_id=' + productId)
-            .then(response => response.json())
+        fetch('get_product_weights.php?product_id=' + productId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Weights API response:', data);
                 weightSelect.innerHTML = '<option value="">Select weight...</option>';
                 
-                if (data.success && data.weights.length > 0) {
+                if (data.success && data.weights && data.weights.length > 0) {
+                    let firstAvailable = null;
+                    let availableCount = 0;
+                    
                     data.weights.forEach(weight => {
+                        // has_active_batch = true means weight has a blocking batch (generated/production/verification/active)
+                        // These weights should be HIDDEN from dropdown
+                        if (weight.has_active_batch) {
+                            console.log('Hiding blocked weight:', weight.display_weight, 'status:', weight.active_batch_status);
+                            return; // Skip - don't add to dropdown
+                        }
+                        
+                        // Add available weights to dropdown (EAN shown in separate field)
                         const option = document.createElement('option');
                         option.value = weight.id;
                         option.textContent = weight.display_weight;
                         option.setAttribute('data-weight', weight.display_weight);
-                        if (weight.is_default == 1) {
-                            option.selected = true;
-                        }
+                        option.setAttribute('data-ean', weight.ean || '');
+                        
                         weightSelect.appendChild(option);
+                        availableCount++;
+                        
+                        if (!firstAvailable) {
+                            firstAvailable = option;
+                        }
                     });
                     
-                    // Trigger weight update if default selected
-                    if (weightSelect.value) {
+                    // If no available weights, show message
+                    if (availableCount === 0) {
+                        weightSelect.innerHTML = '<option value="">No weights available - all have active batches</option>';
+                    } else if (firstAvailable) {
+                        // Auto-select first available weight
+                        firstAvailable.selected = true;
                         updateNetWeight();
                     }
                 } else {
@@ -839,21 +917,39 @@ function loadProductDetails() {
         document.getElementById('productNameHidden').value = '';
         weightSelect.innerHTML = '<option value="">Select product first...</option>';
         document.getElementById('netWeightHidden').value = '';
+        document.getElementById('eanDisplay').value = '';
         document.getElementById('activeBatchesContainer').innerHTML = '';
     }
 }
 
-// Update hidden net_weight field when weight is selected
+// Update hidden net_weight field and EAN display when weight is selected
 function updateNetWeight() {
     const weightSelect = document.getElementById('weightSelect');
     const selectedOption = weightSelect.options[weightSelect.selectedIndex];
+    const eanDisplay = document.getElementById('eanDisplay');
     
     if (selectedOption.value) {
         const displayWeight = selectedOption.getAttribute('data-weight');
+        const ean = selectedOption.getAttribute('data-ean');
         document.getElementById('netWeightHidden').value = displayWeight || '';
+        eanDisplay.value = ean || '';
+        
+        // Validate EAN and show warning if missing
+        if (!ean || ean.trim() === '') {
+            eanDisplay.classList.add('is-invalid');
+        } else if (!/^[0-9]{8,13}$/.test(ean)) {
+            eanDisplay.classList.add('is-invalid');
+        } else {
+            eanDisplay.classList.remove('is-invalid');
+        }
     } else {
         document.getElementById('netWeightHidden').value = '';
+        eanDisplay.value = '';
+        eanDisplay.classList.remove('is-invalid');
     }
+    
+    // Regenerate batch code with new EAN suffix
+    generateBatchCode();
 }
 
 // Load active batches for selected product
@@ -921,6 +1017,7 @@ function generateBatchCode() {
     const mfgDateInput = document.getElementById('mfgDateInput');
     const shiftSelect = document.getElementById('shiftSelect');
     const batchCodeDisplay = document.getElementById('batchCodeDisplay');
+    const eanDisplay = document.getElementById('eanDisplay');
     
     // Check if all required fields are filled
     if (!codeSelect.value || !productSelect.value || !mfgDateInput.value || !shiftSelect.value) {
@@ -947,8 +1044,15 @@ function generateBatchCode() {
     // Get shift code
     const shift = shiftSelect.value;
     
-    // Generate batch code: G-[CategoryCode][ProductCode]-[MMYY]-[DD]-[Shift]
-    const batchCode = `G-${categoryCode}${productCode}-${month}${year}-${day}-${shift}`;
+    // Get EAN and extract last 2 digits
+    const ean = eanDisplay.value.trim();
+    let eanSuffix = '';
+    if (ean && /^[0-9]{8,13}$/.test(ean)) {
+        eanSuffix = '-' + ean.slice(-2);
+    }
+    
+    // Generate batch code: G-[CategoryCode][ProductCode]-[MMYY]-[DD]-[Shift]-[EAN Last 2]
+    const batchCode = `G-${categoryCode}${productCode}-${month}${year}-${day}-${shift}${eanSuffix}`;
     
     // Display the generated batch code
     batchCodeDisplay.value = batchCode;

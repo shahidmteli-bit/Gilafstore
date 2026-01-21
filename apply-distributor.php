@@ -14,7 +14,7 @@ include __DIR__ . '/includes/new-header.php';
 
 .application-hero {
     background: linear-gradient(135deg, var(--color-green) 0%, rgba(26, 60, 52, 0.9) 100%);
-    padding: 60px 40px;
+    padding: 18px 40px;
     border-radius: 24px;
     margin-bottom: 40px;
     text-align: center;
@@ -58,7 +58,7 @@ include __DIR__ . '/includes/new-header.php';
 }
 
 .application-hero h1 {
-    font-family: var(--font-serif);
+    font-family: 'Poppins', sans-serif;
     font-size: 2.5rem;
     font-weight: 700;
     color: white;
@@ -400,6 +400,87 @@ include __DIR__ . '/includes/new-header.php';
 .application-type-card input[type="radio"] {
     display: none;
 }
+
+/* Force partnership cards in a row on desktop */
+.partnership-cards-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 20px !important;
+}
+
+@media (min-width: 768px) {
+    .partnership-cards-row {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px !important;
+    }
+    .partnership-cards-row > div {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+    }
+    .application-type-card {
+        padding: 20px 15px;
+    }
+    .card-icon-wrapper {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 12px;
+    }
+    .card-icon-wrapper i {
+        font-size: 1.8rem;
+    }
+    .application-type-card h5 {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+    .card-description {
+        font-size: 0.8rem;
+        margin-bottom: 12px;
+        min-height: 36px;
+    }
+    .card-benefits {
+        margin: 12px 0;
+        padding: 12px;
+    }
+    .benefit-item {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+        gap: 6px;
+    }
+    .benefit-item i {
+        font-size: 0.75rem;
+    }
+    .card-badge {
+        padding: 4px 10px;
+        font-size: 0.65rem;
+        top: 10px;
+        right: 10px;
+    }
+    .card-logo-wrapper {
+        width: 80px;
+        height: 60px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .partnership-cards-row {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Force side-by-side layout for Business sections */
+.business-info-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 40px !important;
+}
+@media (max-width: 767px) {
+    .business-info-row {
+        grid-template-columns: 1fr !important;
+    }
+}
 </style>
 
 <section class="application-form">
@@ -414,68 +495,31 @@ include __DIR__ . '/includes/new-header.php';
 
         <form action="<?= base_url('submit_application.php'); ?>" method="post" enctype="multipart/form-data" id="distributorForm">
             
-            <!-- Business Owner Information -->
+            <!-- Business Owner Information & Business Place Address - Side by Side -->
             <div class="form-card">
-                <h2 class="form-section-title"><i class="fas fa-user"></i> Business Owner Information</h2>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Business Owner Name *</label>
-                        <input type="text" name="owner_name" class="form-control" required>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Phone Number *</label>
-                        <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Email ID *</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Owner Address *</label>
-                        <textarea name="owner_address" class="form-control" rows="3" required></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Business Place Address -->
-            <div class="form-card">
-                <h2 class="form-section-title"><i class="fas fa-building"></i> Business Place Address</h2>
-                
-                <div class="form-check mb-3">
-                    <input class="form-check-input" type="checkbox" id="sameAsOwner" name="same_as_owner_address" value="1" onchange="toggleBusinessAddress()">
-                    <label class="form-check-label" for="sameAsOwner">
-                        Same as owner address
-                    </label>
-                </div>
-                
-                <div id="businessAddressFields">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label">Business Address *</label>
-                            <textarea name="business_address" id="businessAddress" class="form-control" rows="3" required></textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">Pincode *</label>
-                            <input type="text" name="pincode" class="form-control" pattern="[0-9]{6}" required>
+                <div class="row business-info-row">
+                    <!-- Column 1: Business Owner Information -->
+                    <div class="col-md-6">
+                        <h2 class="form-section-title"><i class="fas fa-user"></i> Business Owner Information</h2>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Business Owner Name *</label>
+                            <input type="text" name="owner_name" class="form-control" required>
                         </div>
                         
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">City *</label>
-                            <input type="text" name="city" class="form-control" required>
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" name="phone" class="form-control" pattern="[0-9]{10}" placeholder="10-digit mobile number" required>
                         </div>
                         
-                        <div class="col-md-4 mb-3">
+                        <div class="mb-3">
+                            <label class="form-label">Email ID *</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
                             <label class="form-label">State *</label>
-                            <select name="state" class="form-select" required>
+                            <select name="owner_state" class="form-select" required>
                                 <option value="">Select State/UT</option>
                                 <optgroup label="States">
                                     <option value="Andhra Pradesh">Andhra Pradesh</option>
@@ -519,113 +563,115 @@ include __DIR__ . '/includes/new-header.php';
                                 </optgroup>
                             </select>
                         </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Owner Address *</label>
+                            <textarea name="owner_address" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Column 2: Store Location -->
+                    <div class="col-md-6">
+                        <h2 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Store Location</h2>
+                        
+                        <div class="mb-3">
+                            <button type="button" class="location-btn" id="allowLocationBtn" onclick="getLocation()">
+                                <i class="fas fa-crosshairs"></i> Allow Location & Auto-Fill Details
+                            </button>
+                            <p class="file-info mt-2">Click to automatically capture GPS coordinates and fill address details</p>
+                            <div id="locationStatus" class="mt-2"></div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Latitude (X Coordinate)</label>
+                            <input type="text" name="latitude" id="latitude" class="form-control" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Longitude (Y Coordinate)</label>
+                            <input type="text" name="longitude" id="longitude" class="form-control" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Location Accuracy</label>
+                            <input type="text" name="location_accuracy" id="locationAccuracy" class="form-control" readonly placeholder="Accuracy radius in meters">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Area / Locality</label>
+                            <input type="text" name="locality" id="locality" class="form-control" readonly>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Google Maps Location URL</label>
+                            <input type="url" name="google_maps_url" id="googleMapsUrl" class="form-control" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Identity Proof -->
+            <!-- Business Licenses & Identity Proof - Side by Side -->
             <div class="form-card">
-                <h2 class="form-section-title"><i class="fas fa-id-card"></i> Identity Proof</h2>
-                
-                <div class="mb-3">
-                    <label class="form-label">Select Identity Proof Type *</label>
-                    <select name="identity_proof_type" class="form-select" required>
-                        <option value="">Choose...</option>
-                        <option value="aadhaar">Aadhaar Card</option>
-                        <option value="pan">PAN Card</option>
-                        <option value="election_card">Election Card</option>
-                    </select>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Upload Identity Proof * (Max 200 KB)</label>
-                    <div class="upload-area" onclick="document.getElementById('identityProof').click()">
-                        <i class="fas fa-cloud-upload-alt fa-2x mb-2" style="color: var(--color-gold);"></i>
-                        <p class="mb-0">Click to upload or drag and drop</p>
-                        <p class="file-info">PDF, JPG, PNG (Max 200 KB)</p>
-                        <input type="file" id="identityProof" name="identity_proof" accept=".pdf,.jpg,.jpeg,.png" required onchange="displayFileName(this, 'identityFileName')">
-                    </div>
-                    <div id="identityFileName" class="mt-2 text-success"></div>
-                </div>
-            </div>
-
-            <!-- Business Licenses -->
-            <div class="form-card">
-                <h2 class="form-section-title"><i class="fas fa-certificate"></i> Business Licenses</h2>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Shops & Labour License</label>
-                        <input type="file" name="shops_labour_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
-                        <small class="text-muted">Max 200 KB</small>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Municipality License</label>
-                        <input type="file" name="municipality_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
-                        <small class="text-muted">Max 200 KB</small>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">MSME License</label>
-                        <input type="file" name="msme_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
-                        <small class="text-muted">Max 200 KB</small>
+                <div class="row business-info-row">
+                    <!-- Column 1: Business Licenses -->
+                    <div class="col-md-6">
+                        <h2 class="form-section-title"><i class="fas fa-certificate"></i> Business Licenses</h2>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Shops & Labour License</label>
+                            <input type="file" name="shops_labour_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
+                            <small class="text-muted">Max 200 KB</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Municipality License</label>
+                            <input type="file" name="municipality_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
+                            <small class="text-muted">Max 200 KB</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">MSME License</label>
+                            <input type="file" name="msme_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
+                            <small class="text-muted">Max 200 KB</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">GST License</label>
+                            <input type="file" name="gst_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
+                            <small class="text-muted">Max 200 KB</small>
+                        </div>
+                        
+                        <div class="mb-3" style="max-width: 300px;">
+                            <label class="form-label">GST Registration Number</label>
+                            <input type="text" name="gst_registration_number" class="form-control" placeholder="e.g., 22AAAAA0000A1Z5">
+                        </div>
                     </div>
                     
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">GST License</label>
-                        <input type="file" name="gst_license" class="form-control" accept=".pdf,.jpg,.jpeg,.png" onchange="validateFileSize(this)">
-                        <small class="text-muted">Max 200 KB</small>
+                    <!-- Column 2: Identity Proof -->
+                    <div class="col-md-6">
+                        <h2 class="form-section-title"><i class="fas fa-id-card"></i> Identity Proof</h2>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Select Identity Proof Type *</label>
+                            <select name="identity_proof_type" class="form-select" required>
+                                <option value="">Choose...</option>
+                                <option value="aadhaar">Aadhaar Card</option>
+                                <option value="pan">PAN Card</option>
+                                <option value="election_card">Election Card</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Upload Identity Proof * (Max 200 KB)</label>
+                            <div class="upload-area" onclick="document.getElementById('identityProof').click()">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2" style="color: var(--color-gold);"></i>
+                                <p class="mb-0">Click to upload or drag and drop</p>
+                                <p class="file-info">PDF, JPG, PNG (Max 200 KB)</p>
+                                <input type="file" id="identityProof" name="identity_proof" accept=".pdf,.jpg,.jpeg,.png" required onchange="displayFileName(this, 'identityFileName')">
+                            </div>
+                            <div id="identityFileName" class="mt-2 text-success"></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">GST Registration Number</label>
-                    <input type="text" name="gst_registration_number" class="form-control" placeholder="e.g., 22AAAAA0000A1Z5">
-                </div>
-            </div>
-
-            <!-- Location -->
-            <div class="form-card">
-                <h2 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Store Location</h2>
-                
-                <div class="mb-3">
-                    <button type="button" class="location-btn" id="allowLocationBtn" onclick="getLocation()">
-                        <i class="fas fa-crosshairs"></i> Allow Location & Auto-Fill Details
-                    </button>
-                    <p class="file-info mt-2">Click to automatically capture GPS coordinates and fill address details</p>
-                    <div id="locationStatus" class="mt-2"></div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Latitude (X Coordinate)</label>
-                        <input type="text" name="latitude" id="latitude" class="form-control" readonly>
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Longitude (Y Coordinate)</label>
-                        <input type="text" name="longitude" id="longitude" class="form-control" readonly>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Location Accuracy</label>
-                        <input type="text" name="location_accuracy" id="locationAccuracy" class="form-control" readonly placeholder="Accuracy radius in meters">
-                    </div>
-                    
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Area / Locality</label>
-                        <input type="text" name="locality" id="locality" class="form-control" readonly>
-                    </div>
-                </div>
-                
-                <div class="mb-3">
-                    <label class="form-label">Google Maps Location URL</label>
-                    <input type="url" name="google_maps_url" id="googleMapsUrl" class="form-control" readonly>
                 </div>
             </div>
 
@@ -634,7 +680,7 @@ include __DIR__ . '/includes/new-header.php';
                 <h2 class="form-section-title"><i class="fas fa-briefcase"></i> Select Partnership Type</h2>
                 <p style="color: var(--color-text-light); margin-bottom: 30px; font-size: 0.95rem;">Choose the partnership model that best fits your business goals</p>
                 
-                <div class="row g-4">
+                <div class="row g-4 partnership-cards-row">
                     <div class="col-md-4">
                         <label class="application-type-card" onclick="selectApplicationType('reseller')" id="card-reseller">
                             <input type="radio" name="application_type" value="reseller" required>
@@ -672,11 +718,8 @@ include __DIR__ . '/includes/new-header.php';
                     <div class="col-md-4">
                         <label class="application-type-card card-premium" onclick="selectApplicationType('official_store')" id="card-official_store">
                             <input type="radio" name="application_type" value="official_store" required>
-                            <div class="card-logo-wrapper">
-                                <img src="https://i.imgur.com/YourGilafLogo.png" alt="Gilaf Logo" class="gilaf-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="card-icon-wrapper" style="display: none;">
-                                    <i class="fas fa-crown"></i>
-                                </div>
+                            <div class="card-icon-wrapper">
+                                <i class="fas fa-crown"></i>
                             </div>
                             <h5>Official Gilaf Store</h5>
                             <p class="card-description">Open an exclusive Gilaf branded flagship store</p>

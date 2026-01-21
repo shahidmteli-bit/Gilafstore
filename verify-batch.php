@@ -487,9 +487,36 @@ include __DIR__ . '/includes/new-header.php';
                         <div class="batch-info-value"><?= htmlspecialchars($batch['net_weight']) ?></div>
                     </div>
                     
+                    <?php 
+                    // Fetch weight-specific price and EAN from product_weights
+                    $verifyEan = '';
+                    $weightPrice = null;
+                    if (!empty($batch['weight_id'])) {
+                        $weightData = db_fetch("SELECT price, ean FROM product_weights WHERE id = ?", [$batch['weight_id']]);
+                        if ($weightData) {
+                            $weightPrice = (float)$weightData['price'];
+                            $verifyEan = $weightData['ean'] ?? '';
+                        }
+                    } elseif (!empty($batch['net_weight']) && !empty($batch['product_id'])) {
+                        $weightData = db_fetch("SELECT price, ean FROM product_weights WHERE product_id = ? AND display_weight = ?", [$batch['product_id'], $batch['net_weight']]);
+                        if ($weightData) {
+                            $weightPrice = (float)$weightData['price'];
+                            $verifyEan = $weightData['ean'] ?? '';
+                        }
+                    }
+                    // Use weight-specific price, fallback to product price only if weight not found
+                    $finalPrice = $weightPrice ?? (float)$batch['product_price'];
+                    ?>
+                    <?php if (!empty($verifyEan)): ?>
+                    <div class="batch-info-item">
+                        <div class="batch-info-label">EAN/Barcode</div>
+                        <div class="batch-info-value"><?= htmlspecialchars($verifyEan) ?></div>
+                    </div>
+                    <?php endif; ?>
+                    
                     <div class="batch-info-item">
                         <div class="batch-info-label">MRP</div>
-                        <div class="batch-info-value">₹<?= number_format($batch['product_price'], 2) ?></div>
+                        <div class="batch-info-value">₹<?= number_format($finalPrice, 2) ?></div>
                     </div>
                     
                     <div class="batch-info-item">

@@ -3,6 +3,12 @@
 -- Run this in phpMyAdmin on BOTH local and Hostinger
 -- ============================================
 
+-- IMPORTANT: Replace 'your_database_name' with your actual database name
+-- For localhost: Usually 'gilaf_store' or check phpMyAdmin left sidebar
+-- For Hostinger: Check your database name in Hostinger panel
+
+-- USE your_database_name;
+
 -- Add price column to existing product_weights table
 ALTER TABLE `product_weights` 
 ADD COLUMN `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `display_weight`;

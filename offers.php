@@ -17,7 +17,7 @@ include __DIR__ . '/includes/new-header.php';
     .offers-hero {
         background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
         color: white;
-        padding: 120px 20px;
+        padding: 36px 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -221,9 +221,13 @@ include __DIR__ . '/includes/new-header.php';
     
     .benefits-section {
         background: #f8f9fa;
-        padding: 60px 20px;
+        padding: 60px 20px 11px 20px;
         border-radius: 12px;
-        margin-bottom: 60px;
+        margin-bottom: 11px;
+    }
+    
+    .faq-section {
+        margin-top: 16px !important;
     }
     
     .benefits-section h2 {

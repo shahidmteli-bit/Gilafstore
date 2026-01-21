@@ -23,13 +23,32 @@ $highlights = get_product_highlights($productId);
 $variants = get_product_variants($productId);
 $batchDetails = get_batch_details_for_product($productId);
 
-// Fetch all weights for this product
+// Build product images array (use image_1..image_4 if available, fallback to main image)
+$productImages = [];
+foreach (['image_1', 'image_2', 'image_3', 'image_4'] as $imageField) {
+    if (!empty($product[$imageField])) {
+        $productImages[] = $product[$imageField];
+    }
+}
+if (empty($productImages) && !empty($product['image'])) {
+    $productImages[] = $product['image'];
+}
+
+$mainProductImage = $productImages[0] ?? $product['image'];
+
+// Fetch all weights for this product (including EAN for display)
 $db = get_db_connection();
-$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, is_default FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, ean, is_default FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
 $stmt->execute([$productId]);
 $productWeights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $fssaiLicense = get_site_setting('fssai_license_number', '12724064000335');
 $returnPolicy = get_site_setting('return_policy', 'Returns allowed only for damaged, defective, or incorrect products within 7 days of delivery');
+
+// Get dynamic shipping/delivery fee from admin settings
+$productShippingType = $product['shipping_type'] ?? 'domestic';
+$shippingSettings = get_shipping_settings($productShippingType);
+$deliveryFee = (float)($shippingSettings['base_charge'] ?? 50.00);
+$freeShippingThreshold = (float)($shippingSettings['free_shipping_threshold'] ?? 500.00);
 $userHasPurchased = isset($_SESSION['user']) ? user_has_purchased_product((int)$_SESSION['user']['id'], $productId) : false;
 $productRating = get_product_rating($productId);
 
@@ -77,16 +96,128 @@ include __DIR__ . '/includes/new-header.php';
 <!-- Product Detail Page CSS -->
 <link rel="stylesheet" href="<?= asset_url('css/product-detail-page.css'); ?>">
 
+<!-- Inline Zoom Styles (fallback) -->
+<style>
+.product-image-zoom-container { position: relative; display: block; width: 100%; }
+.product-main-image-wrapper { position: relative; overflow: visible; cursor: crosshair; border-radius: 16px; border: 1px solid #e9ecef; background: #ffffff; padding: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+.product-main-image-wrapper .product-main-image { width: 100%; max-width: 100%; height: auto; display: block; border: none; padding: 0; box-shadow: none; }
+#zoomLens { position: absolute; border: 3px solid #d4af37; width: 120px; height: 120px; background-color: rgba(212,175,55,0.2); pointer-events: none; display: none; z-index: 100; border-radius: 4px; }
+#zoomResult { position: fixed; width: 400px; height: 400px; border: 2px solid #d4af37; background-color: #fff; box-shadow: 0 8px 40px rgba(0,0,0,0.3); border-radius: 12px; display: none; z-index: 99999; overflow: hidden; pointer-events: none; }
+#zoomResult img { position: absolute; max-width: none; pointer-events: none; }
+@media (max-width: 991px) { #zoomLens, #zoomResult { display: none !important; } .product-main-image-wrapper { cursor: default; } }
+</style>
+
 <section class="py-5 product-detail-page">
   <div class="container">
     <div class="product-detail-grid">
       <!-- Left Column: Product Image -->
       <div class="product-image-section">
-        <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="<?= htmlspecialchars($product['name']); ?>" class="product-main-image" id="mainProductImage" />
+        <div class="product-image-zoom-container">
+          <div class="product-main-image-wrapper" id="imageZoomWrapper">
+            <img src="<?= asset_url('images/products/' . htmlspecialchars($mainProductImage)); ?>" alt="<?= htmlspecialchars($product['name']); ?>" class="product-main-image" id="mainProductImage" />
+            <div id="zoomLens"></div>
+          </div>
+          <div id="zoomResult"></div>
+        </div>
+        
+        <!-- Zoom Script (immediately after elements) -->
+        <script>
+        (function(){
+          var w = document.getElementById('imageZoomWrapper');
+          var img = document.getElementById('mainProductImage');
+          var lens = document.getElementById('zoomLens');
+          var res = document.getElementById('zoomResult');
+          
+          if(!w || !img || !lens || !res) return;
+          
+          var zoomImg = null;
+          var cx = 3, cy = 3;
+          
+          function init() {
+            if(window.innerWidth <= 991) return;
+            
+            var dispW = img.offsetWidth;
+            var dispH = img.offsetHeight;
+            
+            if(dispW === 0 || dispH === 0) {
+              setTimeout(init, 100);
+              return;
+            }
+            
+            // Create or update zoom image
+            if(!zoomImg) {
+              zoomImg = document.createElement('img');
+              res.innerHTML = '';
+              res.appendChild(zoomImg);
+            }
+            zoomImg.src = img.src;
+            zoomImg.style.width = (dispW * cx) + 'px';
+            zoomImg.style.height = (dispH * cy) + 'px';
+            zoomImg.style.left = '0px';
+            zoomImg.style.top = '0px';
+            
+            // Position zoom result
+            var wRect = w.getBoundingClientRect();
+            res.style.top = Math.max(10, wRect.top) + 'px';
+            res.style.left = (wRect.right + 15) + 'px';
+          }
+          
+          function move(e) {
+            if(window.innerWidth <= 991 || !zoomImg) return;
+            
+            var rect = img.getBoundingClientRect();
+            var dispW = img.offsetWidth;
+            var dispH = img.offsetHeight;
+            
+            var mouseX = e.clientX - rect.left;
+            var mouseY = e.clientY - rect.top;
+            
+            var lensX = mouseX - 60;
+            var lensY = mouseY - 60;
+            
+            if(lensX < 0) lensX = 0;
+            if(lensY < 0) lensY = 0;
+            if(lensX > dispW - 120) lensX = dispW - 120;
+            if(lensY > dispH - 120) lensY = dispH - 120;
+            
+            lens.style.left = lensX + 'px';
+            lens.style.top = lensY + 'px';
+            
+            // Move the zoomed image
+            zoomImg.style.left = '-' + (lensX * cx) + 'px';
+            zoomImg.style.top = '-' + (lensY * cy) + 'px';
+          }
+          
+          w.addEventListener('mouseenter', function() {
+            if(window.innerWidth <= 991) return;
+            init();
+            lens.style.display = 'block';
+            res.style.display = 'block';
+          });
+          
+          w.addEventListener('mouseleave', function() {
+            lens.style.display = 'none';
+            res.style.display = 'none';
+          });
+          
+          w.addEventListener('mousemove', move);
+          
+          // Thumbnail click
+          var origChange = window.changeMainImage;
+          window.changeMainImage = function(src) {
+            if(origChange) origChange(src);
+            zoomImg = null; // Reset zoom image
+            setTimeout(init, 250);
+          };
+        })();
+        </script>
         <div class="product-thumbnail-list">
-          <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="Thumbnail 1" class="product-thumbnail active" onclick="changeMainImage(this.src)" />
-          <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="Thumbnail 2" class="product-thumbnail" onclick="changeMainImage(this.src)" />
-          <img src="<?= asset_url('images/products/' . htmlspecialchars($product['image'])); ?>" alt="Thumbnail 3" class="product-thumbnail" onclick="changeMainImage(this.src)" />
+          <?php foreach ($productImages as $index => $imagePath): ?>
+            <img src="<?= asset_url('images/products/' . htmlspecialchars($imagePath)); ?>"
+                 alt="Thumbnail <?= $index + 1; ?>"
+                 class="product-thumbnail <?= $index === 0 ? 'active' : ''; ?>"
+                 onclick="changeMainImage(this.src)" />
+          <?php endforeach; ?>
         </div>
         
         <!-- Product Description Section -->
@@ -169,10 +300,13 @@ include __DIR__ . '/includes/new-header.php';
         
         <div class="product-delivery-info">
           <svg class="product-delivery-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"></path>
           </svg>
-          <span class="product-delivery-text">Delivery ₹67</span>
-          <span class="product-delivery-price">₹70</span>
+          <?php if ($deliveryFee > 0): ?>
+            <span class="product-delivery-text">Delivery ₹<?= number_format($deliveryFee, 0); ?></span>
+          <?php else: ?>
+            <span class="product-delivery-text" style="color: #10b981;">Free Delivery</span>
+          <?php endif; ?>
         </div>
         
         <?php if (!empty($productWeights)): ?>
@@ -184,6 +318,7 @@ include __DIR__ . '/includes/new-header.php';
                       data-weight-id="<?= $weight['id']; ?>" 
                       data-price="<?= $weight['price']; ?>"
                       data-weight="<?= htmlspecialchars($weight['display_weight']); ?>"
+                      data-ean="<?= htmlspecialchars($weight['ean'] ?? ''); ?>"
                       onclick="selectWeight(this)">
                 <?= htmlspecialchars($weight['display_weight']); ?>
               </button>
@@ -208,7 +343,7 @@ include __DIR__ . '/includes/new-header.php';
               </svg>
               Add to Cart
             </button>
-            <button type="button" class="btn-buy-now" onclick="buyNow()">
+            <button type="submit" class="btn-buy-now" formaction="<?= base_url('buy_now.php'); ?>">
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
               </svg>
@@ -258,6 +393,14 @@ include __DIR__ . '/includes/new-header.php';
             <div class="detail-row">
               <span class="detail-label">FSSAI License:</span>
               <span class="detail-value"><?= htmlspecialchars($fssaiLicense); ?></span>
+            </div>
+            <?php 
+              $defaultWeightData = !empty($productWeights) ? (array_filter($productWeights, fn($w) => $w['is_default'] == 1) ?: [$productWeights[0]]) : [];
+              $defaultEan = !empty($defaultWeightData) ? reset($defaultWeightData)['ean'] : '';
+            ?>
+            <div class="detail-row" id="eanRow" style="<?= empty($defaultEan) ? 'display:none;' : ''; ?>">
+              <span class="detail-label">EAN/Barcode:</span>
+              <span class="detail-value" id="productEan"><?= htmlspecialchars($defaultEan); ?></span>
             </div>
           </div>
         </div>
@@ -373,6 +516,7 @@ function selectWeight(button) {
   const weightId = button.getAttribute('data-weight-id');
   const price = button.getAttribute('data-price');
   const weight = button.getAttribute('data-weight');
+  const ean = button.getAttribute('data-ean');
   
   // Update hidden input for selected weight
   const weightIdInput = document.getElementById('selectedWeightId');
@@ -386,7 +530,19 @@ function selectWeight(button) {
     priceElement.innerHTML = '<span class="product-price-symbol">₹</span>' + parseFloat(price).toFixed(0);
   }
   
-  console.log('Selected weight: ' + weight + ' - Price: ₹' + price);
+  // Update EAN display
+  const eanRow = document.getElementById('eanRow');
+  const eanElement = document.getElementById('productEan');
+  if (eanRow && eanElement) {
+    if (ean && ean.trim() !== '') {
+      eanElement.textContent = ean;
+      eanRow.style.display = '';
+    } else {
+      eanRow.style.display = 'none';
+    }
+  }
+  
+  console.log('Selected weight: ' + weight + ' - Price: ₹' + price + ' - EAN: ' + (ean || 'N/A'));
 }
 
 // Legacy function for backward compatibility
@@ -395,18 +551,36 @@ function selectVariant(button) {
 }
 
 // Buy Now functionality
-function buyNow() {
+function buyNow(e) {
+  if (e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+  
   const form = document.getElementById('productForm');
   const formData = new FormData(form);
+  formData.set('action', 'add');
+  formData.set('buy_now', '1'); // Flag for direct checkout
   
-  // Add to cart first
+  // Add to cart first, then redirect to checkout
   fetch(form.action, {
     method: 'POST',
-    body: formData
-  }).then(() => {
-    // Redirect to checkout
-    window.location.href = '<?= base_url('checkout.php'); ?>';
-  });
+    body: formData,
+    credentials: 'same-origin'
+  }).then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        window.location.href = '<?= base_url('checkout.php'); ?>';
+      } else {
+        alert(data.message || 'Failed to add product. Please try again.');
+      }
+    }).catch(error => {
+      console.error('Buy Now error:', error);
+      // Still redirect - item might have been added
+      window.location.href = '<?= base_url('checkout.php'); ?>';
+    });
+  
+  return false;
 }
 
 // Copy product highlights

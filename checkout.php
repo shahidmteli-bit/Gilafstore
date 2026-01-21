@@ -4,8 +4,10 @@ ini_set('display_errors', 1);
 
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/region_detection.php';
 require_once __DIR__ . '/includes/currency_converter.php';
+require_once __DIR__ . '/includes/promo_functions.php';
 
 // Redirect to login if not authenticated
 if (!isset($_SESSION['user'])) {
@@ -20,10 +22,37 @@ $currentCurrencySymbol = $userRegion['currency_symbol'];
 
 $pageTitle = 'Checkout — Gilaf Store';
 $activePage = '';
-$items = cart_items();
-$subtotal = cart_subtotal();
-$gst = cart_gst();
-$total = cart_total_with_gst();
+
+// Check if this is a Buy Now flow (single product quick checkout)
+$isBuyNow = isset($_GET['buy_now']) && isset($_SESSION['buy_now']);
+
+if ($isBuyNow) {
+    // Buy Now: Use single product from buy_now session
+    $buyNowItem = $_SESSION['buy_now'];
+    $items = [[
+        'product_id' => $buyNowItem['product_id'],
+        'weight_id' => $buyNowItem['weight_id'],
+        'quantity' => $buyNowItem['quantity'],
+        'price' => $buyNowItem['price'],
+        'name' => $buyNowItem['name'],
+        'image' => $buyNowItem['image'],
+        'weight_name' => $buyNowItem['weight_name']
+    ]];
+    $subtotal = $buyNowItem['price'] * $buyNowItem['quantity'];
+    $gst = 0; // Price already includes GST
+    $total = $subtotal;
+} else {
+    // Regular cart checkout
+    $items = cart_items();
+    $subtotal = cart_subtotal();
+    $gst = cart_gst();
+    $total = cart_total(); // Use cart_total() - prices already include GST
+}
+
+// Get dynamic shipping fee from admin settings
+$shippingSettings = get_shipping_settings('domestic');
+$baseDeliveryFee = (float)($shippingSettings['base_charge'] ?? 50.00);
+$freeShippingThreshold = (float)($shippingSettings['free_shipping_threshold'] ?? 500.00);
 
 if (!$items) {
     redirect_with_message('/cart.php', 'Your cart is empty', 'info');
@@ -56,15 +85,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
+            // Calculate final total with promo discount
+            $appliedPromoForOrder = get_applied_promo_code();
+            $promoDiscountForOrder = 0;
+            $promoCodeForOrder = '';
+            if ($appliedPromoForOrder) {
+                $promoDiscountForOrder = recalculate_promo_discount($total);
+                $promoCodeForOrder = $appliedPromoForOrder['code'];
+            }
+            $finalTotal = $total - $promoDiscountForOrder;
+            
             $_SESSION['pending_order'] = [
                 'order_id' => 'ORD' . time() . rand(1000, 9999),
-                'total' => $total,
+                'total' => $finalTotal,
+                'subtotal' => $total,
+                'promo_discount' => $promoDiscountForOrder,
+                'promo_code' => $promoCodeForOrder,
                 'items' => $items,
                 'payment_method' => 'upi',
-                'address' => $addressData
+                'address' => $addressData,
+                'is_buy_now' => $isBuyNow
             ];
             
-            error_log("Checkout: Setting pending_order session - Order ID: " . $_SESSION['pending_order']['order_id'] . ", Total: " . $total);
+            error_log("Checkout: Setting pending_order session - Order ID: " . $_SESSION['pending_order']['order_id'] . ", Total: " . $finalTotal . ", Promo: " . $promoCodeForOrder . " (-" . $promoDiscountForOrder . ")");
             
             header('Location: ' . base_url('upi_payment.php'));
             exit;
@@ -216,14 +259,22 @@ section[data-layout="flipkart-grid"] .checkout-right {
               $itemsTotal += $item['price'] * $item['quantity'];
           }
           
-          $deliveryCharge = 0; // Free delivery
+          // Dynamic delivery charge from admin settings (free if above threshold)
+          $deliveryCharge = ($itemsTotal >= $freeShippingThreshold) ? 0 : $baseDeliveryFee;
           $subtotalInclTax = $itemsTotal + $deliveryCharge;
           
-          // Check for applied promotions/discounts (placeholder - implement your discount logic)
+          // Check for applied promo code from cart
+          $appliedPromo = get_applied_promo_code();
           $promotionDiscount = 0;
           $promotionApplied = false;
-          // Example: $promotionDiscount = $_SESSION['applied_promo_discount'] ?? 0;
-          // if ($promotionDiscount > 0) $promotionApplied = true;
+          $promoCode = '';
+          if ($appliedPromo) {
+              $promotionDiscount = recalculate_promo_discount($itemsTotal);
+              if ($promotionDiscount > 0) {
+                  $promotionApplied = true;
+                  $promoCode = $appliedPromo['code'];
+              }
+          }
           
           // Check for bank offers (placeholder - implement your bank offer logic)
           $bankOfferDiscount = 0;
@@ -231,8 +282,15 @@ section[data-layout="flipkart-grid"] .checkout-right {
           // Example: $bankOfferDiscount = $_SESSION['applied_bank_offer'] ?? 0;
           // if ($bankOfferDiscount > 0) $bankOfferApplied = true;
           
+          // Calculate product discount savings (same as cart page)
+          $gstRate = get_gst_rate();
+          $promotionalDiscountPercent = get_promotional_discount();
+          $gstMultiplier = 1 + ($gstRate / 100);
+          $itemPriceExclTax = $itemsTotal / $gstMultiplier;
+          $productSavings = $itemPriceExclTax * ($promotionalDiscountPercent / 100);
+          
           $totalPayable = $subtotalInclTax - $promotionDiscount - $bankOfferDiscount;
-          $totalSavings = $promotionDiscount + $bankOfferDiscount;
+          $totalSavings = $productSavings + $promotionDiscount + $bankOfferDiscount;
           ?>
           
           <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
@@ -242,7 +300,11 @@ section[data-layout="flipkart-grid"] .checkout-right {
           
           <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
             <span>Delivery:</span>
-            <span><?= display_price($deliveryCharge, $currentCurrency, $currentCurrencySymbol); ?></span>
+            <?php if ($deliveryCharge > 0): ?>
+              <span><?= display_price($deliveryCharge, $currentCurrency, $currentCurrencySymbol); ?></span>
+            <?php else: ?>
+              <span style="color: #2e7d32; font-weight: 600;">Free</span>
+            <?php endif; ?>
           </div>
           
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e0e0e0;">
@@ -254,7 +316,7 @@ section[data-layout="flipkart-grid"] .checkout-right {
           
           <?php if ($promotionApplied): ?>
           <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #2e7d32;">
-            <span>Promotion Applied:</span>
+            <span>Promo (<?= htmlspecialchars($promoCode); ?>):</span>
             <span>−<?= display_price($promotionDiscount, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>
           <?php endif; ?>

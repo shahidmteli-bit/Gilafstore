@@ -454,6 +454,39 @@ body.modal-open {
 .product-details {
     padding: 20px !important;
     text-align: center;
+    overflow: visible;
+}
+
+/* Force price to single line - never wrap */
+.product-details .price-row,
+.product-card .price-row {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.product-details .product-price,
+.product-card .product-price {
+    white-space: nowrap !important;
+    display: inline !important;
+    font-size: 0.81rem !important;
+    font-weight: 600;
+}
+
+/* Product weight variants display */
+.product-weights {
+    display: block;
+    font-size: 0.7rem;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin: 4px 0 6px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Adjust product title size */
@@ -469,11 +502,12 @@ body.modal-open {
     overflow: hidden;
 }
 
-/* Optimize price display */
+/* Optimize price display - refined for premium look */
 .product-price {
-    font-size: 1.3rem !important;
-    font-weight: 700;
+    font-size: 0.95rem !important;
+    font-weight: 600;
     color: var(--color-green, #1a3c34) !important;
+    letter-spacing: 0.01em;
 }
 
 /* Reduce button sizes */
@@ -611,29 +645,34 @@ body.modal-open {
    DISCOUNT PRICING DISPLAY
    ============================================ */
 
-/* Price row with discount */
+/* Price row with discount - single line, premium styling */
 .price-row {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    margin: 12px 0;
-    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 14px 0;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
-/* Original price (strikethrough) */
+/* Original price (strikethrough) - refined */
 .product-price-original {
-    font-size: 1rem;
+    font-size: 0.8rem;
     color: #9ca3af;
     text-decoration: line-through;
-    font-weight: 500;
+    font-weight: 400;
+    white-space: nowrap;
 }
 
-/* Discounted price (highlighted in green) */
+/* Product price - premium single line styling */
 .product-price {
-    font-size: 1.4rem !important;
-    font-weight: 700;
+    font-size: 0.81rem !important;
+    font-weight: 600;
     color: var(--color-green, #1a3c34) !important;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    display: inline-block;
 }
 
 /* Ensure discounted price is green */
@@ -643,12 +682,19 @@ body.modal-open {
 
 /* Mobile adjustments for pricing */
 @media (max-width: 767px) {
+    .price-row {
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+    }
+    
     .product-price-original {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
     
     .product-price {
-        font-size: 1.25rem !important;
+        font-size: 0.85rem !important;
+        white-space: nowrap !important;
     }
     
     .badge.discount-badge {
@@ -688,6 +734,91 @@ button[type="button"],
         font-size: 15px;
         width: 100%;
         max-width: 100%;
+    }
+}
+
+/* ============================================
+   HERO BUTTONS - PREMIUM STYLING
+   ============================================ */
+
+/* Primary Button - Shop Collection (Gold Border) */
+section.hero .hero-buttons .btn-primary,
+.hero .btn-primary,
+.hero a.btn-primary {
+    background: transparent !important;
+    color: #C5A059 !important;
+    font-weight: 600 !important;
+    border: 2px solid #C5A059 !important;
+    border-radius: 8px !important;
+    padding: 14px 32px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-size: 0.85rem !important;
+    box-shadow: none !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+}
+
+section.hero .hero-buttons .btn-primary:hover,
+.hero .btn-primary:hover,
+.hero a.btn-primary:hover {
+    background: #C5A059 !important;
+    color: #FFFFFF !important;
+    border-color: #C5A059 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(197, 160, 89, 0.5) !important;
+}
+
+/* Secondary Button - Verify My Product (Outlined) */
+section.hero .hero-buttons .btn-outline,
+.hero .btn-outline,
+.hero a.btn-outline {
+    background: transparent !important;
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+    border: 2px solid #FFFFFF !important;
+    border-radius: 8px !important;
+    padding: 14px 32px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    font-size: 0.85rem !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+}
+
+section.hero .hero-buttons .btn-outline:hover,
+.hero .btn-outline:hover,
+.hero a.btn-outline:hover {
+    background: #FFFFFF !important;
+    color: #1A3C34 !important;
+    border-color: #FFFFFF !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Hero buttons container */
+.hero-buttons {
+    display: flex !important;
+    gap: 16px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    margin-top: 30px !important;
+}
+
+/* Mobile responsive hero buttons */
+@media (max-width: 768px) {
+    section.hero .hero-buttons .btn-primary,
+    section.hero .hero-buttons .btn-outline,
+    .hero .btn-primary,
+    .hero .btn-outline {
+        padding: 12px 24px !important;
+        font-size: 0.8rem !important;
+        width: auto !important;
+        min-width: 160px !important;
+    }
+    
+    .hero-buttons {
+        gap: 12px !important;
     }
 }
 
@@ -1000,3 +1131,4 @@ video {
         padding-right: max(20px, env(safe-area-inset-right));
     }
 }
+

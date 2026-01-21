@@ -365,6 +365,7 @@ function verifyBatch(e) {
                         <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
                             <strong>Net Weight:</strong> ${batch.net_weight}
                         </div>
+                        ${batch.ean ? `<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;"><strong>EAN:</strong> ${batch.ean}</div>` : ''}
                         <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
                             <strong>Manufacturing Date:</strong> ${batch.manufacturing_date}
                         </div>

@@ -51,7 +51,7 @@ include __DIR__ . '/../includes/admin_header.php';
           <?php endif; ?>
         </div>
         
-        <form action="<?= base_url('admin_actions.php'); ?>" method="post" class="row g-4" novalidate>
+        <form action="<?= base_url('admin_actions.php'); ?>" method="post" class="row g-4" id="weightEditForm">
           <input type="hidden" name="action" value="update_product_weight" />
           <input type="hidden" name="product_id" value="<?= (int)$productId; ?>" />
           <input type="hidden" name="weight_id" value="<?= (int)$weightId; ?>" />
@@ -84,9 +84,10 @@ include __DIR__ . '/../includes/admin_header.php';
           </div>
           
           <div class="col-md-6">
-            <label class="form-label">EAN Number</label>
-            <input type="text" name="ean" class="form-control" value="<?= htmlspecialchars($weight['ean'] ?? ''); ?>" maxlength="13" pattern="[0-9]{8,13}" />
-            <small class="text-muted">8-13 digit barcode (optional)</small>
+            <label class="form-label">EAN Number <span class="text-danger">*</span></label>
+            <input type="text" name="ean" id="eanInput" class="form-control" value="<?= htmlspecialchars($weight['ean'] ?? ''); ?>" maxlength="13" pattern="[0-9]{8,13}" required />
+            <small class="text-muted">8-13 digit barcode (required for batch generation)</small>
+            <div class="invalid-feedback">EAN must be 8-13 numeric digits only</div>
           </div>
           
           <div class="col-12">
@@ -125,6 +126,53 @@ include __DIR__ . '/../includes/admin_header.php';
     </div>
   </div>
 </section>
+
+<script>
+document.getElementById('weightEditForm').addEventListener('submit', function(e) {
+    const eanInput = document.getElementById('eanInput');
+    const ean = eanInput.value.trim();
+    
+    // Validate EAN: must be 8-13 numeric digits
+    const eanRegex = /^[0-9]{8,13}$/;
+    
+    if (!ean) {
+        e.preventDefault();
+        eanInput.classList.add('is-invalid');
+        alert('EAN number is required. Please add the EAN to save this weight.');
+        eanInput.focus();
+        return false;
+    }
+    
+    if (!eanRegex.test(ean)) {
+        e.preventDefault();
+        eanInput.classList.add('is-invalid');
+        alert('EAN must be 8-13 numeric digits only. No letters or special characters allowed.');
+        eanInput.focus();
+        return false;
+    }
+    
+    eanInput.classList.remove('is-invalid');
+    return true;
+});
+
+// Real-time EAN validation
+document.getElementById('eanInput').addEventListener('input', function() {
+    const ean = this.value.trim();
+    const eanRegex = /^[0-9]{8,13}$/;
+    
+    // Remove non-numeric characters
+    this.value = this.value.replace(/[^0-9]/g, '');
+    
+    if (ean && !eanRegex.test(ean)) {
+        this.classList.add('is-invalid');
+    } else if (ean) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+    } else {
+        this.classList.remove('is-valid', 'is-invalid');
+    }
+});
+</script>
 
 <?php
 include __DIR__ . '/../includes/admin_footer.php';

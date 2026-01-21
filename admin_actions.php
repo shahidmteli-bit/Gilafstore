@@ -176,6 +176,7 @@ try {
             $price = (float)($_POST['price'] ?? 0);
             $ean = trim($_POST['ean'] ?? '');
             $weightsDataJson = trim($_POST['weights_data'] ?? '');
+            $isFreshlyHarvested = isset($_POST['is_freshly_harvested']) ? 1 : 0;
 
             if (!$productId || $name === '' || !$categoryId) {
                 throw new RuntimeException('Please fill in all product fields correctly');
@@ -194,6 +195,7 @@ try {
                 'price' => $price,
                 'ean' => $ean,
                 'image' => $image,
+                'is_freshly_harvested' => $isFreshlyHarvested,
             ]);
             
             // Handle weights update
@@ -212,12 +214,14 @@ try {
                 // Update/Insert weights
                 if (!empty($weightsData['weights'])) {
                     foreach ($weightsData['weights'] as $index => $weight) {
+                        $weightEan = $weight['ean'] ?? '';
+                        
                         if ($weight['is_new']) {
-                            // Insert new weight
+                            // Insert new weight with EAN
                             $stmt = $db->prepare("
                                 INSERT INTO product_weights 
-                                (product_id, weight_value, weight_unit, display_weight, price, is_default, sort_order)
-                                VALUES (?, ?, ?, ?, ?, ?, ?)
+                                (product_id, weight_value, weight_unit, display_weight, price, ean, is_default, sort_order)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                             ");
                             $stmt->execute([
                                 $productId,
@@ -225,14 +229,15 @@ try {
                                 $weight['unit'],
                                 $weight['display'],
                                 $weight['price'],
+                                $weightEan,
                                 $weight['is_default'],
                                 $index
                             ]);
                         } else {
-                            // Update existing weight
+                            // Update existing weight with EAN
                             $stmt = $db->prepare("
                                 UPDATE product_weights 
-                                SET weight_value = ?, weight_unit = ?, display_weight = ?, price = ?, is_default = ?, sort_order = ?
+                                SET weight_value = ?, weight_unit = ?, display_weight = ?, price = ?, ean = ?, is_default = ?, sort_order = ?
                                 WHERE id = ? AND product_id = ?
                             ");
                             $stmt->execute([
@@ -240,6 +245,7 @@ try {
                                 $weight['unit'],
                                 $weight['display'],
                                 $weight['price'],
+                                $weightEan,
                                 $weight['is_default'],
                                 $index,
                                 $weight['id'],
@@ -272,6 +278,14 @@ try {
 
             if (!$productId || !$weightId || $weightValue <= 0 || $price < 0) {
                 throw new RuntimeException('Please fill in all required fields correctly');
+            }
+            
+            // EAN validation: required and must be 8-13 numeric digits
+            if (empty($ean)) {
+                throw new RuntimeException('EAN number is required. Please add the EAN in Edit Product Weight.');
+            }
+            if (!preg_match('/^[0-9]{8,13}$/', $ean)) {
+                throw new RuntimeException('EAN must be 8-13 numeric digits only. No letters or special characters allowed.');
             }
 
             $db = get_db_connection();

@@ -1,0 +1,46 @@
+===============================================
+SIMPLE FIX FOR "No database selected" ERROR
+===============================================
+
+YOU MUST CLICK THE DATABASE NAME FIRST!
+
+STEP 1: Open phpMyAdmin
+http://localhost/phpmyadmin
+
+STEP 2: Look at LEFT SIDEBAR
+You'll see a list of databases like:
+- information_schema
+- mysql
+- performance_schema
+- YOUR_DATABASE_NAME  <-- CLICK THIS!
+
+Common database names:
+- gilaf_store
+- ecommerce_db
+- gilafstore
+- u237848198_gilaf
+
+STEP 3: CLICK on your database name
+It will turn BLUE/HIGHLIGHTED
+
+STEP 4: NOW click "SQL" tab at top
+
+STEP 5: Paste this SQL:
+
+ALTER TABLE `product_weights` ADD COLUMN `price` DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER `display_weight`;
+
+STEP 6: Click "Go"
+
+===============================================
+IF YOU GET "Duplicate column" ERROR:
+===============================================
+
+The column already exists! Run this instead:
+
+UPDATE `product_weights` pw INNER JOIN `products` p ON pw.product_id = p.id SET pw.price = p.price;
+
+===============================================
+THAT'S IT!
+===============================================
+
+After this, product creation will work without errors.

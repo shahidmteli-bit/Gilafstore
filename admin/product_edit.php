@@ -13,7 +13,7 @@ if (!$product) {
 
 // Fetch all weights for this product
 $db = get_db_connection();
-$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, is_default, sort_order FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
+$stmt = $db->prepare("SELECT id, weight_value, weight_unit, display_weight, price, ean, is_default, sort_order FROM product_weights WHERE product_id = ? ORDER BY sort_order ASC, weight_value ASC");
 $stmt->execute([$productId]);
 $productWeights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -62,20 +62,24 @@ include __DIR__ . '/../includes/admin_header.php';
                 <div class="card border-success mb-2" data-weight-id="<?= $weight['id']; ?>">
                   <div class="card-body p-3">
                     <div class="row g-2 align-items-center">
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <label class="form-label small mb-1">Weight</label>
                         <input type="number" class="form-control form-control-sm weight-value" value="<?= $weight['weight_value']; ?>" step="0.01" min="0.01" data-weight-id="<?= $weight['id']; ?>">
                       </div>
-                      <div class="col-md-2">
+                      <div class="col-md-1">
                         <label class="form-label small mb-1">Unit</label>
                         <select class="form-select form-select-sm weight-unit" data-weight-id="<?= $weight['id']; ?>">
                           <option value="g" <?= $weight['weight_unit'] === 'g' ? 'selected' : ''; ?>>g</option>
                           <option value="kg" <?= $weight['weight_unit'] === 'kg' ? 'selected' : ''; ?>>kg</option>
                         </select>
                       </div>
-                      <div class="col-md-3">
+                      <div class="col-md-2">
                         <label class="form-label small mb-1">Price (₹)</label>
                         <input type="number" class="form-control form-control-sm weight-price" value="<?= $weight['price']; ?>" step="0.01" min="0" data-weight-id="<?= $weight['id']; ?>">
+                      </div>
+                      <div class="col-md-3">
+                        <label class="form-label small mb-1">EAN/Barcode</label>
+                        <input type="text" class="form-control form-control-sm weight-ean" value="<?= htmlspecialchars($weight['ean'] ?? ''); ?>" placeholder="e.g. 8901234567890" data-weight-id="<?= $weight['id']; ?>">
                       </div>
                       <div class="col-md-2">
                         <?php if ($weight['is_default'] == 1): ?>
@@ -100,20 +104,24 @@ include __DIR__ . '/../includes/admin_header.php';
               <div class="card-body p-3">
                 <h6 class="mb-2">Add New Weight</h6>
                 <div class="row g-2 align-items-end">
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label class="form-label small mb-1">Weight</label>
                     <input type="number" id="newWeightValue" class="form-control form-control-sm" step="0.01" min="0.01" placeholder="Enter weight">
                   </div>
-                  <div class="col-md-2">
+                  <div class="col-md-1">
                     <label class="form-label small mb-1">Unit</label>
                     <select id="newWeightUnit" class="form-select form-select-sm">
                       <option value="g">g</option>
                       <option value="kg">kg</option>
                     </select>
                   </div>
-                  <div class="col-md-3">
+                  <div class="col-md-2">
                     <label class="form-label small mb-1">Price (₹)</label>
                     <input type="number" id="newWeightPrice" class="form-control form-control-sm" step="0.01" min="0" placeholder="Enter price">
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label small mb-1">EAN/Barcode</label>
+                    <input type="text" id="newWeightEan" class="form-control form-control-sm" placeholder="e.g. 8901234567890">
                   </div>
                   <div class="col-md-4">
                     <button type="button" class="btn btn-primary btn-sm w-100" id="addNewWeightBtn">
@@ -142,6 +150,20 @@ include __DIR__ . '/../includes/admin_header.php';
             <label class="form-label">Description</label>
             <textarea name="description" class="form-control" rows="4" required><?= htmlspecialchars($product['description']); ?></textarea>
           </div>
+          <!-- Section Display Options -->
+          <div class="col-12">
+            <label class="form-label fw-semibold">Homepage Section Display</label>
+            <div class="card border-light bg-light p-3">
+              <div class="form-check form-switch mb-2">
+                <input class="form-check-input" type="checkbox" role="switch" name="is_freshly_harvested" id="freshlyHarvestedToggle" value="1" <?= !empty($product['is_freshly_harvested']) ? 'checked' : ''; ?>>
+                <label class="form-check-label" for="freshlyHarvestedToggle">
+                  <i class="fas fa-leaf text-success me-1"></i> Show in "Freshly Harvested" section
+                </label>
+              </div>
+              <small class="text-muted">Enable to display this product in the Freshly Harvested section on homepage</small>
+            </div>
+          </div>
+          
           <div class="col-12">
             <label class="form-label">Product image</label>
             <input type="file" name="image" class="form-control" accept="image/*" />
@@ -209,6 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const value = parseFloat(document.getElementById('newWeightValue').value);
     const unit = document.getElementById('newWeightUnit').value;
     const price = parseFloat(document.getElementById('newWeightPrice').value);
+    const ean = document.getElementById('newWeightEan').value.trim();
     
     if (!value || value <= 0) {
       alert('Please enter a valid weight');
@@ -230,20 +253,24 @@ document.addEventListener('DOMContentLoaded', function() {
     newCard.innerHTML = `
       <div class="card-body p-3">
         <div class="row g-2 align-items-center">
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label small mb-1">Weight</label>
             <input type="number" class="form-control form-control-sm weight-value" value="${value}" step="0.01" min="0.01" data-weight-id="${newCard.dataset.weightId}">
           </div>
-          <div class="col-md-2">
+          <div class="col-md-1">
             <label class="form-label small mb-1">Unit</label>
             <select class="form-select form-select-sm weight-unit" data-weight-id="${newCard.dataset.weightId}">
               <option value="g" ${unit === 'g' ? 'selected' : ''}>g</option>
               <option value="kg" ${unit === 'kg' ? 'selected' : ''}>kg</option>
             </select>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label class="form-label small mb-1">Price (₹)</label>
             <input type="number" class="form-control form-control-sm weight-price" value="${price}" step="0.01" min="0" data-weight-id="${newCard.dataset.weightId}">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small mb-1">EAN/Barcode</label>
+            <input type="text" class="form-control form-control-sm weight-ean" value="${ean}" placeholder="e.g. 8901234567890" data-weight-id="${newCard.dataset.weightId}">
           </div>
           <div class="col-md-2">
             <button type="button" class="btn btn-sm btn-outline-primary mt-4 set-default-btn" data-weight-id="${newCard.dataset.weightId}">Set Default</button>
@@ -278,6 +305,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Clear inputs
     document.getElementById('newWeightValue').value = '';
     document.getElementById('newWeightPrice').value = '';
+    document.getElementById('newWeightEan').value = '';
     document.getElementById('newWeightValue').focus();
   });
   
@@ -295,6 +323,8 @@ document.addEventListener('DOMContentLoaded', function() {
       const value = parseFloat(card.querySelector('.weight-value').value);
       const unit = card.querySelector('.weight-unit').value;
       const price = parseFloat(card.querySelector('.weight-price').value);
+      const eanInput = card.querySelector('.weight-ean');
+      const ean = eanInput ? eanInput.value.trim() : '';
       const isDefault = card.querySelector('.badge.bg-primary') !== null;
       
       if (isDefault) {
@@ -307,6 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
         unit: unit,
         display: value + ' ' + unit,
         price: price,
+        ean: ean,
         is_default: isDefault ? 1 : 0,
         is_new: isNew
       });

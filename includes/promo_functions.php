@@ -218,6 +218,14 @@ function validate_promo_code($code, $cartTotal, $userId = null, $userEmail = nul
             return ['valid' => false, 'message' => 'This promo code has reached its usage limit'];
         }
         
+        // Check per-user usage limit
+        if (!empty($promo['usage_limit_per_user']) && $userId) {
+            $userUsageCount = db_fetch("SELECT COUNT(*) as count FROM promo_code_usage WHERE promo_code_id = ? AND user_id = ?", [$promo['id'], $userId]);
+            if ($userUsageCount && $userUsageCount['count'] >= $promo['usage_limit_per_user']) {
+                return ['valid' => false, 'message' => 'You have reached the usage limit for this promo code.'];
+            }
+        }
+        
         // INTELLIGENT USER ELIGIBILITY CHECK
         $userProfile = get_user_profile($userEmail, $userPhone, $userId);
         $eligibilityCheck = check_user_eligibility($promo, $userProfile);
@@ -307,6 +315,30 @@ function apply_promo_code($code, $cartTotal, $userEmail = null, $userPhone = nul
  * Remove promo code from session
  */
 function remove_promo_code() {
+    unset($_SESSION['promo_code']);
+}
+
+/**
+ * Auto-clear promo code if not on allowed pages (cart.php or checkout.php)
+ * Call this on every page load to ensure promo codes don't persist outside checkout flow
+ */
+function auto_clear_promo_if_outside_checkout_flow() {
+    // Get current script name
+    $currentScript = basename($_SERVER['SCRIPT_NAME']);
+    
+    // Allowed pages where promo code should persist
+    $allowedPages = ['cart.php', 'checkout.php', 'upi_payment.php', 'apply_promo.php', 'order_success.php', 'confirm_upi_payment.php'];
+    
+    // If not on an allowed page and promo code is applied, clear it
+    if (!in_array($currentScript, $allowedPages) && isset($_SESSION['promo_code'])) {
+        unset($_SESSION['promo_code']);
+    }
+}
+
+/**
+ * Clear promo code after payment completion (success or failure)
+ */
+function clear_promo_after_payment() {
     unset($_SESSION['promo_code']);
 }
 

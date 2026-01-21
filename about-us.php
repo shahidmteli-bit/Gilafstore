@@ -22,7 +22,7 @@ include __DIR__ . '/includes/new-header.php';
     .about-hero {
         background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
         color: white;
-        padding: 120px 20px;
+        padding: 38px 20px;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -76,7 +76,7 @@ include __DIR__ . '/includes/new-header.php';
     .philosophy-section {
         background: linear-gradient(135deg, #1A3C34 0%, #244A36 100%);
         color: white;
-        padding: 100px 20px;
+        padding: 76px 20px;
         position: relative;
         overflow: hidden;
     }

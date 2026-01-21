@@ -16,15 +16,15 @@ if (!isset($_SESSION['pending_order'])) {
 }
 
 $order = $_SESSION['pending_order'];
-$orderAmount = $order['total'];
+$orderAmount = $order['total']; // This now includes promo discount
 $orderId = $order['order_id'] ?? 'ORD' . time();
 $items = $order['items'] ?? [];
 
-// Calculate price breakdown
-$subtotal = $orderAmount;
-$discount = 0;
-$additionalFees = 0;
-$total = $subtotal - $discount + $additionalFees;
+// Get promo discount info from session
+$subtotal = $order['subtotal'] ?? $orderAmount;
+$promoDiscount = $order['promo_discount'] ?? 0;
+$promoCode = $order['promo_code'] ?? '';
+$total = $orderAmount; // Final amount after promo discount
 
 // Business UPI details
 $businessUpiId = 'gilaf@ptyes';

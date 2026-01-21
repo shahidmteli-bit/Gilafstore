@@ -30,8 +30,8 @@ function convert_currency($amount, $targetCurrency = 'INR') {
  * @return string Formatted price
  */
 function format_price($amount, $currency = 'INR', $currencySymbol = '₹') {
-    // Round to appropriate decimal places
-    $decimals = in_array($currency, ['JPY', 'KRW']) ? 0 : 2;
+    // Round to appropriate decimal places (INR shows whole numbers only)
+    $decimals = in_array($currency, ['JPY', 'KRW', 'INR']) ? 0 : 2;
     $formatted = number_format($amount, $decimals);
     
     // Symbol placement based on currency

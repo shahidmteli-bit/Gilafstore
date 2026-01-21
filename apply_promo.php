@@ -1,10 +1,20 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+
 session_start();
-require_once __DIR__ . '/includes/db_connect.php';
-require_once __DIR__ . '/includes/promo_functions.php';
-require_once __DIR__ . '/includes/functions.php';
 
 header('Content-Type: application/json');
+
+try {
+    require_once __DIR__ . '/includes/db_connect.php';
+    require_once __DIR__ . '/includes/promo_functions.php';
+    require_once __DIR__ . '/includes/functions.php';
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => 'Server configuration error: ' . $e->getMessage()]);
+    exit;
+}
 
 $action = $_POST['action'] ?? '';
 
@@ -24,13 +34,30 @@ try {
             }
             
             $cartTotal = 0;
-            foreach ($cart as $productId => $quantity) {
-                $product = get_product_by_id($productId);
+            foreach ($cart as $cartKey => $cartItem) {
+                // Handle both old format (productId => quantity) and new format (cartKey => array)
+                if (is_array($cartItem)) {
+                    $productId = (int)$cartItem['product_id'];
+                    $quantity = (int)$cartItem['quantity'];
+                    $weightId = $cartItem['weight_id'] ?? null;
+                } else {
+                    $productId = (int)$cartKey;
+                    $quantity = (int)$cartItem;
+                    $weightId = null;
+                }
+                
+                $product = get_product($productId);
                 if ($product) {
-                    $productWithDiscount = enrich_products_with_discounts([$product])[0];
-                    $price = $productWithDiscount['has_discount'] ? 
-                             $productWithDiscount['discounted_price'] : 
-                             $productWithDiscount['price'];
+                    // Get price from weight if available
+                    if ($weightId) {
+                        $weightData = db_fetch("SELECT price FROM product_weights WHERE id = ?", [$weightId]);
+                        $price = $weightData ? (float)$weightData['price'] : (float)$product['price'];
+                    } else {
+                        $productWithDiscount = enrich_products_with_discounts([$product])[0];
+                        $price = $productWithDiscount['has_discount'] ? 
+                                 $productWithDiscount['discounted_price'] : 
+                                 $productWithDiscount['price'];
+                    }
                     $cartTotal += $price * $quantity;
                 }
             }
@@ -69,13 +96,30 @@ try {
             $cart = $_SESSION['cart'] ?? [];
             $cartTotal = 0;
             
-            foreach ($cart as $productId => $quantity) {
-                $product = get_product_by_id($productId);
+            foreach ($cart as $cartKey => $cartItem) {
+                // Handle both old format (productId => quantity) and new format (cartKey => array)
+                if (is_array($cartItem)) {
+                    $productId = (int)$cartItem['product_id'];
+                    $quantity = (int)$cartItem['quantity'];
+                    $weightId = $cartItem['weight_id'] ?? null;
+                } else {
+                    $productId = (int)$cartKey;
+                    $quantity = (int)$cartItem;
+                    $weightId = null;
+                }
+                
+                $product = get_product($productId);
                 if ($product) {
-                    $productWithDiscount = enrich_products_with_discounts([$product])[0];
-                    $price = $productWithDiscount['has_discount'] ? 
-                             $productWithDiscount['discounted_price'] : 
-                             $productWithDiscount['price'];
+                    // Get price from weight if available
+                    if ($weightId) {
+                        $weightData = db_fetch("SELECT price FROM product_weights WHERE id = ?", [$weightId]);
+                        $price = $weightData ? (float)$weightData['price'] : (float)$product['price'];
+                    } else {
+                        $productWithDiscount = enrich_products_with_discounts([$product])[0];
+                        $price = $productWithDiscount['has_discount'] ? 
+                                 $productWithDiscount['discounted_price'] : 
+                                 $productWithDiscount['price'];
+                    }
                     $cartTotal += $price * $quantity;
                 }
             }
@@ -104,6 +148,13 @@ try {
 } catch (Exception $e) {
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => $e->getMessage(),
+        'debug' => $e->getFile() . ':' . $e->getLine()
+    ]);
+} catch (Error $e) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Fatal error: ' . $e->getMessage(),
+        'debug' => $e->getFile() . ':' . $e->getLine()
     ]);
 }

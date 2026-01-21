@@ -38,7 +38,7 @@
                     <h4>SUPPORT</h4>
                     <ul>
                         <li><a href="#" onclick="openTrackingModal(); return false;">Track Order</a></li>
-                        <li><a href="#">Shipping & Logistics</a></li>
+                        <li><a href="shipping-policy.php">Shipping & Logistics</a></li>
                         <li><a href="#verification">Authenticity Check</a></li>
                         <li><a href="#">Contact Us</a></li>
                         <li><a href="#">Become a Distributor</a></li>
@@ -51,7 +51,6 @@
                     <ul>
                         <li><a href="#">Privacy Policy</a></li>
                         <li><a href="#">Terms & Conditions</a></li>
-                        <li><a href="#">Shipping Policy</a></li>
                         <li><a href="#">Refund & Return Policy</a></li>
                         <li><a href="#">Order Cancellation Policy</a></li>
                         <li><a href="#">Payment Policy</a></li>

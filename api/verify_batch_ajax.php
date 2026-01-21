@@ -58,6 +58,26 @@ try {
     $status = $batch['status'] ?? 'production';
     $isValid = !in_array($status, ['expired', 'recalled', 'blocked', 'rejected']);
     
+    // Fetch weight-specific price and EAN from product_weights (NOT from products table)
+    $weightPrice = null;
+    $ean = '';
+    if (!empty($batch['weight_id'])) {
+        $weightData = db_fetch("SELECT price, ean FROM product_weights WHERE id = ?", [$batch['weight_id']]);
+        if ($weightData) {
+            $weightPrice = (float)$weightData['price'];
+            $ean = $weightData['ean'] ?? '';
+        }
+    } elseif (!empty($batch['net_weight']) && !empty($batch['product_id'])) {
+        $weightData = db_fetch("SELECT price, ean FROM product_weights WHERE product_id = ? AND display_weight = ?", [$batch['product_id'], $batch['net_weight']]);
+        if ($weightData) {
+            $weightPrice = (float)$weightData['price'];
+            $ean = $weightData['ean'] ?? '';
+        }
+    }
+    
+    // Use weight-specific price, fallback to product price only if weight not found
+    $finalPrice = $weightPrice ?? (float)$batch['product_price'];
+    
     // Prepare response
     $response = [
         'success' => true,
@@ -68,7 +88,8 @@ try {
             'product_name' => $batch['product_name'],
             'product_image' => $batch['product_image'] ? base_url('uploads/products/' . $batch['product_image']) : null,
             'net_weight' => $batch['net_weight'],
-            'mrp' => $batch['product_price'],
+            'ean' => $ean,
+            'mrp' => $finalPrice,
             'manufacturing_date' => date('M d, Y', strtotime($batch['manufacturing_date'])),
             'expiry_date' => date('M d, Y', strtotime($batch['expiry_date'])),
             'country_of_origin' => $batch['country_of_origin'],

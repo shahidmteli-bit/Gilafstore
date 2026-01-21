@@ -15,6 +15,7 @@ $currentCurrencySymbol = $userRegion['currency_symbol'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $productId = (int)($_POST['product_id'] ?? 0);
+    $weightId = (int)($_POST['weight_id'] ?? 0);
     
     if ($action === 'add' && $productId > 0) {
         $quantity = (int)($_POST['quantity'] ?? 1);
@@ -22,10 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = [];
             }
-            if (isset($_SESSION['cart'][$productId])) {
-                $_SESSION['cart'][$productId] += $quantity;
+            
+            // Create unique cart key based on product + weight combination
+            $cartKey = $weightId > 0 ? $productId . '_' . $weightId : (string)$productId;
+            
+            if (isset($_SESSION['cart'][$cartKey]) && is_array($_SESSION['cart'][$cartKey])) {
+                $_SESSION['cart'][$cartKey]['quantity'] += $quantity;
             } else {
-                $_SESSION['cart'][$productId] = $quantity;
+                $_SESSION['cart'][$cartKey] = [
+                    'product_id' => $productId,
+                    'weight_id' => $weightId,
+                    'quantity' => $quantity
+                ];
             }
             
             // Track add to cart event for analytics
@@ -36,21 +45,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+        
+        // Check if this is a Buy Now AJAX request
+        if (isset($_POST['buy_now']) || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'message' => 'Product added to cart']);
+            exit;
+        }
+        
         header('Location: ' . base_url('cart.php'));
         exit;
     }
     
     if ($action === 'update' && $productId > 0) {
         $quantity = (int)($_POST['quantity'] ?? 1);
-        if ($quantity > 0) {
-            $_SESSION['cart'][$productId] = $quantity;
+        $cartKey = $_POST['cart_key'] ?? (string)$productId;
+        if ($quantity > 0 && isset($_SESSION['cart'][$cartKey])) {
+            if (is_array($_SESSION['cart'][$cartKey])) {
+                $_SESSION['cart'][$cartKey]['quantity'] = $quantity;
+            } else {
+                $_SESSION['cart'][$cartKey] = $quantity;
+            }
         }
         header('Location: ' . base_url('cart.php'));
         exit;
     }
     
     if ($action === 'remove' && $productId > 0) {
-        cart_remove($productId);
+        $cartKey = $_POST['cart_key'] ?? (string)$productId;
+        if (isset($_SESSION['cart'][$cartKey])) {
+            unset($_SESSION['cart'][$cartKey]);
+        } else {
+            cart_remove($productId);
+        }
         header('Location: ' . base_url('cart.php'));
         exit;
     }
@@ -60,6 +87,13 @@ $pageTitle = 'Your Cart — Gilaf Store';
 $activePage = 'cart';
 $items = cart_items();
 $total = cart_total();
+
+// Get dynamic shipping fee from admin settings
+$shippingSettings = get_shipping_settings('domestic');
+$deliveryFee = (float)($shippingSettings['base_charge'] ?? 50.00);
+$freeShippingThreshold = (float)($shippingSettings['free_shipping_threshold'] ?? 500.00);
+// Apply free shipping if cart total meets threshold
+$actualShippingFee = ($total >= $freeShippingThreshold) ? 0 : $deliveryFee;
 
 include __DIR__ . '/includes/new-header.php';
 ?>
@@ -524,6 +558,11 @@ include __DIR__ . '/includes/new-header.php';
                     <p class="product-meta">
                       Net Weight: <?= htmlspecialchars($item['weight']); ?>
                     </p>
+                    <?php if (!empty($item['ean'])): ?>
+                    <p class="product-meta">
+                      EAN: <?= htmlspecialchars($item['ean']); ?>
+                    </p>
+                    <?php endif; ?>
                     <p class="product-meta">
                       Batch Code: <?= htmlspecialchars($item['batch_code']); ?>
                     </p>
@@ -543,21 +582,22 @@ include __DIR__ . '/includes/new-header.php';
                   
                   <!-- Quantity Controls Below Product Info -->
                   <div class="quantity-row">
-                    <form action="<?= base_url('cart.php'); ?>" method="post" style="margin: 0;" id="qty-form-<?= (int)$item['product_id']; ?>">
-                      <input type="hidden" name="action" value="update" id="action-<?= (int)$item['product_id']; ?>" />
+                    <form action="<?= base_url('cart.php'); ?>" method="post" style="margin: 0;" id="qty-form-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>">
+                      <input type="hidden" name="action" value="update" id="action-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>" />
                       <input type="hidden" name="product_id" value="<?= (int)$item['product_id']; ?>" />
+                      <input type="hidden" name="cart_key" value="<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>" />
                       <div class="quantity-selector">
                         <?php if ($item['quantity'] == 1): ?>
-                          <button type="button" class="quantity-btn" onclick="if(confirm('Remove this item from cart?')) { document.getElementById('action-<?= (int)$item['product_id']; ?>').value = 'remove'; document.getElementById('qty-form-<?= (int)$item['product_id']; ?>').submit(); }">
+                          <button type="button" class="quantity-btn" onclick="if(confirm('Remove this item from cart?')) { document.getElementById('action-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>').value = 'remove'; document.getElementById('qty-form-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>').submit(); }">
                             <i class="fas fa-minus"></i>
                           </button>
                         <?php else: ?>
-                          <button type="button" class="quantity-btn" onclick="let form = document.getElementById('qty-form-<?= (int)$item['product_id']; ?>'); let input = form.querySelector('.quantity-input'); input.value = parseInt(input.value) - 1; form.submit();">
+                          <button type="button" class="quantity-btn" onclick="let form = document.getElementById('qty-form-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>'); let input = form.querySelector('.quantity-input'); input.value = parseInt(input.value) - 1; form.submit();">
                             <i class="fas fa-minus"></i>
                           </button>
                         <?php endif; ?>
                         <input type="number" class="quantity-input" name="quantity" value="<?= (int)$item['quantity']; ?>" min="1" readonly />
-                        <button type="button" class="quantity-btn" onclick="let form = document.getElementById('qty-form-<?= (int)$item['product_id']; ?>'); let input = form.querySelector('.quantity-input'); input.value = parseInt(input.value) + 1; form.submit();">
+                        <button type="button" class="quantity-btn" onclick="let form = document.getElementById('qty-form-<?= htmlspecialchars($item['cart_key'] ?? $item['product_id']); ?>'); let input = form.querySelector('.quantity-input'); input.value = parseInt(input.value) + 1; form.submit();">
                           <i class="fas fa-plus"></i>
                         </button>
                       </div>
@@ -593,8 +633,16 @@ include __DIR__ . '/includes/new-header.php';
             $itemPriceExclTax = $total / $gstMultiplier;
             $gstAmount = $total - $itemPriceExclTax;
             
-            // Calculate savings
-            $savings = $itemPriceExclTax * ($promotionalDiscount / 100);
+            // Get promo discount first (needed for total savings calculation)
+            $appliedPromo = get_applied_promo_code();
+            $promoDiscount = 0;
+            if ($appliedPromo) {
+                $promoDiscount = recalculate_promo_discount($total);
+            }
+            
+            // Calculate savings (include promo discount in total savings)
+            $baseSavings = $itemPriceExclTax * ($promotionalDiscount / 100);
+            $savings = $baseSavings + $promoDiscount;
             ?>
             
             <div class="summary-row" style="cursor: pointer; user-select: none;" onclick="toggleTaxBreakdown()">
@@ -618,7 +666,11 @@ include __DIR__ . '/includes/new-header.php';
             
             <div class="summary-row">
               <span class="summary-label">Shipping</span>
-              <span class="summary-value" style="color: #067d62; font-weight: 600;">Free</span>
+              <?php if ($actualShippingFee > 0): ?>
+                <span class="summary-value">₹<?= number_format($actualShippingFee, 0); ?></span>
+              <?php else: ?>
+                <span class="summary-value" style="color: #067d62; font-weight: 600;">Free</span>
+              <?php endif; ?>
             </div>
             
             <?php if ($savings > 0): ?>
@@ -631,11 +683,14 @@ include __DIR__ . '/includes/new-header.php';
             
             <!-- Promo Code Section -->
             <?php 
-            $appliedPromo = get_applied_promo_code();
-            $promoDiscount = 0;
-            if ($appliedPromo) {
-                $promoDiscount = recalculate_promo_discount($total);
-            }
+            // Get user profile for eligibility check
+            $userEmail = $_SESSION['user']['email'] ?? null;
+            $userPhone = $_SESSION['user']['phone'] ?? null;
+            $userId = $_SESSION['user']['id'] ?? null;
+            $userProfile = get_user_profile($userEmail, $userPhone, $userId);
+            
+            // Fetch available promo codes
+            $availablePromoCodes = get_active_promo_codes(false, $userProfile);
             ?>
             
             <div style="margin: 16px 0;">
@@ -661,7 +716,7 @@ include __DIR__ . '/includes/new-header.php';
                   <span class="summary-value" style="font-weight: 700;">-<?= display_price($promoDiscount, $currentCurrency, $currentCurrencySymbol); ?></span>
                 </div>
               <?php else: ?>
-                <!-- Promo Code Input -->
+                <!-- Promo Code Selection -->
                 <div style="margin-bottom: 12px;">
                   <button onclick="togglePromoInput()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
                     <i class="fas fa-tag"></i>
@@ -670,6 +725,30 @@ include __DIR__ . '/includes/new-header.php';
                 </div>
                 
                 <div id="promoInputSection" style="display: none; margin-bottom: 12px;">
+                  <?php if (!empty($availablePromoCodes)): ?>
+                  <!-- Available Promo Codes Dropdown -->
+                  <div style="margin-bottom: 10px;">
+                    <label style="font-size: 12px; color: #666; margin-bottom: 6px; display: block;">Select Available Offer:</label>
+                    <select id="promoCodeSelect" onchange="selectPromoCode(this.value)" style="width: 100%; padding: 10px 12px; border: 2px solid #667eea; border-radius: 6px; font-size: 14px; background: #f8f9ff; cursor: pointer; color: #333;">
+                      <option value="">-- Choose a promo code --</option>
+                      <?php foreach ($availablePromoCodes as $promo): ?>
+                        <?php 
+                          $discountText = $promo['discount_type'] === 'percentage' 
+                            ? $promo['discount_value'] . '% OFF' 
+                            : '₹' . number_format($promo['discount_value']) . ' OFF';
+                          $minOrder = $promo['min_order_value'] > 0 ? ' (Min ₹' . number_format($promo['min_order_value']) . ')' : '';
+                        ?>
+                        <option value="<?= htmlspecialchars($promo['code']); ?>" data-description="<?= htmlspecialchars($promo['description'] ?? $promo['promo_message'] ?? ''); ?>">
+                          <?= htmlspecialchars($promo['code']); ?> - <?= $discountText; ?><?= $minOrder; ?>
+                        </option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  
+                  <div style="text-align: center; color: #999; font-size: 12px; margin: 8px 0;">— OR enter manually —</div>
+                  <?php endif; ?>
+                  
+                  <!-- Manual Input -->
                   <div style="display: flex; gap: 8px;">
                     <input type="text" id="promoCodeInput" placeholder="Enter promo code" style="flex: 1; padding: 10px 12px; border: 2px solid #e3e6e8; border-radius: 6px; font-size: 14px; text-transform: uppercase; font-family: monospace; letter-spacing: 1px;" maxlength="50">
                     <button onclick="applyPromoCode()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; white-space: nowrap; transition: all 0.3s;" onmouseover="this.style.background='#5568d3'" onmouseout="this.style.background='#667eea'">
@@ -725,6 +804,17 @@ function togglePromoInput() {
   }
 }
 
+// Select promo code from dropdown and auto-apply
+function selectPromoCode(code) {
+  if (!code) return;
+  
+  const input = document.getElementById('promoCodeInput');
+  input.value = code;
+  
+  // Auto-apply the selected code
+  applyPromoCode();
+}
+
 // Apply promo code
 async function applyPromoCode() {
   const input = document.getElementById('promoCodeInput');
@@ -746,7 +836,17 @@ async function applyPromoCode() {
       body: formData
     });
     
-    const result = await response.json();
+    const text = await response.text();
+    console.log('Promo apply response:', text);
+    
+    let result;
+    try {
+      result = JSON.parse(text);
+    } catch (parseError) {
+      console.error('JSON parse error:', text);
+      showPromoMessage('Server error. Check console for details.', 'error');
+      return;
+    }
     
     if (result.success) {
       showPromoMessage(result.message, 'success');
@@ -754,10 +854,11 @@ async function applyPromoCode() {
         location.reload();
       }, 1000);
     } else {
-      showPromoMessage(result.message, 'error');
+      showPromoMessage(result.message || 'Unknown error', 'error');
     }
   } catch (error) {
-    showPromoMessage('Error applying promo code. Please try again.', 'error');
+    console.error('Promo code error:', error);
+    showPromoMessage('Error applying promo code: ' + error.message, 'error');
   }
 }
 
@@ -820,6 +921,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+
+// Promo code auto-clear is now handled server-side in promo_functions.php
+// Promo persists only on: cart.php, checkout.php, upi_payment.php
 </script>
 
 <?php

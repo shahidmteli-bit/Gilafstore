@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weight Add Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .card { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .success { background: #d4edda; }
+        button { padding: 10px 20px; margin: 5px; }
+        input, select { padding: 5px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Weight Add Test</h1>
+    
+    <div>
+        <input type="number" id="weightValue" placeholder="Weight" value="250">
+        <select id="weightUnit">
+            <option value="g">g</option>
+            <option value="kg">kg</option>
+        </select>
+        <input type="number" id="weightPrice" placeholder="Price" value="350">
+        <button onclick="addWeight()">ADD WEIGHT</button>
+    </div>
+    
+    <div id="weightsDisplay"></div>
+    
+    <button onclick="testSubmit()">TEST SUBMIT</button>
+    
+    <div id="console" style="background: #f0f0f0; padding: 10px; margin-top: 20px; font-family: monospace; white-space: pre-wrap;"></div>
+
+    <script>
+        let weightPrices = [];
+        
+        function log(msg) {
+            const consoleDiv = document.getElementById('console');
+            consoleDiv.textContent += msg + '\n';
+            console.log(msg);
+        }
+        
+        function addWeight() {
+            const value = parseFloat(document.getElementById('weightValue').value);
+            const unit = document.getElementById('weightUnit').value;
+            const price = parseFloat(document.getElementById('weightPrice').value);
+            
+            log('Adding weight: ' + value + unit + ' - ₹' + price);
+            
+            weightPrices.push({
+                value: value,
+                unit: unit,
+                display: value + ' ' + unit,
+                price: price
+            });
+            
+            log('Array length: ' + weightPrices.length);
+            log('Array contents: ' + JSON.stringify(weightPrices));
+            
+            renderWeights();
+        }
+        
+        function renderWeights() {
+            const display = document.getElementById('weightsDisplay');
+            display.innerHTML = '';
+            
+            weightPrices.forEach((wp, index) => {
+                const card = document.createElement('div');
+                card.className = 'card success';
+                card.innerHTML = '<strong>' + wp.display + '</strong> - Price: ₹' + wp.price;
+                display.appendChild(card);
+            });
+        }
+        
+        function testSubmit() {
+            log('=== SUBMIT TEST ===');
+            log('weightPrices.length: ' + weightPrices.length);
+            
+            if (weightPrices.length === 0) {
+                log('ERROR: No weights added');
+                alert('Please add at least one weight with price');
+            } else {
+                log('SUCCESS: ' + weightPrices.length + ' weights found');
+                log('Data: ' + JSON.stringify(weightPrices));
+                alert('SUCCESS! Would submit: ' + JSON.stringify(weightPrices));
+            }
+        }
+        
+        log('Test page loaded');
+        log('weightPrices initialized: ' + weightPrices.length);
+    </script>
+</body>
+</html>

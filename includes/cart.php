@@ -15,7 +15,9 @@ if (!isset($_SESSION['cart'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     $productId = (int)($_POST['product_id'] ?? 0);
+    $weightId = (int)($_POST['weight_id'] ?? 0);
     $quantity = (int)($_POST['quantity'] ?? 1);
+    $cartKey = $_POST['cart_key'] ?? null;
     
     if ($productId <= 0) {
         header('Location: ' . base_url('index.php'));
@@ -24,11 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     switch ($action) {
         case 'add':
-            // Add product to cart or increase quantity if already exists
-            if (isset($_SESSION['cart'][$productId])) {
-                $_SESSION['cart'][$productId] += $quantity;
+            // Create unique cart key based on product + weight combination
+            $cartKey = $weightId > 0 ? $productId . '_' . $weightId : (string)$productId;
+            
+            if (isset($_SESSION['cart'][$cartKey]) && is_array($_SESSION['cart'][$cartKey])) {
+                $_SESSION['cart'][$cartKey]['quantity'] += $quantity;
             } else {
-                $_SESSION['cart'][$productId] = $quantity;
+                $_SESSION['cart'][$cartKey] = [
+                    'product_id' => $productId,
+                    'weight_id' => $weightId,
+                    'quantity' => $quantity
+                ];
             }
             
             // Track add to cart event
@@ -43,16 +51,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
             
         case 'update':
-            if ($quantity > 0) {
-                $_SESSION['cart'][$productId] = $quantity;
-            } else {
-                unset($_SESSION['cart'][$productId]);
+            $key = $cartKey ?? (string)$productId;
+            if ($quantity > 0 && isset($_SESSION['cart'][$key])) {
+                if (is_array($_SESSION['cart'][$key])) {
+                    $_SESSION['cart'][$key]['quantity'] = $quantity;
+                } else {
+                    $_SESSION['cart'][$key] = $quantity;
+                }
+            } elseif ($quantity <= 0) {
+                unset($_SESSION['cart'][$key]);
             }
             header('Location: ' . base_url('cart.php'));
             exit;
             
         case 'remove':
-            cart_remove($productId);
+            $key = $cartKey ?? (string)$productId;
+            if (isset($_SESSION['cart'][$key])) {
+                unset($_SESSION['cart'][$key]);
+            } else {
+                cart_remove($productId);
+            }
             header('Location: ' . base_url('cart.php'));
             exit;
             

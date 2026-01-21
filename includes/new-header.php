@@ -239,8 +239,8 @@ if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
             <div class="menu-toggle"><i class="fas fa-bars"></i></div>
             <div class="logo">
                 <a href="<?= base_url('index.php'); ?>">
-                    <h1 style="color: #ffffff; -webkit-text-fill-color: #ffffff; background: none;">GILAF STORE</h1>
-                    <span>Taste • Culture • Craft</span>
+                    <h1 style="color: #ffffff; -webkit-text-fill-color: #ffffff; background: none; letter-spacing: 2px;">GILAF STORE</h1>
+                    <span style="font-size: 0.6rem; letter-spacing: 3.5px;">TASTE • CULTURE • CRAFT</span>
                 </a>
             </div>
             <!-- Desktop Navigation -->

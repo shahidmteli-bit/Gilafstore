@@ -22,6 +22,7 @@ try {
             $minOrderValue = floatval($_POST['min_order_value'] ?? 0);
             $maxDiscount = !empty($_POST['max_discount']) ? floatval($_POST['max_discount']) : null;
             $usageLimit = !empty($_POST['usage_limit']) ? intval($_POST['usage_limit']) : null;
+            $usageLimitPerUser = !empty($_POST['usage_limit_per_user']) ? intval($_POST['usage_limit_per_user']) : null;
             $validFrom = $_POST['valid_from'] ?? '';
             $validUntil = $_POST['valid_until'] ?? '';
             $isActive = isset($_POST['is_active']) ? 1 : 0;
@@ -59,13 +60,13 @@ try {
             
             // Insert promo code
             $sql = "INSERT INTO promo_codes (code, description, promo_message, eligibility_type, inactive_days, display_in_header, 
-                    discount_type, discount_value, min_order_value, max_discount, usage_limit, 
+                    discount_type, discount_value, min_order_value, max_discount, usage_limit, usage_limit_per_user,
                     valid_from, valid_until, is_active) 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             
             db_query($sql, [
                 $code, $description, $promoMessage, $eligibilityType, $inactiveDays, $displayInHeader,
-                $discountType, $discountValue, $minOrderValue, $maxDiscount, $usageLimit, 
+                $discountType, $discountValue, $minOrderValue, $maxDiscount, $usageLimit, $usageLimitPerUser,
                 $validFrom, $validUntil, $isActive
             ]);
             
@@ -85,6 +86,7 @@ try {
             $minOrderValue = floatval($_POST['min_order_value'] ?? 0);
             $maxDiscount = !empty($_POST['max_discount']) ? floatval($_POST['max_discount']) : null;
             $usageLimit = !empty($_POST['usage_limit']) ? intval($_POST['usage_limit']) : null;
+            $usageLimitPerUser = !empty($_POST['usage_limit_per_user']) ? intval($_POST['usage_limit_per_user']) : null;
             $validFrom = $_POST['valid_from'] ?? '';
             $validUntil = $_POST['valid_until'] ?? '';
             $isActive = isset($_POST['is_active']) ? 1 : 0;
@@ -119,13 +121,13 @@ try {
             // Update promo code
             $sql = "UPDATE promo_codes SET 
                     code = ?, description = ?, promo_message = ?, eligibility_type = ?, inactive_days = ?, display_in_header = ?,
-                    discount_type = ?, discount_value = ?, min_order_value = ?, max_discount = ?, usage_limit = ?,
+                    discount_type = ?, discount_value = ?, min_order_value = ?, max_discount = ?, usage_limit = ?, usage_limit_per_user = ?,
                     valid_from = ?, valid_until = ?, is_active = ?
                     WHERE id = ?";
             
             db_query($sql, [
                 $code, $description, $promoMessage, $eligibilityType, $inactiveDays, $displayInHeader,
-                $discountType, $discountValue, $minOrderValue, $maxDiscount, $usageLimit, 
+                $discountType, $discountValue, $minOrderValue, $maxDiscount, $usageLimit, $usageLimitPerUser,
                 $validFrom, $validUntil, $isActive, $promoId
             ]);
             

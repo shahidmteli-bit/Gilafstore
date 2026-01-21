@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/db_connect.php';
 require_once __DIR__ . '/analytics_tracker.php';
+require_once __DIR__ . '/promo_functions.php';
+
+// Auto-clear promo code if user navigates outside checkout flow (cart/checkout/payment pages)
+auto_clear_promo_if_outside_checkout_flow();
 
 function sanitize_input($data) {
     if (is_array($data)) {
@@ -25,6 +29,57 @@ function get_featured_categories(int $limit = 6): array
 function get_trending_products(int $limit = 8): array
 {
     return db_fetch_all('SELECT * FROM products ORDER BY id DESC LIMIT ' . (int)$limit);
+}
+
+function get_freshly_harvested_products(int $limit = 8): array
+{
+    try {
+        // Check if column exists first
+        $db = get_db_connection();
+        $checkCol = $db->query("SHOW COLUMNS FROM products LIKE 'is_freshly_harvested'");
+        if ($checkCol->rowCount() === 0) {
+            return []; // Column doesn't exist yet
+        }
+        
+        // Fetch products marked as freshly harvested, ordered by freshly_harvested_order then by newest
+        return db_fetch_all('
+            SELECT p.*, c.name AS category_name 
+            FROM products p 
+            LEFT JOIN categories c ON c.id = p.category_id 
+            WHERE p.is_freshly_harvested = 1 
+            ORDER BY p.freshly_harvested_order ASC, p.created_at DESC 
+            LIMIT ' . (int)$limit
+        );
+    } catch (PDOException $e) {
+        // If freshly_harvested_order column doesn't exist, try without it
+        if (strpos($e->getMessage(), 'freshly_harvested_order') !== false) {
+            return db_fetch_all('
+                SELECT p.*, c.name AS category_name 
+                FROM products p 
+                LEFT JOIN categories c ON c.id = p.category_id 
+                WHERE p.is_freshly_harvested = 1 
+                ORDER BY p.created_at DESC 
+                LIMIT ' . (int)$limit
+            );
+        }
+        return [];
+    }
+}
+
+function get_explore_products(int $limit = 12): array
+{
+    try {
+        // Fetch all active products, ordered by updated_at (most recent first), then created_at
+        return db_fetch_all('
+            SELECT p.*, c.name AS category_name 
+            FROM products p 
+            LEFT JOIN categories c ON c.id = p.category_id 
+            ORDER BY p.created_at DESC 
+            LIMIT ' . (int)$limit
+        );
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 function get_products(array $filters = []): array
@@ -134,6 +189,51 @@ function get_site_setting(string $key, string $default = ''): string
     }
 }
 
+/**
+ * Get shipping settings from admin panel
+ * @param string $shippingType 'domestic' or 'worldwide'
+ * @return array Shipping settings with base_charge, free_shipping_threshold, etc.
+ */
+function get_shipping_settings(string $shippingType = 'domestic'): array
+{
+    $defaults = [
+        'base_charge' => 50.00,
+        'free_shipping_threshold' => 500.00,
+        'estimated_days_min' => 3,
+        'estimated_days_max' => 5,
+        'enabled' => 1
+    ];
+    
+    try {
+        $result = db_fetch('SELECT * FROM shipping_settings WHERE shipping_type = ?', [$shippingType]);
+        return $result ?: $defaults;
+    } catch (PDOException $e) {
+        return $defaults;
+    }
+}
+
+/**
+ * Get delivery fee for display (returns fee or 0 for free shipping)
+ * @param string $shippingType 'domestic' or 'worldwide'
+ * @return float The delivery fee amount
+ */
+function get_delivery_fee(string $shippingType = 'domestic'): float
+{
+    $settings = get_shipping_settings($shippingType);
+    return (float)($settings['base_charge'] ?? 50.00);
+}
+
+/**
+ * Get free shipping threshold
+ * @param string $shippingType 'domestic' or 'worldwide'
+ * @return float The minimum order amount for free shipping
+ */
+function get_free_shipping_threshold(string $shippingType = 'domestic'): float
+{
+    $settings = get_shipping_settings($shippingType);
+    return (float)($settings['free_shipping_threshold'] ?? 500.00);
+}
+
 function get_batch_details_for_product(int $productId): ?array
 {
     try {
@@ -207,6 +307,52 @@ function get_shipping_badge_html(string $shippingType): string
     return $badges;
 }
 
+/**
+ * Get product weight variants for display on product cards
+ * @param int $productId Product ID
+ * @return string Formatted weight string (e.g., "100g | 200g | 250g")
+ */
+function get_product_weights_display(int $productId): string
+{
+    $weights = db_fetch_all("SELECT display_weight FROM product_weights WHERE product_id = ? ORDER BY weight_value ASC", [$productId]);
+    
+    if (empty($weights)) {
+        return '';
+    }
+    
+    $weightLabels = array_map(function($w) {
+        return trim($w['display_weight']);
+    }, $weights);
+    
+    return implode(' | ', $weightLabels);
+}
+
+function get_product_price_range(int $productId): array
+{
+    // Fetch min and max prices from product_weights table
+    $priceRange = db_fetch("SELECT MIN(price) as min_price, MAX(price) as max_price, COUNT(*) as weight_count FROM product_weights WHERE product_id = ?", [$productId]);
+    
+    if ($priceRange && $priceRange['weight_count'] > 0) {
+        return [
+            'min_price' => (float)$priceRange['min_price'],
+            'max_price' => (float)$priceRange['max_price'],
+            'has_range' => $priceRange['min_price'] != $priceRange['max_price'],
+            'weight_count' => (int)$priceRange['weight_count']
+        ];
+    }
+    
+    // Fallback to product base price if no weights defined
+    $product = db_fetch("SELECT price FROM products WHERE id = ?", [$productId]);
+    $basePrice = $product ? (float)$product['price'] : 0;
+    
+    return [
+        'min_price' => $basePrice,
+        'max_price' => $basePrice,
+        'has_range' => false,
+        'weight_count' => 0
+    ];
+}
+
 function get_related_products(int $categoryId, int $excludeId, int $limit = 4): array
 {
     return db_fetch_all('SELECT * FROM products WHERE category_id = ? AND id != ? ORDER BY id DESC LIMIT ' . (int)$limit, [
@@ -230,26 +376,57 @@ function cart_items(): array
         return [];
     }
 
-    $productIds = array_keys($_SESSION['cart']);
-    $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-    $products = db_fetch_all("SELECT * FROM products WHERE id IN ($placeholders)", $productIds);
-
     $items = [];
-    foreach ($products as $product) {
-        // Fetch stock quantity from database based on product_id and batch_code
-        $stockQuery = "SELECT stock FROM products WHERE id = ?";
-        $stockResult = db_fetch($stockQuery, [$product['id']]);
-        $stockQuantity = $stockResult ? (int)$stockResult['stock'] : 0;
+    
+    foreach ($_SESSION['cart'] as $cartKey => $cartData) {
+        // Handle both old format (productId => quantity) and new format (cartKey => array)
+        if (is_array($cartData)) {
+            $productId = (int)$cartData['product_id'];
+            $weightId = (int)($cartData['weight_id'] ?? 0);
+            $quantity = (int)$cartData['quantity'];
+        } else {
+            // Legacy format: key is product_id, value is quantity
+            $productId = (int)$cartKey;
+            $weightId = 0;
+            $quantity = (int)$cartData;
+        }
+        
+        // Fetch product details
+        $product = db_fetch("SELECT * FROM products WHERE id = ?", [$productId]);
+        if (!$product) {
+            continue;
+        }
+        
+        // Determine price, weight display, and EAN
+        $price = (float)$product['price'];
+        $weightDisplay = $product['weight'] ?? 'N/A';
+        $ean = $product['ean'] ?? '';
+        
+        // If weight_id is set, fetch the specific weight's price and EAN
+        if ($weightId > 0) {
+            $weightData = db_fetch("SELECT * FROM product_weights WHERE id = ? AND product_id = ?", [$weightId, $productId]);
+            if ($weightData) {
+                $price = (float)$weightData['price'];
+                $weightDisplay = $weightData['display_weight'] ?? ($weightData['weight_value'] . ' ' . $weightData['weight_unit']);
+                $ean = $weightData['ean'] ?? $ean;
+            }
+        }
+        
+        // Fetch stock quantity
+        $stockQuantity = (int)$product['stock'];
         
         $items[] = [
-            'id' => $product['id'],
-            'product_id' => $product['id'],
+            'id' => $productId,
+            'product_id' => $productId,
+            'weight_id' => $weightId,
+            'cart_key' => $cartKey,
             'name' => $product['name'],
-            'price' => (float)$product['price'],
+            'price' => $price,
             'image' => $product['image'],
-            'quantity' => (int)$_SESSION['cart'][$product['id']],
+            'quantity' => $quantity,
             'gst_rate' => isset($product['gst_rate']) ? (float)$product['gst_rate'] : 5.00,
-            'weight' => $product['weight'] ?? 'N/A',
+            'weight' => $weightDisplay,
+            'ean' => $ean,
             'batch_code' => $product['batch_code'] ?? 'N/A',
             'stock_quantity' => $stockQuantity,
         ];
@@ -507,56 +684,128 @@ function admin_create_product(array $data): int
     global $pdo;
     
     // Check if new columns exist
-    $hasExtendedFields = false;
-    $hasLabReportFields = false;
+    $hasExtendedFields   = false;
+    $hasLabReportFields  = false;
+    $hasMultiImageFields = false;
     
     try {
+        // Extended fields (net_weight, bullet_points, etc.)
         $stmt = $pdo->query("SHOW COLUMNS FROM products LIKE 'net_weight'");
         $hasExtendedFields = $stmt->rowCount() > 0;
         
+        // Lab report fields
         $stmt = $pdo->query("SHOW COLUMNS FROM products LIKE 'has_lab_report'");
         $hasLabReportFields = $stmt->rowCount() > 0;
+
+        // Detect full multi-image schema: require image_1..image_4 to all exist
+        $hasImage1 = $pdo->query("SHOW COLUMNS FROM products LIKE 'image_1'")->rowCount() > 0;
+        $hasImage2 = $pdo->query("SHOW COLUMNS FROM products LIKE 'image_2'")->rowCount() > 0;
+        $hasImage3 = $pdo->query("SHOW COLUMNS FROM products LIKE 'image_3'")->rowCount() > 0;
+        $hasImage4 = $pdo->query("SHOW COLUMNS FROM products LIKE 'image_4'")->rowCount() > 0;
+        $hasMultiImageFields = $hasImage1 && $hasImage2 && $hasImage3 && $hasImage4;
     } catch (Exception $e) {
         // Columns don't exist yet
     }
     
+    // Normalise image data
+    $mainImage = $data['image'] ?? null;
+    $image1 = $data['image_1'] ?? $mainImage;
+    $image2 = $data['image_2'] ?? null;
+    $image3 = $data['image_3'] ?? null;
+    $image4 = $data['image_4'] ?? null;
+    
     if ($hasExtendedFields && $hasLabReportFields) {
-        // Full schema with all new fields
-        db_query('INSERT INTO products (name, description, category_id, price, stock, image, net_weight, bullet_points, has_lab_report, lab_report_file, lab_report_uploaded_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
-            $data['name'],
-            $data['description'],
-            $data['category_id'],
-            $data['price'],
-            $data['stock'],
-            $data['image'],
-            $data['net_weight'] ?? null,
-            $data['bullet_points'] ?? null,
-            $data['has_lab_report'] ?? 0,
-            $data['lab_report_file'] ?? null,
-            !empty($data['lab_report_file']) ? date('Y-m-d H:i:s') : null,
-        ]);
+        if ($hasMultiImageFields) {
+            // Full schema with multi-image support
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, image_1, image_2, image_3, image_4, net_weight, bullet_points, has_lab_report, lab_report_file, lab_report_uploaded_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+                $image1,
+                $image2,
+                $image3,
+                $image4,
+                $data['net_weight'] ?? null,
+                $data['bullet_points'] ?? null,
+                $data['has_lab_report'] ?? 0,
+                $data['lab_report_file'] ?? null,
+                !empty($data['lab_report_file']) ? date('Y-m-d H:i:s') : null,
+            ]);
+        } else {
+            // Full schema without multi-image fields
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, net_weight, bullet_points, has_lab_report, lab_report_file, lab_report_uploaded_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+                $data['net_weight'] ?? null,
+                $data['bullet_points'] ?? null,
+                $data['has_lab_report'] ?? 0,
+                $data['lab_report_file'] ?? null,
+                !empty($data['lab_report_file']) ? date('Y-m-d H:i:s') : null,
+            ]);
+        }
     } elseif ($hasExtendedFields) {
-        // Schema with net_weight and bullet_points only
-        db_query('INSERT INTO products (name, description, category_id, price, stock, image, net_weight, bullet_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
-            $data['name'],
-            $data['description'],
-            $data['category_id'],
-            $data['price'],
-            $data['stock'],
-            $data['image'],
-            $data['net_weight'] ?? null,
-            $data['bullet_points'] ?? null,
-        ]);
+        if ($hasMultiImageFields) {
+            // Schema with net_weight, bullet_points and multi-images
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, image_1, image_2, image_3, image_4, net_weight, bullet_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+                $image1,
+                $image2,
+                $image3,
+                $image4,
+                $data['net_weight'] ?? null,
+                $data['bullet_points'] ?? null,
+            ]);
+        } else {
+            // Schema with net_weight and bullet_points only
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, net_weight, bullet_points, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+                $data['net_weight'] ?? null,
+                $data['bullet_points'] ?? null,
+            ]);
+        }
     } else {
-        // Old schema without new columns
-        db_query('INSERT INTO products (name, description, category_id, price, stock, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())', [
-            $data['name'],
-            $data['description'],
-            $data['category_id'],
-            $data['price'],
-            $data['stock'],
-            $data['image'],
-        ]);
+        if ($hasMultiImageFields) {
+            // Old schema for other fields but with multi-images
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, image_1, image_2, image_3, image_4, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+                $image1,
+                $image2,
+                $image3,
+                $image4,
+            ]);
+        } else {
+            // Old schema without new columns
+            db_query('INSERT INTO products (name, description, category_id, price, stock, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())', [
+                $data['name'],
+                $data['description'],
+                $data['category_id'],
+                $data['price'],
+                $data['stock'],
+                $mainImage,
+            ]);
+        }
     }
 
     return (int)$pdo->lastInsertId();
@@ -564,8 +813,14 @@ function admin_create_product(array $data): int
 
 function admin_update_product(int $productId, array $data): void
 {
-    $fields = ['name = ?', 'description = ?', 'category_id = ?', 'price = ?', 'stock = ?'];
-    $params = [$data['name'], $data['description'], $data['category_id'], $data['price'], $data['stock']];
+    $fields = ['name = ?', 'description = ?', 'category_id = ?', 'price = ?'];
+    $params = [$data['name'], $data['description'], $data['category_id'], $data['price']];
+    
+    // Stock is optional
+    if (isset($data['stock'])) {
+        $fields[] = 'stock = ?';
+        $params[] = $data['stock'];
+    }
 
     if (!empty($data['ean'])) {
         $fields[] = 'ean = ?';
@@ -575,6 +830,23 @@ function admin_update_product(int $productId, array $data): void
     if (!empty($data['image'])) {
         $fields[] = 'image = ?';
         $params[] = $data['image'];
+    }
+    
+    // Handle is_freshly_harvested toggle (auto-create column if missing)
+    if (isset($data['is_freshly_harvested'])) {
+        try {
+            $db = get_db_connection();
+            $checkCol = $db->query("SHOW COLUMNS FROM products LIKE 'is_freshly_harvested'");
+            if ($checkCol->rowCount() === 0) {
+                // Auto-create the columns
+                $db->exec("ALTER TABLE products ADD COLUMN is_freshly_harvested TINYINT(1) NOT NULL DEFAULT 0");
+                $db->exec("ALTER TABLE products ADD COLUMN freshly_harvested_order INT DEFAULT 0");
+            }
+            $fields[] = 'is_freshly_harvested = ?';
+            $params[] = $data['is_freshly_harvested'];
+        } catch (PDOException $e) {
+            // Column creation failed, skip this field
+        }
     }
 
     $params[] = $productId;

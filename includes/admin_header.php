@@ -55,6 +55,16 @@ $userName = $_SESSION['user']['name'] ?? 'Admin';
           <a class="nav-link <?= $adminPage === 'shipping' ? 'active' : ''; ?>" href="<?= base_url('admin/shipping_settings.php'); ?>"><i class="fas fa-shipping-fast"></i>Shipping</a>
           <a class="nav-link <?= $adminPage === 'policies' ? 'active' : ''; ?>" href="<?= base_url('admin/policies_compliances.php'); ?>"><i class="fas fa-file-contract"></i>Policies</a>
           <a class="nav-link <?= $adminPage === 'content' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_content.php'); ?>"><i class="fas fa-file-alt"></i>Content Pages</a>
+          <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#advertisementsMenu" role="button" aria-expanded="false" aria-controls="advertisementsMenu">
+            <span><i class="fas fa-bullhorn"></i>Advertisements</span>
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="collapse" id="advertisementsMenu">
+            <div class="nav-submenu">
+              <a class="nav-link <?= $adminPage === 'advertisements' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_advertisements.php'); ?>"><i class="fas fa-ad"></i>Story Ads</a>
+              <a class="nav-link <?= $adminPage === 'hero_banner' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_hero_banner.php'); ?>"><i class="fas fa-image"></i>Hero Banner</a>
+            </div>
+          </div>
           <a class="nav-link <?= $adminPage === 'optimize_images' ? 'active' : ''; ?>" href="<?= base_url('admin/optimize_images.php'); ?>"><i class="fas fa-compress-alt"></i>Image Optimization</a>
           <a class="nav-link <?= $adminPage === 'applications' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_applications.php'); ?>"><i class="fas fa-handshake"></i>Applications</a>
           <a class="nav-link <?= $adminPage === 'orders' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_orders.php'); ?>"><i class="fas fa-receipt"></i>Orders</a>
