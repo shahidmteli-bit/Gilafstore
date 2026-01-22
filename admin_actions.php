@@ -2,8 +2,70 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/error_logger.php';
+require_once __DIR__ . '/includes/gst_calculator.php';
 
 require_admin();
+
+// Helper function to auto-calculate GST when conditions are met
+function auto_calculate_gst_if_eligible($orderId, $db) {
+    // Check if order is delivered AND payment is completed
+    $stmt = $db->prepare("SELECT o.*, u.state as customer_state, u.gstin as customer_gstin 
+                          FROM orders o 
+                          LEFT JOIN users u ON o.user_id = u.id 
+                          WHERE o.id = ?");
+    $stmt->execute([$orderId]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$order) return false;
+    
+    $isDelivered = ($order['order_status'] === 'delivered');
+    $isPaid = ($order['payment_status'] === 'completed');
+    
+    if ($isDelivered && $isPaid) {
+        // Check if GST already calculated for this order
+        $checkStmt = $db->prepare("SELECT id FROM gst_orders WHERE order_id = ?");
+        $checkStmt->execute([$orderId]);
+        if ($checkStmt->fetch()) {
+            return true; // GST already calculated
+        }
+        
+        try {
+            // Get customer state from shipping address or user profile
+            $customerState = $order['customer_state'] ?? 'Maharashtra';
+            
+            // If no state in user profile, try to extract from shipping address
+            if (empty($customerState) && !empty($order['shipping_address'])) {
+                // Try to extract state from address (common Indian states)
+                $states = ['Maharashtra', 'Gujarat', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Delhi', 'Rajasthan', 
+                          'Uttar Pradesh', 'West Bengal', 'Madhya Pradesh', 'Andhra Pradesh', 'Telangana', 
+                          'Punjab', 'Haryana', 'Bihar', 'Odisha', 'Jharkhand', 'Chhattisgarh', 'Assam', 
+                          'Goa', 'Himachal Pradesh', 'Uttarakhand', 'Jammu and Kashmir', 'Sikkim'];
+                foreach ($states as $state) {
+                    if (stripos($order['shipping_address'], $state) !== false) {
+                        $customerState = $state;
+                        break;
+                    }
+                }
+            }
+            
+            // Use mysqli connection for GSTCalculator
+            global $conn;
+            if (!isset($conn)) {
+                $conn = new mysqli('localhost', 'root', '', 'gilaborgin');
+            }
+            
+            $gstCalculator = new GSTCalculator($conn);
+            $gstCalculator->calculateOrderGST($orderId, $customerState, $order['customer_gstin'] ?? null);
+            
+            return true;
+        } catch (Exception $e) {
+            error_log("Auto GST calculation failed for order #$orderId: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    return false;
+}
 
 $action = $_POST['action'] ?? '';
 
@@ -410,7 +472,7 @@ try {
             $courierCompany = trim($_POST['courier_company'] ?? '');
             $trackingId = trim($_POST['tracking_id'] ?? '');
             
-            if (!$orderId || !in_array($status, ['pending', 'accepted', 'shipped', 'delivered'], true)) {
+            if (!$orderId || !in_array($status, ['pending', 'accepted', 'shipped', 'delivered', 'cancelled', 'return_requested', 'returned', 'delivery_failed'], true)) {
                 throw new RuntimeException('Invalid order update');
             }
             
@@ -446,6 +508,11 @@ try {
             $adminId = $_SESSION['user']['id'] ?? null;
             $notes = $courierCompany ? "Courier: $courierCompany, Tracking: $trackingId" : null;
             $historyStmt->execute([$orderId, $oldStatus, $status, $adminId, $notes]);
+            
+            // Auto-calculate GST when order is delivered (if payment is also completed)
+            if ($status === 'delivered') {
+                auto_calculate_gst_if_eligible($orderId, $db);
+            }
             
             redirect_with_message('/admin/manage_orders.php', 'Order status updated successfully');
             break;

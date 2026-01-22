@@ -146,11 +146,11 @@ class GilafChatbot {
                 quickActions: ['Verify Now', 'How to Scan', 'Report Fake']
             },
 
-            // Contact & Support
+            // Contact & Support - handled directly by showSupportOptions()
             'contact': {
                 keywords: ['contact', 'support', 'help', 'customer care', 'phone number', 'email', 'reach you'],
-                response: 'We\'re here to help! 📞\n\nContact Options:\n\n📱 WhatsApp: +91-9419404670\n📞 Phone: +91-9419404670\n📧 Email: support@gilaf.com\n⏰ Hours: Mon-Sat, 9 AM - 6 PM\n\nYou can also request a callback and we\'ll reach out to you!',
-                quickActions: ['Create Support Ticket', 'Track Requests', 'WhatsApp', 'Email Us']
+                response: '__SHOW_SUPPORT_OPTIONS__',
+                quickActions: []
             },
 
             // Suggestions & Feedback
@@ -550,11 +550,9 @@ class GilafChatbot {
 
             const options = orders.map(o => {
                 const id = o.id;
-                const status = this.escapeHtml(this.formatOrderStatus(o.status || ''));
-                const created = this.escapeHtml((o.created_at || '').toString().slice(0, 10));
-                const total = typeof o.total_amount === 'number' ? o.total_amount : parseFloat(o.total_amount || 0);
-                const totalText = isFinite(total) ? `₹${total.toFixed(2)}` : '';
-                return `<option value="${id}">Order #${id} - ${created} - ${totalText} - ${status}</option>`;
+                const ref = o.reference || ('ORD-' + String(id).padStart(5, '0'));
+                const status = this.formatOrderStatus(o.status || '');
+                return `<option value="${id}">${this.escapeHtml(ref)} - ${this.escapeHtml(status)}</option>`;
             }).join('');
 
             const recentHTML = `
@@ -645,11 +643,13 @@ class GilafChatbot {
             const o = data.order || {};
             const status = this.escapeHtml(this.formatOrderStatus(o.status || ''));
             const created = this.escapeHtml((o.created_at || '').toString().slice(0, 19).replace('T', ' '));
+            const deliveredAt = o.delivered_at ? this.escapeHtml((o.delivered_at || '').toString().slice(0, 19).replace('T', ' ')) : null;
             const itemCount = Number.isFinite(o.item_count) ? o.item_count : (Array.isArray(o.items) ? o.items.length : 0);
             const total = typeof o.total_amount === 'number' ? o.total_amount : parseFloat(o.total_amount || 0);
             const totalText = isFinite(total) ? `₹${total.toFixed(2)}` : '';
             const trackingNo = (o.tracking_number || '').toString().trim();
-            const trackingLine = trackingNo ? `<div style="margin-top:10px; font-size:12px;"><strong>Tracking:</strong> ${this.escapeHtml(trackingNo)}</div>` : '';
+            const trackingLine = trackingNo ? `<div style="margin-top:6px;"><strong>Tracking:</strong> ${this.escapeHtml(trackingNo)}</div>` : '';
+            const deliveredLine = deliveredAt ? `<div style="margin-top:6px; color:#16a34a;"><strong>Delivered:</strong> ${deliveredAt}</div>` : '';
 
             const statusHTML = `
                 <div style="background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:14px;">
@@ -658,11 +658,12 @@ class GilafChatbot {
                             <div style="font-weight:800; color:#1A3C34;">Order #${this.escapeHtml(String(o.id || id))}</div>
                             <div style="font-size:12px; color:#6b7280; margin-top:3px;">${created}</div>
                         </div>
-                        <div style="font-size:12px; font-weight:800; color:#1A3C34; background:rgba(26,60,52,0.08); padding:6px 10px; border-radius:999px;">${status}</div>
+                        <div style="font-size:12px; font-weight:800; color:${deliveredAt ? '#16a34a' : '#1A3C34'}; background:${deliveredAt ? 'rgba(22,163,74,0.1)' : 'rgba(26,60,52,0.08)'}; padding:6px 10px; border-radius:999px;">${status}</div>
                     </div>
                     <div style="margin-top:12px; font-size:12px; color:#111827;">
                         <div><strong>Items:</strong> ${this.escapeHtml(String(itemCount))}</div>
                         <div style="margin-top:6px;"><strong>Total:</strong> ${this.escapeHtml(totalText)}</div>
+                        ${deliveredLine}
                         ${trackingLine}
                     </div>
                 </div>
@@ -702,6 +703,12 @@ class GilafChatbot {
 
         this.addUserMessage(message);
         input.value = '';
+
+        // If live chat is enabled and admin has taken over, send to live chat
+        if (this.liveChatEnabled && (this.chatStatus === 'active' || this.chatStatus === 'waiting')) {
+            this.sendLiveChatMessage(message);
+            return;
+        }
 
         this.showTypingIndicator();
         setTimeout(() => {
@@ -768,11 +775,11 @@ class GilafChatbot {
                         <span>Get detailed help</span>
                     </div>
                 </div>
-                <div class="escalation-btn tracking" onclick="gilafChatbot.handleQuickAction('Track Order')">
-                    <i class="fas fa-shipping-fast"></i>
+                <div class="escalation-btn tracking" onclick="gilafChatbot.showRecentTickets()">
+                    <i class="fas fa-clipboard-list"></i>
                     <div class="escalation-text">
-                        <strong>Track Order</strong>
-                        <span>Check order status</span>
+                        <strong>Track Tickets</strong>
+                        <span>View your support tickets</span>
                     </div>
                 </div>
                 <a href="https://wa.me/919419404670" target="_blank" class="escalation-btn whatsapp">
@@ -782,7 +789,7 @@ class GilafChatbot {
                         <span>Get instant help</span>
                     </div>
                 </a>
-                <div class="escalation-btn callback" onclick="gilafChatbot.requestCallback()">
+                <div class="escalation-btn callback" onclick="gilafChatbot.showCallRequestForm()">
                     <i class="fas fa-phone-alt"></i>
                     <div class="escalation-text">
                         <strong>Request Callback</strong>
@@ -796,8 +803,36 @@ class GilafChatbot {
                         <span>+91-9419404670</span>
                     </div>
                 </a>
+                <div class="escalation-btn agent" onclick="gilafChatbot.requestLiveAgent()">
+                    <i class="fas fa-comments"></i>
+                    <div class="escalation-text">
+                        <strong>Chat with Agent</strong>
+                        <span>Live chat support</span>
+                    </div>
+                </div>
             </div>
         `;
+    }
+
+    showSupportOptions() {
+        // Show all support options directly in a clean format
+        const supportHTML = `
+            <div class="chat-message bot">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div style="margin-bottom: 12px;">
+                            <strong>How can we help you?</strong> 🤝
+                        </div>
+                        ${this.getEscalationOptions()}
+                    </div>
+                    <div class="message-time">${this.getCurrentTime()}</div>
+                </div>
+            </div>
+        `;
+        this.appendMessage(supportHTML);
     }
 
     async processMessage(message) {
@@ -843,6 +878,12 @@ class GilafChatbot {
             return;
         }
 
+        // Check for special support handler
+        if (response === '__SHOW_SUPPORT_OPTIONS__') {
+            this.showSupportOptions();
+            return;
+        }
+
         // Send response with quick actions
         this.addBotMessage(response, matchedCategory.quickActions);
     }
@@ -885,7 +926,7 @@ class GilafChatbot {
             // Handle specific quick actions
             if (action === 'Create Support Ticket') {
                 this.showTicketForm();
-            } else if (action === 'Track Requests') {
+            } else if (action === 'Track Tickets') {
                 this.addBotMessage('Here are your recent support tickets:', null, false);
                 this.showRecentTickets();
             } else if (action === 'View My Tickets') {
@@ -903,11 +944,8 @@ class GilafChatbot {
             } else if (action === 'Apply Now') {
                 window.location.href = 'apply-distributor.php';
             } else if (action === 'Contact Support' || action === 'Need Help') {
-                this.addBotMessage(
-                    'I\'d be happy to connect you with our support team!\n\nYou can:\n\n📋 Create a support ticket for detailed assistance\n📞 Call/WhatsApp: +91-9419404670\n📧 Email: support@gilaf.com\n\nWhat would you prefer?',
-                    ['Create Support Ticket', 'WhatsApp', 'Email Us'],
-                    true
-                );
+                // Show all support options directly without confusing redirects
+                this.showSupportOptions();
             } else if (action === 'Share Your Ideas') {
                 this.openSuggestionModal();
             } else {
@@ -1054,6 +1092,226 @@ class GilafChatbot {
         }, 1000);
     }
 
+    // ============ Live Chat Integration ============
+    
+    liveChatEnabled = false;
+    liveChatPolling = null;
+    lastMessageId = 0;
+    chatStatus = 'bot';
+
+    async requestLiveAgent() {
+        this.addUserMessage('Talk to an agent');
+        this.showTypingIndicator();
+
+        try {
+            // First start/get the live chat session
+            const startRes = await this.fetchWithTimeout(this.buildUrl('live_chat_user_api.php'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'start_chat' })
+            });
+            const startData = await startRes.json();
+
+            if (!startData.success) {
+                throw new Error('Failed to start chat');
+            }
+
+            // Request agent
+            const agentRes = await this.fetchWithTimeout(this.buildUrl('live_chat_user_api.php'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'request_agent' })
+            });
+            const agentData = await agentRes.json();
+
+            this.removeTypingIndicator();
+
+            if (agentData.success) {
+                this.liveChatEnabled = true;
+                this.chatStatus = 'waiting';
+                this.addBotMessage(
+                    '🙋 I\'m connecting you with a support agent. They\'ll be with you shortly!\n\nWhile you wait, feel free to describe your issue.',
+                    null,
+                    false
+                );
+                this.startLiveChatPolling();
+            } else {
+                this.addBotMessage('Sorry, unable to connect to an agent right now. Please try again later.', null, true);
+            }
+        } catch (error) {
+            console.error('[Chatbot] Live agent request error:', error);
+            this.removeTypingIndicator();
+            this.addBotMessage('Sorry, unable to connect to an agent right now. Please try again later.', null, true);
+        }
+    }
+
+    startLiveChatPolling() {
+        if (this.liveChatPolling) return;
+
+        this.liveChatPolling = setInterval(async () => {
+            try {
+                const res = await fetch(this.buildUrl(`live_chat_user_api.php?action=poll&last_id=${this.lastMessageId}`));
+                const data = await res.json();
+
+                if (data.success) {
+                    // Update chat status
+                    if (data.chat_status) {
+                        this.chatStatus = data.chat_status;
+                    }
+
+                    // Add new messages from admin
+                    if (data.messages && data.messages.length > 0) {
+                        data.messages.forEach(msg => {
+                            if (msg.sender_type === 'admin' || msg.sender_type === 'system') {
+                                this.addLiveChatMessage(msg);
+                                // Play notification sound when chatbot is open
+                                if (this.isOpen && msg.sender_type === 'admin') {
+                                    this.playNotificationSound();
+                                }
+                            }
+                            this.lastMessageId = Math.max(this.lastMessageId, parseInt(msg.id));
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('[Chatbot] Poll error:', error);
+            }
+        }, 2000);
+    }
+
+    stopLiveChatPolling() {
+        if (this.liveChatPolling) {
+            clearInterval(this.liveChatPolling);
+            this.liveChatPolling = null;
+        }
+    }
+
+    addLiveChatMessage(msg) {
+        const isSystem = msg.sender_type === 'system';
+        const avatar = isSystem ? 'info-circle' : 'headset';
+        const bgColor = isSystem ? '#f0f0f0' : '#e3f2fd';
+
+        const messageHTML = `
+            <div class="chat-message bot">
+                <div class="message-avatar" style="background: ${isSystem ? '#999' : '#1A3C34'};">
+                    <i class="fas fa-${avatar}"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble" style="background: ${bgColor};">
+                        ${isSystem ? '' : `<div style="font-size: 0.75rem; color: #1A3C34; font-weight: 600; margin-bottom: 5px;">${this.escapeHtml(msg.sender_name || 'Support Agent')}</div>`}
+                        ${this.escapeHtml(msg.message).replace(/\n/g, '<br>')}
+                    </div>
+                    <div class="message-time">${this.getCurrentTime()}</div>
+                </div>
+            </div>
+        `;
+        this.appendMessage(messageHTML);
+    }
+
+    async sendLiveChatMessage(message) {
+        try {
+            const res = await this.fetchWithTimeout(this.buildUrl('live_chat_user_api.php'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'send_message', message: message })
+            });
+            const data = await res.json();
+
+            if (data.success && data.message) {
+                this.lastMessageId = Math.max(this.lastMessageId, parseInt(data.message.id));
+            }
+
+            return data;
+        } catch (error) {
+            console.error('[Chatbot] Send live message error:', error);
+            return { success: false };
+        }
+    }
+
+    playNotificationSound() {
+        // Create audio element for notification
+        const audio = new Audio(this.buildUrl('assets/sounds/notification.mp3'));
+        audio.volume = 0.5;
+        audio.play().catch(() => {});
+    }
+
+    showCallRequestForm() {
+        this.addUserMessage('Request a callback');
+        
+        setTimeout(() => {
+            const formHTML = `
+                <div class="chat-message bot">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble" style="background: linear-gradient(135deg, #1A3C34 0%, #2d5a4d 100%); padding: 20px; border-radius: 12px;">
+                            <div style="color: white; margin-bottom: 15px;">
+                                <i class="fas fa-phone-alt" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                                <h4 style="margin: 0 0 5px 0; font-size: 16px; font-weight: 600;">Request a Callback</h4>
+                                <p style="margin: 0; font-size: 13px; opacity: 0.9;">We'll call you back shortly!</p>
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: 8px;">
+                                <label style="display:block; font-size: 12px; font-weight: 600; color: #2c3e50; margin-bottom: 6px;">Your Name</label>
+                                <input type="text" id="callbackName" placeholder="Enter your name" 
+                                       style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; margin-bottom: 12px; box-sizing: border-box;">
+                                
+                                <label style="display:block; font-size: 12px; font-weight: 600; color: #2c3e50; margin-bottom: 6px;">Phone Number</label>
+                                <input type="tel" id="callbackPhone" placeholder="Enter 10-digit phone number" 
+                                       style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 14px; margin-bottom: 12px; box-sizing: border-box;">
+                                
+                                <button onclick="gilafChatbot.submitCallRequest()" 
+                                        style="width: 100%; padding: 12px; background: linear-gradient(135deg, #C5A059 0%, #d4b068 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 14px;">
+                                    <i class="fas fa-phone"></i> Request Call
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-time">${this.getCurrentTime()}</div>
+                    </div>
+                </div>
+            `;
+            this.appendMessage(formHTML);
+        }, 500);
+    }
+
+    async submitCallRequest() {
+        const name = document.getElementById('callbackName')?.value?.trim() || '';
+        const phone = document.getElementById('callbackPhone')?.value?.trim() || '';
+
+        if (!name || !phone) {
+            this.addBotMessage('Please enter both your name and phone number.', null, false);
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            this.addBotMessage('Please enter a valid 10-digit phone number.', null, false);
+            return;
+        }
+
+        this.showTypingIndicator();
+
+        try {
+            const res = await this.fetchWithTimeout(this.buildUrl('chatbot_callback.php'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, phone: phone, preferred_time: 'ASAP', message: 'Callback requested via chatbot' })
+            });
+            const data = await res.json();
+
+            this.removeTypingIndicator();
+
+            if (data.success) {
+                this.addBotMessage('✅ Call request submitted successfully! Our team will call you at ' + phone + ' shortly.', ['Continue Chat'], false);
+            } else {
+                this.addBotMessage(data.message || 'Failed to submit call request. Please try again.', null, false);
+            }
+        } catch (error) {
+            console.error('[Chatbot] Call request error:', error);
+            this.removeTypingIndicator();
+            this.addBotMessage('Failed to submit call request. Please try again.', null, false);
+        }
+    }
+
     showTypingIndicator() {
         const typingHTML = `
             <div class="chat-message bot typing-message">
@@ -1186,12 +1444,11 @@ class GilafChatbot {
                 return;
             }
 
-            // Build dropdown options
+            // Build dropdown options - show order reference + status
             const options = orders.map(o => {
-                const ref = this.escapeHtml(o.reference || `ORD-${o.id}`);
+                const ref = this.escapeHtml(o.reference || `ORD-${String(o.id).padStart(5, '0')}`);
                 const status = this.escapeHtml(this.formatOrderStatus(o.status || ''));
-                const date = this.escapeHtml((o.created_at || '').toString().slice(0, 10));
-                return `<option value="${o.id}">${ref} - ${date} - ${status}</option>`;
+                return `<option value="${o.id}">${ref} - ${status}</option>`;
             }).join('');
 
             card.innerHTML = `

@@ -76,27 +76,41 @@ include __DIR__ . '/../includes/new-header.php';
 ?>
 
 <style>
+    /* Hero Section - Using same container style as Our Values */
+    .ticket-hero {
+        background-color: var(--color-ivory, #FAF8F5);
+        padding: 50px 20px 25px 20px;
+        text-align: center;
+    }
+    .ticket-hero-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(197, 160, 89, 0.2);
+    }
+    .ticket-hero h1 {
+        font-size: 3.0rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #1A3C34;
+    }
+    .ticket-hero p {
+        font-size: 1.0rem;
+        max-width: 100%;
+        margin: 0 auto;
+        color: #C9A961;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        white-space: nowrap;
+    }
+    
     .create-ticket-container {
         max-width: 900px;
         margin: 0 auto;
-        padding: 0 20px;
-    }
-    
-    .page-header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    
-    .page-header h1 {
-        font-family: 'Playfair Display', serif;
-        color: #1A3C34;
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-    
-    .page-header p {
-        color: #7f8c8d;
-        font-size: 1.1rem;
+        padding: 40px 20px 80px 20px;
     }
     
     .form-card {
@@ -350,12 +364,16 @@ include __DIR__ . '/../includes/new-header.php';
     }
 </style>
 
-<section style="min-height: 70vh; background: linear-gradient(135deg, rgba(26, 60, 52, 0.03) 0%, rgba(197, 160, 89, 0.03) 100%); padding: 60px 0 30px 0;">
+<!-- Hero Section -->
+<div class="ticket-hero">
+    <div class="ticket-hero-content">
+        <h1>Create Support Ticket</h1>
+        <p>We're here to help! Describe your issue and we'll get back to you soon.</p>
+    </div>
+</div>
+
+<section style="min-height: 70vh; background: linear-gradient(135deg, rgba(26, 60, 52, 0.03) 0%, rgba(197, 160, 89, 0.03) 100%); padding: 0;">
     <div class="create-ticket-container">
-        <div class="page-header">
-            <h1>Create Support Ticket</h1>
-            <p>We're here to help! Describe your issue and we'll get back to you soon.</p>
-        </div>
         
         <?php if ($success): ?>
             <!-- Success Message -->

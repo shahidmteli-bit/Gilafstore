@@ -53,14 +53,21 @@ try {
     $items = $order['items'] ?? [];
     $itemCount = is_array($items) ? count($items) : 0;
 
+    $status = $order['order_status'] ?? $order['status'] ?? 'pending';
+    // Use updated_at as delivered timestamp when status is delivered
+    $deliveredAt = null;
+    if (strtolower($status) === 'delivered') {
+        $deliveredAt = $order['delivered_at'] ?? $order['updated_at'] ?? $order['created_at'] ?? null;
+    }
     echo json_encode([
         'success' => true,
         'order' => [
             'id' => (int)$order['id'],
-            'status' => (string)($order['status'] ?? ''),
+            'status' => ucfirst(str_replace('_', ' ', $status)),
             'total_amount' => (float)($order['total_amount'] ?? 0),
             'created_at' => (string)($order['created_at'] ?? ''),
-            'tracking_number' => (string)($order['tracking_number'] ?? ''),
+            'delivered_at' => $deliveredAt ? (string)$deliveredAt : null,
+            'tracking_number' => (string)($order['tracking_id'] ?? $order['tracking_number'] ?? ''),
             'item_count' => $itemCount,
             'items' => $items,
         ]

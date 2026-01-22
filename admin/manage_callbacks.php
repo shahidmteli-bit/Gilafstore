@@ -5,7 +5,7 @@ require_once '../includes/auth.php';
 require_admin();
 
 $page_title = "Manage Callback Requests";
-include '../admin/includes/admin_header.php';
+include '../includes/admin_header.php';
 
 // Handle status update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
@@ -82,7 +82,7 @@ if ($stats_result) {
 
 .stat-card.pending h3 { color: #ffc107; }
 .stat-card.contacted h3 { color: #17a2b8; }
-.stat-card.completed h3 { color: #28a745; }
+.stat-card.not-connected h3 { color: #6c757d; }
 .stat-card.cancelled h3 { color: #dc3545; }
 
 .callbacks-table {
@@ -133,9 +133,9 @@ if ($stats_result) {
     color: #0c5460;
 }
 
-.status-badge.completed {
-    background: #d4edda;
-    color: #155724;
+.status-badge.not-connected {
+    background: #e9ecef;
+    color: #495057;
 }
 
 .status-badge.cancelled {
@@ -259,19 +259,19 @@ if ($stats_result) {
     <div class="callback-stats">
         <div class="stat-card pending">
             <h3><?= $stats['pending'] ?></h3>
-            <p>Pending</p>
+            <p><i class="fas fa-phone-alt" style="margin-right:5px;"></i>Pending</p>
         </div>
         <div class="stat-card contacted">
             <h3><?= $stats['contacted'] ?></h3>
-            <p>Contacted</p>
+            <p><i class="fas fa-phone-volume" style="margin-right:5px;color:#17a2b8;"></i>Connected</p>
         </div>
-        <div class="stat-card completed">
+        <div class="stat-card not-connected">
             <h3><?= $stats['completed'] ?></h3>
-            <p>Completed</p>
+            <p><i class="fas fa-phone-slash" style="margin-right:5px;color:#6c757d;"></i>Not Connected</p>
         </div>
         <div class="stat-card cancelled">
             <h3><?= $stats['cancelled'] ?></h3>
-            <p>Cancelled</p>
+            <p><i class="fas fa-times-circle" style="margin-right:5px;"></i>Cancelled</p>
         </div>
     </div>
 
@@ -303,8 +303,22 @@ if ($stats_result) {
                             <td><a href="tel:<?= $callback['phone'] ?>"><?= $callback['phone'] ?></a></td>
                             <td><?= htmlspecialchars($callback['preferred_time'] ?: 'Anytime') ?></td>
                             <td>
-                                <span class="status-badge <?= $callback['status'] ?>">
-                                    <?= ucfirst($callback['status']) ?>
+                                <span class="status-badge <?= $callback['status'] === 'completed' ? 'not-connected' : $callback['status'] ?>">
+                                    <?php 
+                                    $statusIcons = [
+                                        'pending' => '<i class="fas fa-clock" style="margin-right:4px;"></i>',
+                                        'contacted' => '<i class="fas fa-phone-volume" style="margin-right:4px;"></i>',
+                                        'completed' => '<i class="fas fa-phone-slash" style="margin-right:4px;"></i>',
+                                        'cancelled' => '<i class="fas fa-times" style="margin-right:4px;"></i>'
+                                    ];
+                                    $statusLabels = [
+                                        'pending' => 'Pending',
+                                        'contacted' => 'Connected',
+                                        'completed' => 'Not Connected',
+                                        'cancelled' => 'Cancelled'
+                                    ];
+                                    echo ($statusIcons[$callback['status']] ?? '') . ($statusLabels[$callback['status']] ?? ucfirst($callback['status']));
+                                    ?>
                                 </span>
                             </td>
                             <td><?= date('M d, Y H:i', strtotime($callback['created_at'])) ?></td>
@@ -356,10 +370,10 @@ if ($stats_result) {
             <div class="form-group">
                 <label>Status</label>
                 <select name="status" id="callback_status" required>
-                    <option value="pending">Pending</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
+                    <option value="pending">⏳ Pending</option>
+                    <option value="contacted">📞 Connected</option>
+                    <option value="completed">📵 Not Connected</option>
+                    <option value="cancelled">❌ Cancelled</option>
                 </select>
             </div>
             
@@ -406,4 +420,4 @@ document.getElementById('callbackModal').addEventListener('click', function(e) {
 });
 </script>
 
-<?php include '../admin/includes/admin_footer.php'; ?>
+<?php include '../includes/admin_footer.php'; ?>

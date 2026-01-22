@@ -633,8 +633,24 @@ body.scrolled .top-bar { display: none; }
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     border-radius: var(--border-radius);
-    max-height: 90vh;
+    max-height: 85vh;
     overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gold) #f0f0f0;
+}
+
+.region-modal::-webkit-scrollbar {
+    width: 6px;
+}
+
+.region-modal::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+
+.region-modal::-webkit-scrollbar-thumb {
+    background: var(--color-gold);
+    border-radius: 3px;
 }
 
 .modal-overlay.active .region-modal { transform: translateY(0); }
@@ -717,15 +733,16 @@ body.scrolled .top-bar { display: none; }
 .tracking-result-container.show { display: block; animation: fadeUp 0.5s; }
 
 .tracking-meta { background: #F8F5F2; padding: 15px; border-radius: 6px; margin-bottom: 25px; display: flex; justify-content: space-between; font-size: 0.9rem; }
-.timeline { position: relative; padding-left: 10px; margin-top: 20px; }
-.timeline::before { content: ''; position: absolute; left: 29px; top: 5px; bottom: 30px; width: 2px; background: #eee; z-index: 0; }
-.timeline-step { position: relative; padding-bottom: 30px; padding-left: 70px; z-index: 1; }
-.timeline-step:last-child { padding-bottom: 0; }
+.timeline { position: relative; padding-left: 10px; margin-top: 15px; padding-bottom: 10px; }
+.timeline::before { content: ''; position: absolute; left: 29px; top: 5px; bottom: 10px; width: 2px; background: #eee; z-index: 0; }
+.timeline-step { position: relative; padding-bottom: 20px; padding-left: 70px; z-index: 1; }
+.timeline-step:last-child { padding-bottom: 10px; }
 .step-icon { position: absolute; left: 0; top: 0; width: 60px; height: 25px; display: flex; align-items: center; justify-content: center; background: var(--color-white); }
 .dot { width: 16px; height: 16px; border-radius: 50%; background: #e0e0e0; border: 3px solid #fff; box-shadow: 0 0 0 1px #ccc; transition: 0.3s; }
 .timeline-step.completed .dot, .timeline-step.active .dot { background: var(--color-gold); box-shadow: 0 0 0 1px var(--color-gold); }
 .timeline-step.active .dot { transform: scale(1.2); box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.3); }
 .timeline-step.completed::after { content: ''; position: absolute; left: 29px; top: 20px; height: 100%; width: 2px; background: var(--color-green); z-index: -1; }
+.timeline-step.completed:last-child::after { display: none; }
 .step-content h5 { font-family: var(--font-sans); font-size: 0.95rem; margin-bottom: 2px; color: #888; }
 .step-content p { font-size: 0.8rem; color: #aaa; }
 .timeline-step.completed h5, .timeline-step.active h5 { color: var(--color-green); font-weight: 700; }

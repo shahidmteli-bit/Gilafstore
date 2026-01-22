@@ -14,59 +14,42 @@ include __DIR__ . '/includes/new-header.php';
 ?>
 
 <style>
+    /* FAQs Hero - Using same container style as Our Values */
     .faqs-hero {
-        background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
-        color: white;
-        padding: 36px 20px;
+        background-color: var(--color-ivory, #FAF8F5);
+        padding: 50px 20px 25px 20px;
         text-align: center;
-        position: relative;
-        overflow: hidden;
     }
-    .faqs-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(201, 169, 97, 0.2) 0%, transparent 60%), 
-                    radial-gradient(circle at 70% 60%, rgba(26, 60, 52, 0.3) 0%, transparent 60%);
-        opacity: 0.25;
-        z-index: 0;
-    }
-    .faqs-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #C9A961 0%, #FFFFFF 50%, #C9A961 100%);
-        z-index: 2;
+    .faqs-hero-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(197, 160, 89, 0.2);
     }
     .faqs-hero h1 {
-        font-size: 3.5rem;
+        font-size: 3.0rem;
         font-weight: 700;
         margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        font-family: 'Poppins', sans-serif;
+        color: #1A3C34;
     }
     .faqs-hero p {
-        font-size: 1.3rem;
-        max-width: 800px;
+        font-size: 1.1rem;
+        max-width: 100%;
         margin: 0 auto;
-        opacity: 0.95;
-        position: relative;
-        z-index: 1;
-        font-family: 'Poppins', sans-serif;
+        color: #C9A961;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        white-space: nowrap;
+        text-align: center;
     }
     
     .faqs-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: 80px 20px;
+        padding: 40px 20px 80px 20px;
     }
     
     .faq-categories {
@@ -136,6 +119,7 @@ include __DIR__ . '/includes/new-header.php';
         margin-bottom: 40px;
         padding-bottom: 20px;
         border-bottom: 2px solid #f0f0f0;
+        width: 100%;
     }
     
     .faq-content-panel .faq-header h2 {
@@ -147,6 +131,7 @@ include __DIR__ . '/includes/new-header.php';
         align-items: center;
         justify-content: center;
         gap: 12px;
+        text-align: center;
     }
     
     .faq-content-panel .faq-header h2::before {
@@ -167,6 +152,9 @@ include __DIR__ . '/includes/new-header.php';
         font-size: 1.05rem;
         color: #777;
         margin: 0;
+        text-align: center !important;
+        width: 100%;
+        display: block;
     }
     
     .faq-content-panel .faq-container {
@@ -323,8 +311,10 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Hero Section -->
 <div class="faqs-hero">
-    <h1>Frequently Asked Questions</h1>
-    <p>Find answers to common questions about our products, services, and policies</p>
+    <div class="faqs-hero-content">
+        <h1>Frequently Asked Questions</h1>
+        <p>Find answers to common questions about our products, services, and policies</p>
+    </div>
 </div>
 
 <!-- FAQs Content -->
@@ -418,7 +408,7 @@ function buildFAQHTML(faqs, title) {
         <section class="faq-section">
             <div class="faq-header">
                 <h2>${escapeHtml(title)}</h2>
-                <p>Find answers to commonly asked questions</p>
+                <p style="text-align: center;">Find answers to commonly asked questions</p>
             </div>
             <div class="faq-container">
     `;

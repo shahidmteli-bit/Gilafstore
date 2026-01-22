@@ -50,6 +50,7 @@ function display_faq_section($category = null, $title = 'Frequently Asked Questi
         .faq-header {
             text-align: center;
             margin-bottom: 50px;
+            width: 100%;
         }
         
         .faq-header h2 {
@@ -58,13 +59,17 @@ function display_faq_section($category = null, $title = 'Frequently Asked Questi
             margin-bottom: 15px;
             font-weight: 700;
             font-family: 'Poppins', sans-serif;
+            text-align: center;
         }
         
         .faq-header p {
             font-size: 1.1rem;
             color: #666;
-            max-width: 600px;
+            max-width: 100%;
+            width: 100%;
             margin: 0 auto;
+            text-align: center !important;
+            display: block;
         }
         
         .faq-container {
@@ -183,7 +188,7 @@ function display_faq_section($category = null, $title = 'Frequently Asked Questi
     <section class="faq-section" id="<?= $sectionId; ?>">
         <div class="faq-header">
             <h2><?= htmlspecialchars($title); ?></h2>
-            <p>Find answers to commonly asked questions</p>
+            <p style="text-align: center;">Find answers to commonly asked questions</p>
         </div>
         
         <div class="faq-container">

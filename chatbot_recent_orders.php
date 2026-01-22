@@ -26,19 +26,40 @@ try {
     // Fetch ALL recent orders (no filtering)
     $allOrders = get_user_orders($userId);
     
+    // Filter orders: show active orders + delivered orders from last 20 days
+    $twentyDaysAgo = strtotime('-20 days');
+    $filteredOrders = array_filter($allOrders, function($o) use ($twentyDaysAgo) {
+        $status = strtolower($o['order_status'] ?? $o['status'] ?? '');
+        
+        // Always exclude cancelled, returned, refunded
+        if (in_array($status, ['cancelled', 'returned', 'refunded'])) {
+            return false;
+        }
+        
+        // For delivered orders, only show if within last 20 days
+        if ($status === 'delivered') {
+            $orderDate = strtotime($o['created_at'] ?? 'now');
+            return $orderDate >= $twentyDaysAgo;
+        }
+        
+        // Show all other active orders
+        return true;
+    });
+    
     // Get up to 20 most recent orders
-    $recentOrders = array_slice($allOrders, 0, 20);
+    $recentOrders = array_slice(array_values($filteredOrders), 0, 20);
 
     $result = [];
     foreach ($recentOrders as $o) {
         $orderId = (int)($o['id'] ?? 0);
+        $status = $o['order_status'] ?? $o['status'] ?? 'pending';
         $result[] = [
             'id' => $orderId,
             'reference' => 'ORD-' . str_pad($orderId, 5, '0', STR_PAD_LEFT),
-            'status' => (string)($o['status'] ?? ''),
+            'status' => ucfirst(str_replace('_', ' ', $status)),
             'total_amount' => (float)($o['total_amount'] ?? 0),
             'created_at' => (string)($o['created_at'] ?? ''),
-            'tracking_number' => (string)($o['tracking_number'] ?? ''),
+            'tracking_number' => (string)($o['tracking_id'] ?? $o['tracking_number'] ?? ''),
         ];
     }
 

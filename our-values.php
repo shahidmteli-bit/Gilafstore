@@ -14,66 +14,47 @@ include __DIR__ . '/includes/new-header.php';
 ?>
 
 <style>
+    /* Values Hero - Using same container style as About Us */
     .values-hero {
-        background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
-        color: white;
-        padding: 120px 20px;
+        background-color: var(--color-ivory, #FAF8F5);
+        padding: 50px 20px 25px 20px;
         text-align: center;
-        position: relative;
-        overflow: hidden;
     }
-    .values-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(201, 169, 97, 0.2) 0%, transparent 60%), 
-                    radial-gradient(circle at 70% 60%, rgba(26, 60, 52, 0.3) 0%, transparent 60%);
-        opacity: 0.25;
-        z-index: 0;
-    }
-    .values-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #C9A961 0%, #FFFFFF 50%, #C9A961 100%);
-        z-index: 2;
+    .values-hero-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(197, 160, 89, 0.2);
     }
     .values-hero h1 {
-        font-size: 3.5rem;
+        font-size: 3.0rem;
         font-weight: 700;
         margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        font-family: 'Poppins', sans-serif;
+        color: #1A3C34;
     }
     .values-hero p {
         font-size: 1.3rem;
         max-width: 800px;
         margin: 0 auto;
-        opacity: 0.95;
-        position: relative;
-        z-index: 1;
-        font-family: 'Poppins', sans-serif;
+        color: #C9A961;
+        text-transform: uppercase;
+        letter-spacing: 2px;
     }
     
     .values-container {
         max-width: 1400px;
         margin: 0 auto;
-        padding: 80px 20px;
+        padding: 40px 20px 80px 20px;
     }
     
     .values-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         gap: 40px;
-        margin-top: 60px;
+        margin-top: 0;
     }
     
     .value-card {
@@ -123,8 +104,10 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Hero Section -->
 <div class="values-hero">
-    <h1>Our Core Values</h1>
-    <p>The principles that guide everything we do at Gilaf Store</p>
+    <div class="values-hero-content">
+        <h1>Our Core Values</h1>
+        <p>The principles that guide everything we do at Gilaf Store</p>
+    </div>
 </div>
 
 <!-- Values Section -->

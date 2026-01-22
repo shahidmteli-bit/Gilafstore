@@ -20,3 +20,10 @@
 [2026-01-07 14:52:15] Action: clear_frontend_cache | Admin: 4 | Details: Cleared 0 files
 [2026-01-07 14:52:26] Action: clear_admin_cache | Admin: 4 | Details: Cleared 0 files
 [2026-01-07 14:52:32] Action: clear_frontend_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:23] Action: clear_all_cache | Admin: 4 | Details: Cleared 0 cache files
+[2026-01-22 10:57:26] Action: clear_frontend_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:27] Action: clear_admin_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:33] Action: clear_currency_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:36] Action: clear_language_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:38] Action: clear_promo_cache | Admin: 4 | Details: Cleared 0 files
+[2026-01-22 10:57:41] Action: clear_api_cache | Admin: 4 | Details: Cleared 0 files

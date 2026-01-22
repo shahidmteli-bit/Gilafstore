@@ -19,54 +19,34 @@ include __DIR__ . '/includes/new-header.php';
 ?>
 
 <style>
+    /* About Hero - Using Freshly Harvested container style */
     .about-hero {
-        background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
-        color: white;
-        padding: 38px 20px;
+        background-color: var(--color-ivory, #FAF8F5);
+        padding: 50px 20px 25px 20px;
         text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-    .about-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(201, 169, 97, 0.2) 0%, transparent 60%), 
-                    radial-gradient(circle at 70% 60%, rgba(26, 60, 52, 0.3) 0%, transparent 60%),
-                    url('https://images.unsplash.com/photo-1596040033229-a0b55ee0a1b5?w=1200') center/cover;
-        opacity: 0.25;
-        z-index: 0;
-    }
-    .about-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #C9A961 0%, #FFFFFF 50%, #C9A961 100%);
-        z-index: 2;
     }
     .about-hero-content {
-        position: relative;
-        z-index: 1;
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(197, 160, 89, 0.2);
     }
     .about-hero h1 {
-        font-size: 3.5rem;
+        font-size: 3.0rem;
         font-weight: 700;
         margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        font-family: 'Poppins', sans-serif;
+        color: #1A3C34;
     }
     .about-hero p {
         font-size: 1.3rem;
         max-width: 800px;
         margin: 0 auto;
-        opacity: 0.95;
-        font-family: 'Poppins', sans-serif;
+        color: #C9A961;
+        text-transform: uppercase;
+        letter-spacing: 2px;
     }
     
     .about-section {
@@ -320,11 +300,12 @@ include __DIR__ . '/includes/new-header.php';
 </div>
 
 <!-- 5. Leadership Section -->
-<div class="about-section" style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 100px 20px;">
+<div class="about-section" style="background-color: var(--color-ivory, #FAF8F5); padding: 50px 20px 100px 20px;">
     <div class="values-content">
-        <div style="text-align: center; margin-bottom: 60px;">
-            <h2 style="font-size: 2.8rem; color: #1A3C34; margin-bottom: 15px; font-weight: 700;">Leadership</h2>
-            <p style="font-size: 1.2rem; color: #666; max-width: 700px; margin: 0 auto;">Meet the visionaries driving Gilaf Foods & Spices towards excellence</p>
+        <!-- Leadership Header Card - Same container as hero banner -->
+        <div style="background: #fff; border-radius: 12px; padding: 30px 40px; max-width: 1200px; margin: 0 auto 60px auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); text-align: center;">
+            <h2 style="font-size: 3.0rem; color: #1A3C34; margin-bottom: 15px; font-weight: 700;">Leadership</h2>
+            <p style="font-size: 1.2rem; color: #C9A961; margin: 0;">Meet the visionaries driving Gilaf Foods & Spices towards excellence</p>
         </div>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 50px; max-width: 1400px; margin: 0 auto;">
@@ -387,10 +368,13 @@ include __DIR__ . '/includes/new-header.php';
 </div>
 
 <!-- 6. Vision & Mission Section -->
-<div class="mission-section">
+<div class="mission-section" style="background-color: var(--color-ivory, #FAF8F5); padding: 50px 20px 80px 20px;">
     <div class="mission-content">
-        <h2>Vision & Mission</h2>
-        <div style="max-width: 900px; margin: 40px auto 0; text-align: left;">
+        <!-- Vision & Mission Header Card -->
+        <div style="background: #fff; border-radius: 12px; padding: 30px 40px; max-width: 1200px; margin: 0 auto 40px auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); text-align: center;">
+            <h2 style="font-size: 3.0rem; font-weight: 700; color: #1A3C34; margin: 0;">Vision & Mission</h2>
+        </div>
+        <div style="max-width: 900px; margin: 0 auto; text-align: left;">
             <h3 style="color: #1A3C34; font-size: 1.5rem; margin-bottom: 15px;">Vision</h3>
             <p style="margin-bottom: 40px;">To become a globally recognized brand in the food and spices industry, known for uncompromising quality, authentic sourcing, and customer trust.</p>
             
@@ -401,10 +385,13 @@ include __DIR__ . '/includes/new-header.php';
 </div>
 
 <!-- 7. Quality & Standards Section -->
-<div class="about-section">
+<div class="about-section" style="background-color: var(--color-ivory, #FAF8F5); padding: 50px 20px 80px 20px;">
     <div class="values-content">
-        <h2>Quality & Standards</h2>
-        <div class="values-grid" style="max-width: 1000px; margin: 40px auto 0;">
+        <!-- Quality & Standards Header Card -->
+        <div style="background: #fff; border-radius: 12px; padding: 30px 40px; max-width: 1200px; margin: 0 auto 40px auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid rgba(197, 160, 89, 0.2); text-align: center;">
+            <h2 style="font-size: 3.0rem; font-weight: 700; color: #1A3C34; margin: 0;">Quality & Standards</h2>
+        </div>
+        <div class="values-grid" style="max-width: 1000px; margin: 0 auto;">
             <div class="value-card">
                 <div class="value-icon"><i class="fas fa-check-circle"></i></div>
                 <h3>Quality Control</h3>

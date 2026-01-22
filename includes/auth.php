@@ -48,6 +48,11 @@ function is_logged_in(): bool
     return !empty($_SESSION['user']);
 }
 
+function is_admin(): bool
+{
+    return !empty($_SESSION['user']) && !empty($_SESSION['user']['is_admin']);
+}
+
 function require_admin(): void
 {
     if (empty($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {

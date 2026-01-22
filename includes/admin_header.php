@@ -67,7 +67,17 @@ $userName = $_SESSION['user']['name'] ?? 'Admin';
           </div>
           <a class="nav-link <?= $adminPage === 'optimize_images' ? 'active' : ''; ?>" href="<?= base_url('admin/optimize_images.php'); ?>"><i class="fas fa-compress-alt"></i>Image Optimization</a>
           <a class="nav-link <?= $adminPage === 'applications' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_applications.php'); ?>"><i class="fas fa-handshake"></i>Applications</a>
-          <a class="nav-link <?= $adminPage === 'orders' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_orders.php'); ?>"><i class="fas fa-receipt"></i>Orders</a>
+          <!-- Orders Management - Collapsible -->
+          <a class="nav-link d-flex justify-content-between align-items-center <?= $adminPage === 'orders' ? 'active' : ''; ?>" data-bs-toggle="collapse" href="#ordersMenu" role="button" aria-expanded="false" aria-controls="ordersMenu">
+            <span><i class="fas fa-receipt"></i>Orders</span>
+            <i class="fas fa-chevron-down"></i>
+          </a>
+          <div class="collapse" id="ordersMenu">
+            <div class="nav-submenu">
+              <a class="nav-link" href="<?= base_url('admin/order_dashboard.php'); ?>"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+              <a class="nav-link" href="<?= base_url('admin/manage_orders.php'); ?>"><i class="fas fa-list"></i>All Orders</a>
+            </div>
+          </div>
 
           <!-- Payments - Business QR / Manual -->
           <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#paymentsMenu" role="button" aria-expanded="false" aria-controls="paymentsMenu">
@@ -103,8 +113,10 @@ $userName = $_SESSION['user']['name'] ?? 'Admin';
           <div class="collapse" id="usersSupportMenu">
             <div class="nav-submenu">
               <a class="nav-link <?= $adminPage === 'users' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_users.php'); ?>"><i class="fas fa-users"></i>Users</a>
+              <a class="nav-link <?= $adminPage === 'live_chat' ? 'active' : ''; ?>" href="<?= base_url('admin/live_chat_admin.php'); ?>"><i class="fas fa-comments"></i>Live Chat Support</a>
               <a class="nav-link <?= $adminPage === 'support' ? 'active' : ''; ?>" href="<?= base_url('admin/support_tickets.php'); ?>"><i class="fas fa-headset"></i>Support Center</a>
               <a class="nav-link <?= $adminPage === 'support_agents' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_support_agents.php'); ?>"><i class="fas fa-user-headset"></i>Support Agents</a>
+              <a class="nav-link <?= $adminPage === 'callbacks' ? 'active' : ''; ?>" href="<?= base_url('admin/manage_callbacks.php'); ?>"><i class="fas fa-phone-alt"></i>Callback Requests</a>
             </div>
           </div>
           

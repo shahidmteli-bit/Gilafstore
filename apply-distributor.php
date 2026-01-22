@@ -6,76 +6,58 @@ include __DIR__ . '/includes/new-header.php';
 ?>
 
 <style>
-.application-form {
-    background: linear-gradient(135deg, rgba(26, 60, 52, 0.03) 0%, rgba(197, 160, 89, 0.03) 100%);
-    padding: 60px 0 80px;
-    min-height: 100vh;
-}
-
-.application-hero {
-    background: linear-gradient(135deg, var(--color-green) 0%, rgba(26, 60, 52, 0.9) 100%);
-    padding: 18px 40px;
-    border-radius: 24px;
-    margin-bottom: 40px;
+/* Distributor Hero - Using same container style as Our Values */
+.distributor-hero {
+    background-color: var(--color-ivory, #FAF8F5);
+    padding: 50px 20px 25px 20px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(26, 60, 52, 0.2);
 }
-
-.application-hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(197, 160, 89, 0.15) 0%, transparent 70%);
-    animation: heroPulse 8s ease-in-out infinite;
+.distributor-hero-content {
+    background: #fff;
+    border-radius: 12px;
+    padding: 30px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(197, 160, 89, 0.2);
 }
-
-@keyframes heroPulse {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    50% { transform: translate(-10px, -10px) scale(1.1); }
+.distributor-hero h1 {
+    font-size: 3.0rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1A3C34;
 }
-
-.application-hero-icon {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 24px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+.distributor-hero p {
+    font-size: 1.1rem;
+    max-width: 100%;
+    margin: 0 auto;
+    color: #C9A961;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+.distributor-hero-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    background: linear-gradient(135deg, rgba(201, 169, 97, 0.1) 0%, rgba(201, 169, 97, 0.05) 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3.5rem;
-    color: var(--color-gold);
-    backdrop-filter: blur(10px);
-    border: 3px solid rgba(197, 160, 89, 0.3);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 1;
-}
-
-.application-hero h1 {
-    font-family: 'Poppins', sans-serif;
     font-size: 2.5rem;
-    font-weight: 700;
-    color: white;
-    margin: 0 0 12px 0;
-    position: relative;
-    z-index: 1;
+    color: #C9A961;
+    border: 2px solid rgba(201, 169, 97, 0.3);
 }
 
-.application-hero p {
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    position: relative;
-    z-index: 1;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 500;
+.application-form {
+    background: linear-gradient(135deg, rgba(26, 60, 52, 0.03) 0%, rgba(197, 160, 89, 0.03) 100%);
+    padding: 0 0 80px;
+    min-height: 100vh;
+}
+
+.application-form .container {
+    padding: 40px 20px 0 20px;
 }
 
 .form-card {
@@ -483,15 +465,19 @@ include __DIR__ . '/includes/new-header.php';
 }
 </style>
 
+<!-- Hero Section -->
+<div class="distributor-hero">
+    <div class="distributor-hero-content">
+        <div class="distributor-hero-icon">
+            <i class="fas fa-handshake"></i>
+        </div>
+        <h1>Become a Distributor</h1>
+        <p>Join our network of trusted distributors and resellers</p>
+    </div>
+</div>
+
 <section class="application-form">
     <div class="container">
-        <div class="application-hero">
-            <div class="application-hero-icon">
-                <i class="fas fa-handshake"></i>
-            </div>
-            <h1>Become a Gilaf Partner</h1>
-            <p>Join our network of trusted distributors and resellers</p>
-        </div>
 
         <form action="<?= base_url('submit_application.php'); ?>" method="post" enctype="multipart/form-data" id="distributorForm">
             

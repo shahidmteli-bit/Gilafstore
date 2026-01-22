@@ -519,6 +519,9 @@ function trackOrder() {
     const input = document.getElementById('trackingIdInput');
     const resultBox = document.getElementById('trackingResult');
     const timeline = document.getElementById('trackingTimeline');
+    const errorBox = document.getElementById('trackingError');
+    const courierName = document.getElementById('trackingCourierName');
+    const deliveryDate = document.getElementById('trackingDeliveryDate');
     
     if (!input || !resultBox || !timeline) return;
     
@@ -529,37 +532,55 @@ function trackOrder() {
         return; 
     }
     
+    // Hide error, show loading
+    if (errorBox) errorBox.style.display = 'none';
+    resultBox.style.display = 'block';
     timeline.innerHTML = '<div style="text-align:center; padding:20px; color:#888;"><i class="fas fa-circle-notch fa-spin"></i> Fetching status...</div>';
-    resultBox.classList.add('show');
     
-    setTimeout(() => {
-        const steps = [
-            { title: "Order Confirmed", date: "Jan 25, 10:30 AM", status: "completed" },
-            { title: "Packed", date: "Jan 25, 02:15 PM", status: "completed" },
-            { title: "Picked Up", date: "Jan 25, 05:45 PM", status: "completed" },
-            { title: "Transit", date: "Arrived at Regional Hub, New Delhi.", status: "active", desc: "Arrived at Regional Hub, New Delhi." },
-            { title: "Out for Delivery", date: "Estimated Jan 29", status: "pending" },
-            { title: "Delivered", date: "", status: "pending" }
-        ];
-        
-        let html = '';
-        steps.forEach(step => {
-            const activeClass = step.status === 'active' ? 'active' : (step.status === 'completed' ? 'completed' : '');
-            const descHtml = step.desc ? `<p>${step.desc}</p>` : (step.date ? `<p>${step.date}</p>` : '');
+    // Fetch real data from API - use relative path for compatibility
+    fetch(`api/track_order.php?tracking=${encodeURIComponent(trackingId)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                resultBox.style.display = 'none';
+                if (errorBox) {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Order not found'}`;
+                }
+                return;
+            }
             
-            html += `
-                <div class="timeline-step ${activeClass}">
-                    <div class="step-icon"><div class="dot"></div></div>
-                    <div class="step-content">
-                        <h5>${step.title}</h5>
-                        ${descHtml}
+            // Update courier name and delivery date
+            if (courierName) courierName.textContent = data.courier.name || 'Not assigned';
+            if (deliveryDate) deliveryDate.textContent = data.estimated_delivery || '--';
+            
+            // Build timeline
+            let html = '';
+            data.timeline.forEach(step => {
+                const activeClass = step.status === 'active' ? 'active' : (step.status === 'completed' ? 'completed' : '');
+                const descHtml = step.date ? `<p>${step.date}</p>` : '';
+                
+                html += `
+                    <div class="timeline-step ${activeClass}">
+                        <div class="step-icon"><div class="dot"></div></div>
+                        <div class="step-content">
+                            <h5>${step.title}</h5>
+                            ${descHtml}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            });
+            
+            timeline.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Tracking error:', error);
+            resultBox.style.display = 'none';
+            if (errorBox) {
+                errorBox.style.display = 'block';
+                errorBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error fetching tracking information';
+            }
         });
-        
-        timeline.innerHTML = html;
-    }, 1000);
 }
 
 // Initialize on page load

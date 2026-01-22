@@ -14,59 +14,40 @@ include __DIR__ . '/includes/new-header.php';
 ?>
 
 <style>
+    /* Policy Hero - Using same container style as Our Values */
     .policy-hero {
-        background: linear-gradient(135deg, #C9A961 0%, #D4B76A 20%, #1A3C34 60%, #244A36 100%);
-        color: white;
-        padding: 36px 20px;
+        background-color: var(--color-ivory, #FAF8F5);
+        padding: 50px 20px 25px 20px;
         text-align: center;
-        position: relative;
-        overflow: hidden;
     }
-    .policy-hero::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 40%, rgba(201, 169, 97, 0.2) 0%, transparent 60%), 
-                    radial-gradient(circle at 70% 60%, rgba(26, 60, 52, 0.3) 0%, transparent 60%);
-        opacity: 0.25;
-        z-index: 0;
-    }
-    .policy-hero::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
-        background: linear-gradient(90deg, #C9A961 0%, #FFFFFF 50%, #C9A961 100%);
-        z-index: 2;
+    .policy-hero-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(197, 160, 89, 0.2);
     }
     .policy-hero h1 {
-        font-size: 3.5rem;
+        font-size: 3.0rem;
         font-weight: 700;
         margin-bottom: 20px;
-        position: relative;
-        z-index: 1;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        font-family: 'Poppins', sans-serif;
+        color: #1A3C34;
     }
     .policy-hero p {
         font-size: 1.3rem;
         max-width: 800px;
         margin: 0 auto;
-        opacity: 0.95;
-        position: relative;
-        z-index: 1;
-        font-family: 'Poppins', sans-serif;
+        color: #C9A961;
+        text-transform: uppercase;
+        letter-spacing: 2px;
     }
     
     .policy-container {
         max-width: 1000px;
         margin: 0 auto;
-        padding: 80px 20px;
+        padding: 40px 20px 80px 20px;
     }
     
     .policy-section {
@@ -174,8 +155,10 @@ include __DIR__ . '/includes/new-header.php';
 
 <!-- Hero Section -->
 <div class="policy-hero">
-    <h1>Payment Policy</h1>
-    <p>Secure and convenient payment options</p>
+    <div class="policy-hero-content">
+        <h1>Payment Policy</h1>
+        <p>Secure and convenient payment options</p>
+    </div>
 </div>
 
 <!-- Policy Content -->

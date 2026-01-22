@@ -1,8 +1,61 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../includes/gst_calculator.php';
 
 require_admin();
+
+// Helper function to auto-calculate GST when conditions are met
+function auto_calculate_gst_on_payment_approval($orderId, $db) {
+    // Check if order is delivered AND payment is now completed
+    $stmt = $db->prepare("SELECT o.*, u.state as customer_state, u.gstin as customer_gstin 
+                          FROM orders o 
+                          LEFT JOIN users u ON o.user_id = u.id 
+                          WHERE o.id = ?");
+    $stmt->execute([$orderId]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if (!$order) return false;
+    
+    $isDelivered = ($order['order_status'] === 'delivered');
+    
+    if ($isDelivered) {
+        // Check if GST already calculated
+        $checkStmt = $db->prepare("SELECT id FROM gst_orders WHERE order_id = ?");
+        $checkStmt->execute([$orderId]);
+        if ($checkStmt->fetch()) return true;
+        
+        try {
+            $customerState = $order['customer_state'] ?? 'Maharashtra';
+            
+            if (empty($customerState) && !empty($order['shipping_address'])) {
+                $states = ['Maharashtra', 'Gujarat', 'Karnataka', 'Tamil Nadu', 'Kerala', 'Delhi', 'Rajasthan', 
+                          'Uttar Pradesh', 'West Bengal', 'Madhya Pradesh', 'Andhra Pradesh', 'Telangana', 
+                          'Punjab', 'Haryana', 'Bihar', 'Odisha', 'Jharkhand', 'Chhattisgarh', 'Assam', 
+                          'Goa', 'Himachal Pradesh', 'Uttarakhand', 'Jammu and Kashmir', 'Sikkim'];
+                foreach ($states as $state) {
+                    if (stripos($order['shipping_address'], $state) !== false) {
+                        $customerState = $state;
+                        break;
+                    }
+                }
+            }
+            
+            global $conn;
+            if (!isset($conn)) {
+                $conn = new mysqli('localhost', 'root', '', 'gilaborgin');
+            }
+            
+            $gstCalculator = new GSTCalculator($conn);
+            $gstCalculator->calculateOrderGST($orderId, $customerState, $order['customer_gstin'] ?? null);
+            return true;
+        } catch (Exception $e) {
+            error_log("Auto GST calculation failed for order #$orderId: " . $e->getMessage());
+            return false;
+        }
+    }
+    return false;
+}
 
 $pageTitle = 'Business QR Payments';
 $adminPage = 'payments';
@@ -51,6 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     $historyStmt = $db->prepare("INSERT INTO order_status_history (order_id, old_status, new_status, changed_by, notes) VALUES (?, ?, ?, ?, ?)");
                     $adminId = $_SESSION['user']['id'] ?? null;
                     $historyStmt->execute([$orderId, $previousStatus, 'accepted', $adminId, 'Business QR payment approved']);
+
+                    // Auto-calculate GST if order is already delivered
+                    auto_calculate_gst_on_payment_approval($orderId, $db);
 
                     $_SESSION['flash_message'] = 'Payment verified and order confirmed successfully!';
                     $_SESSION['flash_type'] = 'success';

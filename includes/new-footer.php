@@ -257,31 +257,32 @@
     </div>
 
     <!-- Tracking Modal -->
-    <div class="modal-overlay" id="trackingModal">
-        <div class="region-modal" style="width: 500px;">
+    <div class="modal-overlay" id="trackingModal" style="align-items: flex-start; padding: 20px 0;">
+        <div class="region-modal" style="width: 500px; max-height: calc(100vh - 40px); overflow-y: auto; margin: auto;">
             <div class="modal-close" onclick="closeTrackingModal()">&times;</div>
             <h3 class="text-center" style="color: var(--color-green); margin-bottom: 10px;">Track Your Shipment</h3>
-            <p class="text-center" style="font-size: 0.9rem; color: #777; margin-bottom: 25px;">Enter your Tracking ID to see real-time status.</p>
+            <p class="text-center" style="font-size: 0.9rem; color: #777; margin-bottom: 20px;">Enter your Tracking ID to see real-time status.</p>
             
             <div class="track-input-group">
                 <input type="text" id="trackingIdInput" class="track-input" placeholder="GF-SHIP-2015">
                 <button class="track-btn-square" onclick="trackOrder()">Track</button>
             </div>
             
-            <div id="trackingResult" class="tracking-result-container">
-                <div class="tracking-meta">
+            <div id="trackingResult" class="tracking-result-container" style="display:none;">
+                <div class="tracking-meta" style="padding: 12px; margin-bottom: 15px;">
                     <div>
-                        <span style="display:block; color:#888; font-size:0.75rem;">ESTIMATED DELIVERY</span>
-                        <strong style="color:var(--color-green);">Mon, 29 Jan 2025</strong>
+                        <span style="display:block; color:#888; font-size:0.7rem;">ESTIMATED DELIVERY</span>
+                        <strong id="trackingDeliveryDate" style="color:var(--color-green); font-size:0.9rem;">--</strong>
                     </div>
                     <div style="text-align:right;">
-                        <span style="display:block; color:#888; font-size:0.75rem;">COURIER</span>
-                        <strong style="color:var(--color-text);">Blue Dart Express</strong>
+                        <span style="display:block; color:#888; font-size:0.7rem;">COURIER</span>
+                        <strong id="trackingCourierName" style="color:var(--color-text); font-size:0.9rem;">--</strong>
                     </div>
                 </div>
 
-                <div class="timeline" id="trackingTimeline"></div>
+                <div class="timeline" id="trackingTimeline" style="margin-bottom: 30px;"></div>
             </div>
+            <div id="trackingError" style="display:none; text-align:center; padding:20px; color:#dc3545;"></div>
         </div>
     </div>
 
