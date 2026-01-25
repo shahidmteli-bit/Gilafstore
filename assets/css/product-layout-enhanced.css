@@ -91,6 +91,16 @@
     color: white;
 }
 
+.badge.premium-badge {
+    background-color: transparent;
+    color: #C5A059;
+    border: none;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 0;
+}
+
 /* Trust Overlay - Appears on Hover */
 .trust-overlay { 
     position: absolute; 
@@ -119,6 +129,18 @@
 .product-details { 
     padding: 25px; 
     text-align: center; 
+}
+
+/* Premium Label - Appears above category */
+.premium-label {
+    font-size: 0.65rem;
+    color: #C5A059;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--font-sans);
 }
 
 /* Product Category */
