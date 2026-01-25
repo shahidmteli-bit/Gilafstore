@@ -1,13 +1,22 @@
 // GILAF STORE - NEW UI/UX JAVASCRIPT
-// Header scroll effect
+// Header scroll effect - disabled on mobile
 window.addEventListener('scroll', function() {
     const header = document.getElementById('header');
-    if (window.scrollY > 50) { 
-        header.classList.add('scrolled'); 
-        document.body.classList.add('scrolled'); 
-    } else { 
-        header.classList.remove('scrolled'); 
-        document.body.classList.remove('scrolled'); 
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isMobile) {
+        // On mobile, keep header static - no scroll effects
+        header.classList.remove('scrolled');
+        document.body.classList.remove('scrolled');
+    } else {
+        // On desktop, apply scroll effects
+        if (window.scrollY > 50) { 
+            header.classList.add('scrolled'); 
+            document.body.classList.add('scrolled'); 
+        } else { 
+            header.classList.remove('scrolled'); 
+            document.body.classList.remove('scrolled'); 
+        }
     }
 });
 

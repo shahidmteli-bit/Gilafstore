@@ -127,34 +127,190 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Force no cache
+// Force no cache - AGGRESSIVE
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
+header("Expires: 0");
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 
 include __DIR__ . '/includes/new-header.php';
 ?>
 
-<style>
-/* EXACT SAME CSS AS CHECKOUT */
-section[data-layout="flipkart-grid"] .checkout-grid {
-  display: grid !important;
-  grid-template-columns: 1fr 350px !important;
-  gap: 20px !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
+<script src="<?= base_url('assets/js/checkout-mobile.js'); ?>?v=<?= time(); ?>"></script>
+
+<style id="checkout-styles-v<?= time(); ?>">
+/* Checkout Page Styles - Version <?= time(); ?> */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 20px;
 }
 
-section[data-layout="flipkart-grid"] .checkout-left {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  width: 100% !important;
-  min-width: 0 !important;
+@media (max-width: 1023px) {
+  .checkout-grid {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+  }
+  .checkout-right {
+    order: -1;
+  }
 }
+
+@media (max-width: 820px) {
+  section[data-layout="flipkart-grid"] {
+    padding: clamp(12px, 3vw, 15px) 0 !important;
+  }
+  
+  section[data-layout="flipkart-grid"] > div {
+    max-width: 100% !important;
+    padding: 0 clamp(8px, 2.5vw, 10px) !important;
+  }
+  
+  .checkout-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: clamp(12px, 3.5vw, 15px) !important;
+    margin: 0 !important;
+  }
+  
+  .checkout-left,
+  .checkout-right {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  
+  /* Make address and payment sections more visible */
+  .checkout-left > div {
+    border: 2px solid #2874f0 !important;
+    box-shadow: 0 2px 8px rgba(40, 116, 240, 0.1) !important;
+    margin-bottom: clamp(12px, 3.5vw, 15px) !important;
+    padding: clamp(15px, 4vw, 20px) !important;
+  }
+  
+  .checkout-left label {
+    font-size: clamp(13px, 3.5vw, 14px) !important;
+    padding: clamp(10px, 3vw, 12px) clamp(8px, 2.5vw, 10px) !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .checkout-left input[type="radio"] {
+    width: clamp(16px, 4.5vw, 18px) !important;
+    height: clamp(16px, 4.5vw, 18px) !important;
+    min-width: clamp(16px, 4.5vw, 18px) !important;
+    margin-right: clamp(8px, 2.5vw, 10px) !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Professional button styling with fluid scaling */
+  .checkout-left button,
+  .checkout-left a {
+    padding: clamp(6px, 2.5vw, 10px) clamp(10px, 4vw, 16px) !important;
+    font-size: clamp(10px, 3.5vw, 12px) !important;
+    font-weight: 600 !important;
+    border-radius: clamp(3px, 1vw, 4px) !important;
+    flex: 1 !important;
+    text-align: center !important;
+    min-height: clamp(38px, 10vw, 40px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Hide Pay button initially, show only after payment method selected */
+  .checkout-right {
+    display: none;
+    order: 2;
+  }
+  
+  .checkout-right.show-payment {
+    display: block !important;
+  }
+  
+  .checkout-right > div {
+    width: 100% !important;
+    padding: clamp(8px, 2.5vw, 18px) !important;
+    box-sizing: border-box !important;
+  }
+  
+  .checkout-right h5 {
+    font-size: clamp(13px, 4vw, 18px) !important;
+    margin-bottom: clamp(8px, 2.5vw, 15px) !important;
+    font-weight: 700 !important;
+    color: #1a1a1a !important;
+    margin-top: 0 !important;
+  }
+  
+  .checkout-right > div > div {
+    font-size: clamp(14px, 3.8vw, 15px) !important;
+    margin-bottom: clamp(10px, 3vw, 12px) !important;
+    line-height: 1.5 !important;
+  }
+  
+  .checkout-right > div > div span {
+    font-weight: 500 !important;
+    color: #333 !important;
+  }
+  
+  /* Order summary rows with clamp() - aggressive minimums for Galaxy S9+ */
+  .checkout-right .order-row,
+  .checkout-right .order-row span,
+  .checkout-right div[class*="order-row"] {
+    font-size: clamp(10px, 3vw, 14px) !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+  }
+  
+  .checkout-right .order-row span {
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  
+  .checkout-right .order-total,
+  .checkout-right .order-total span,
+  .checkout-right div[class*="order-total"] {
+    font-size: clamp(12px, 4.5vw, 18px) !important;
+  }
+  
+  .checkout-right h5 {
+    font-size: clamp(12px, 4.5vw, 18px) !important;
+  }
+  
+  /* Force all text in order summary to use clamp */
+  .checkout-right > div > div,
+  .checkout-right > div > div > span {
+    font-size: clamp(11px, 3.2vw, 14px) !important;
+  }
+  
+  /* Ensure proper spacing for price columns */
+  .checkout-right > div > div[style*="display: flex"] {
+    gap: 2px !important;
+    justify-content: space-between !important;
+    padding: 0 !important;
+  }
+  
+  .checkout-right > div > div[style*="margin-bottom"] {
+    margin-bottom: 6px !important;
+  }
+  
+  .checkout-right button[type="submit"] {
+    position: sticky !important;
+    bottom: 10px !important;
+    z-index: 100 !important;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15) !important;
+    font-size: clamp(15px, 4vw, 16px) !important;
+    padding: clamp(12px, 3.5vw, 14px) !important;
+    width: 100% !important;
+    min-height: clamp(48px, 12vw, 50px) !important;
+    border-radius: clamp(4px, 1.5vw, 6px) !important;
+  }
+}
+
 
 section[data-layout="flipkart-grid"] .checkout-right {
   position: sticky !important;
@@ -163,6 +319,50 @@ section[data-layout="flipkart-grid"] .checkout-right {
   width: 350px !important;
   min-width: 350px !important;
   max-width: 350px !important;
+}
+
+/* Extra small screens - Galaxy S9+ at 320px */
+@media (max-width: 340px) {
+  .checkout-right > div {
+    padding: 5px !important;
+  }
+  
+  .checkout-right h5 {
+    font-size: 10px !important;
+    margin-bottom: 6px !important;
+  }
+  
+  /* Target ALL flex divs in order summary */
+  .checkout-right > div > div[style*="display: flex"],
+  .checkout-right .order-row,
+  .checkout-right div[class*="order"] {
+    font-size: 8px !important;
+    gap: 1px !important;
+  }
+  
+  /* Force label width limit */
+  .checkout-right > div > div[style*="display: flex"] span:first-child,
+  .checkout-right .order-row span:first-child {
+    max-width: 50% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: inline-block !important;
+  }
+  
+  /* Force price visibility */
+  .checkout-right > div > div[style*="display: flex"] span:last-child,
+  .checkout-right .order-row span:last-child {
+    min-width: 45% !important;
+    max-width: 45% !important;
+    text-align: right !important;
+    flex-shrink: 0 !important;
+    display: inline-block !important;
+  }
+  
+  .checkout-right .order-total {
+    font-size: 10px !important;
+  }
 }
 </style>
 
@@ -176,7 +376,7 @@ section[data-layout="flipkart-grid"] .checkout-right {
     <?php endif; ?>
     
     <form id="checkoutForm" method="post">
-    <div class="checkout-grid" style="display: grid !important; grid-template-columns: 780px 350px !important; gap: 20px !important; width: 1160px !important; margin: 0 auto !important;">
+    <div class="checkout-grid">
       <div class="checkout-left">
         <!-- DELIVERY ADDRESS SECTION -->
         <div style="background: white; padding: 20px; border-radius: 4px; margin-bottom: 12px;">
@@ -250,7 +450,7 @@ section[data-layout="flipkart-grid"] .checkout-right {
       <div class="checkout-right">
         <!-- ORDER SUMMARY -->
         <div style="background: white; padding: 20px; border-radius: 4px;">
-          <h5 style="margin: 0 0 15px 0; font-size: 16px;">Order Summary</h5>
+          <h5 style="margin: 0 0 15px 0;">Order Summary</h5>
           
           <?php
           // Calculate pricing breakdown
@@ -293,12 +493,12 @@ section[data-layout="flipkart-grid"] .checkout-right {
           $totalSavings = $productSavings + $promotionDiscount + $bankOfferDiscount;
           ?>
           
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;" class="order-row">
             <span>Items:</span>
             <span><?= display_price($itemsTotal, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>
           
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px;" class="order-row">
             <span>Delivery:</span>
             <?php if ($deliveryCharge > 0): ?>
               <span><?= display_price($deliveryCharge, $currentCurrency, $currentCurrencySymbol); ?></span>
@@ -309,20 +509,20 @@ section[data-layout="flipkart-grid"] .checkout-right {
           
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e0e0e0;">
           
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 600;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600;" class="order-row">
             <span>Subtotal (Incl. Taxes):</span>
             <span><?= display_price($subtotalInclTax, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>
           
           <?php if ($promotionApplied): ?>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #2e7d32;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #2e7d32;" class="order-row">
             <span>Promo (<?= htmlspecialchars($promoCode); ?>):</span>
             <span>−<?= display_price($promotionDiscount, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>
           <?php endif; ?>
           
           <?php if ($bankOfferApplied): ?>
-          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: #2e7d32;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #2e7d32;" class="order-row">
             <span>Bank Offer:</span>
             <span>−<?= display_price($bankOfferDiscount, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>
@@ -330,7 +530,7 @@ section[data-layout="flipkart-grid"] .checkout-right {
           
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e0e0e0;">
           
-          <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-bottom: 15px;">
+          <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 15px;" class="order-total">
             <span>Total Payable:</span>
             <span style="color: #2874f0;"><?= display_price($totalPayable, $currentCurrency, $currentCurrencySymbol); ?></span>
           </div>

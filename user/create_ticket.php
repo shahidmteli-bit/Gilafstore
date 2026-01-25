@@ -96,6 +96,26 @@ include __DIR__ . '/../includes/new-header.php';
         font-weight: 700;
         margin-bottom: 20px;
         color: #1A3C34;
+        white-space: nowrap;
+    }
+    
+    /* Mobile: Reduce title font size */
+    @media only screen and (max-width: 768px) {
+        .ticket-hero h1 {
+            font-size: 1.8rem;
+        }
+    }
+    
+    @media only screen and (max-width: 400px) {
+        .ticket-hero h1 {
+            font-size: 1.5rem;
+        }
+    }
+    
+    @media only screen and (max-width: 360px) {
+        .ticket-hero h1 {
+            font-size: 1.3rem;
+        }
     }
     .ticket-hero p {
         font-size: 1.0rem;
@@ -104,7 +124,36 @@ include __DIR__ . '/../includes/new-header.php';
         color: #C9A961;
         text-transform: uppercase;
         letter-spacing: 2px;
-        white-space: nowrap;
+        line-height: 1.6;
+    }
+    
+    /* Mobile: Reduce font size for tagline - ensure second line stays single */
+    @media only screen and (max-width: 768px) {
+        .ticket-hero p {
+            font-size: 0.5rem;
+            letter-spacing: 0.2px;
+        }
+    }
+    
+    @media only screen and (max-width: 400px) {
+        .ticket-hero p {
+            font-size: 0.45rem;
+            letter-spacing: 0.1px;
+        }
+    }
+    
+    @media only screen and (max-width: 360px) {
+        .ticket-hero p {
+            font-size: 0.42rem;
+            letter-spacing: 0.1px;
+        }
+    }
+    
+    @media only screen and (max-width: 320px) {
+        .ticket-hero p {
+            font-size: 0.38rem;
+            letter-spacing: 0px;
+        }
     }
     
     .create-ticket-container {
@@ -368,7 +417,7 @@ include __DIR__ . '/../includes/new-header.php';
 <div class="ticket-hero">
     <div class="ticket-hero-content">
         <h1>Create Support Ticket</h1>
-        <p>We're here to help! Describe your issue and we'll get back to you soon.</p>
+        <p>We're here to help!<br>Describe your issue and we'll get back to you soon.</p>
     </div>
 </div>
 

@@ -574,18 +574,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    margin: 20px 0;
-    padding: 15px;
+    gap: 8px;
+    margin: 15px 0;
+    padding: 10px;
     background: white;
     border-radius: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .upi-app-logo {
-    height: 35px;
+    height: 24px;
     width: auto;
-    max-width: 80px;
+    max-width: 50px;
     object-fit: contain;
 }
 
@@ -600,13 +600,39 @@ body {
 }
 
 @media (max-width: 768px) {
+    .payment-container {
+        padding: 15px !important;
+    }
+    
+    .payment-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    
     .payment-section {
         padding: 20px;
+        max-width: 100% !important;
+    }
+    
+    .qr-code-wrapper {
+        padding: 20px !important;
+        max-width: 100% !important;
     }
     
     .qr-code-wrapper img {
         width: 220px;
         height: 220px;
+    }
+    
+    .help-section {
+        padding: 20px !important;
+    }
+    
+    .confirm-section {
+        position: sticky !important;
+        bottom: 10px !important;
+        z-index: 100 !important;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.15) !important;
     }
 }
 </style>

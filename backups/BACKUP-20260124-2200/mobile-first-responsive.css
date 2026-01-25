@@ -1,0 +1,582 @@
+/* ============================================
+   MOBILE-FIRST RESPONSIVE FIXES
+   Senior Frontend Architect Implementation
+   Purpose: Fluid typography, overflow fixes, flexible layouts
+   ============================================ */
+
+/* ============================================
+   1. GLOBAL OVERFLOW PREVENTION (Critical)
+   ============================================ */
+html {
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    min-width: 320px;
+}
+
+/* ============================================
+   2. TEXT WRAPPING & OVERFLOW FIX
+   Prevents text from going off-screen
+   ============================================ */
+h1, h2, h3, h4, h5, h6,
+.section-title,
+.hero h2,
+.story-content h2,
+.hero-content,
+p,
+span,
+div {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+}
+
+/* ============================================
+   3. FLEXIBLE MEDIA (Global Rule)
+   ============================================ */
+img,
+video,
+iframe,
+embed,
+object,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================
+   4. FLUID TYPOGRAPHY (Critical)
+   H1/Hero: clamp(28px, 5vw, 56px)
+   H2/Section: clamp(24px, 4vw, 40px)
+   Body: clamp(16px, 1.5vw, 18px)
+   ============================================ */
+
+/* Hero Title - Primary */
+.hero h2 {
+    font-size: clamp(1.75rem, 5vw + 0.5rem, 5.5rem);
+    line-height: 1.15;
+    margin-bottom: clamp(1rem, 3vw, 1.875rem);
+}
+
+/* Section Titles */
+.section-title {
+    font-size: clamp(1.5rem, 4vw + 0.25rem, 3rem);
+    line-height: 1.2;
+}
+
+/* Story Section Title */
+.story-content h2 {
+    font-size: clamp(1.75rem, 4vw + 0.5rem, 3.5rem);
+    line-height: 1.2;
+}
+
+/* Body/Paragraph Text */
+body {
+    font-size: clamp(1rem, 1.5vw + 0.25rem, 1.125rem);
+    line-height: 1.6;
+}
+
+.hero p {
+    font-size: clamp(0.95rem, 1.5vw + 0.25rem, 1.4rem);
+    line-height: 1.5;
+    margin-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
+.story-content p {
+    font-size: clamp(0.9rem, 1.2vw + 0.25rem, 1.1rem);
+    line-height: 1.6;
+}
+
+/* Subtitles */
+.section-subtitle {
+    font-size: clamp(0.7rem, 1vw + 0.1rem, 0.85rem);
+    letter-spacing: clamp(1px, 0.3vw, 3px);
+    margin-bottom: clamp(2rem, 5vw, 3.75rem);
+}
+
+/* Tagline Pill */
+.tagline-pill span {
+    font-size: clamp(0.65rem, 1vw + 0.1rem, 0.85rem);
+    letter-spacing: clamp(1px, 0.2vw, 2px);
+    white-space: normal;
+}
+
+/* Navigation */
+.nav-links > a,
+.nav-links .dropbtn {
+    font-size: clamp(0.7rem, 0.9vw + 0.1rem, 0.85rem);
+}
+
+/* Logo */
+.logo h1 {
+    font-size: clamp(1.3rem, 2vw + 0.3rem, 2rem);
+}
+
+.logo span {
+    font-size: clamp(0.5rem, 0.7vw + 0.1rem, 0.7rem);
+    letter-spacing: clamp(2px, 0.5vw, 5px);
+}
+
+/* Product Titles */
+.product-title {
+    font-size: clamp(1rem, 1.3vw + 0.2rem, 1.35rem);
+    line-height: 1.3;
+}
+
+/* Footer */
+.footer-brand .logo h1 {
+    font-size: clamp(1.4rem, 2vw + 0.3rem, 1.8rem);
+}
+
+.footer-col h4 {
+    font-size: clamp(0.85rem, 1vw + 0.1rem, 1rem);
+}
+
+/* ============================================
+   5. FLEXIBLE CONTAINERS
+   ============================================ */
+.container {
+    width: 100%;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: clamp(1rem, 3vw, 1.875rem);
+    padding-right: clamp(1rem, 3vw, 1.875rem);
+}
+
+/* Hero Content Container */
+.hero-content {
+    max-width: min(1100px, 95%);
+    width: 100%;
+    padding-left: clamp(0.5rem, 2vw, 1rem);
+    padding-right: clamp(0.5rem, 2vw, 1rem);
+}
+
+/* Tagline Pill - Prevent overflow */
+.tagline-pill {
+    max-width: 100%;
+    padding: clamp(0.5rem, 1.5vw, 0.625rem) clamp(1rem, 3vw, 1.5rem);
+}
+
+/* ============================================
+   6. FLEX CONTAINERS WITH WRAPPING
+   ============================================ */
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+    justify-content: center;
+    width: 100%;
+}
+
+.nav-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top-bar .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.shipping-partners-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.partner-logos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+}
+
+/* ============================================
+   7. STORY SECTION - FLEX FIX
+   ============================================ */
+.story-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.story-visual,
+.story-content {
+    flex: 1 1 320px;
+    min-width: 0;
+}
+
+.story-content {
+    padding: clamp(2rem, 5vw, 5rem);
+}
+
+.story-visual {
+    min-height: clamp(250px, 40vw, 550px);
+}
+
+/* ============================================
+   8. PRODUCT GRID - FLEXIBLE
+   ============================================ */
+.product-grid,
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: clamp(1rem, 2vw, 1.875rem);
+    width: 100%;
+}
+
+.product-card {
+    min-width: 0;
+}
+
+/* ============================================
+   9. FOOTER GRID - FLEXIBLE
+   ============================================ */
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* ============================================
+   10. BUTTONS - FLUID SIZING
+   ============================================ */
+.btn {
+    padding: clamp(0.75rem, 1.5vw, 1.125rem) clamp(1.5rem, 3vw, 2.625rem);
+    font-size: clamp(0.7rem, 1vw + 0.1rem, 0.85rem);
+    letter-spacing: clamp(1px, 0.2vw, 2px);
+}
+
+.hero-buttons .btn {
+    min-width: clamp(140px, 20vw, 180px);
+}
+
+/* ============================================
+   11. MOBILE PADDING (max-width: 768px)
+   Forces 20px padding on content wrappers
+   ============================================ */
+@media (max-width: 768px) {
+    .container,
+    .hero-content,
+    .story-content,
+    .verify-box,
+    .section,
+    main > section {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    /* Hero specific mobile fixes */
+    .hero {
+        min-height: auto;
+        height: auto;
+        padding-top: clamp(6rem, 15vh, 8rem);
+        padding-bottom: clamp(3rem, 8vh, 5rem);
+        padding-left: 20px;
+        padding-right: 20px;
+        background-attachment: scroll;
+    }
+
+    .hero h2 {
+        font-size: clamp(1.75rem, 8vw, 2.5rem);
+    }
+
+    .hero p {
+        font-size: clamp(0.9rem, 3vw, 1.1rem);
+        max-width: 100%;
+    }
+
+    .tagline-pill {
+        padding: 8px 16px;
+    }
+
+    .tagline-pill span {
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+
+    /* Hero buttons stack on mobile */
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    /* Story section stacks */
+    .story-section {
+        flex-direction: column-reverse;
+    }
+
+    .story-visual,
+    .story-content {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .story-visual {
+        min-height: 280px;
+    }
+
+    .story-content {
+        padding: 40px 20px;
+    }
+
+    .story-content h2 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    /* Section titles */
+    .section-title {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .section-subtitle {
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    /* Product grid - 2 columns on mobile */
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    /* Footer adjustments */
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
+
+    /* Shipping partners - horizontal scroll */
+    .partner-logos-grid {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+    }
+
+    .partner-text-logo {
+        flex-shrink: 0;
+        min-width: 80px;
+        height: 40px;
+        font-size: 0.7rem;
+        padding: 8px 12px;
+    }
+
+    /* Input groups stack */
+    .input-group,
+    .track-input-group {
+        flex-direction: column;
+    }
+
+    .verify-input,
+    .verify-btn,
+    .track-input,
+    .track-btn-square {
+        width: 100%;
+        border-radius: 4px;
+    }
+
+    .verify-input {
+        border-right: 1px solid #ddd;
+    }
+
+    /* Modals */
+    .region-modal {
+        width: 95%;
+        max-width: 95%;
+        padding: 20px;
+        max-height: 85vh;
+    }
+
+    .country-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Marquee */
+    .marquee-item {
+        margin: 0 15px;
+    }
+
+    .marquee-title {
+        font-size: 0.9rem;
+    }
+
+    .marquee-tagline {
+        font-size: 0.65rem;
+    }
+
+    .marquee-item i {
+        font-size: 1.5rem;
+    }
+}
+
+/* ============================================
+   12. SMALL MOBILE (max-width: 480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .hero {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .hero h2 {
+        font-size: clamp(1.5rem, 7vw, 2rem);
+    }
+
+    .hero p {
+        font-size: 0.9rem;
+    }
+
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .product-details {
+        padding: 12px;
+    }
+
+    .product-title {
+        font-size: 0.9rem;
+    }
+
+    .story-content {
+        padding: 30px 15px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+    }
+
+    /* Modal bottom sheet on very small screens */
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .region-modal {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 15px 15px 0 0;
+        max-height: 90vh;
+    }
+}
+
+/* ============================================
+   13. TABLET PORTRAIT (768px - 1024px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .hero h2 {
+        font-size: clamp(2.5rem, 6vw, 4rem);
+    }
+
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .story-section {
+        flex-direction: row;
+    }
+
+    .story-visual,
+    .story-content {
+        flex: 1 1 50%;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   14. TABLET LANDSCAPE SPECIFIC
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .hero {
+        min-height: 90vh;
+    }
+
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* ============================================
+   15. LARGE DESKTOP (1440px+)
+   ============================================ */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+
+    .hero-content {
+        max-width: 1100px;
+    }
+}
+
+/* ============================================
+   16. ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   17. SAFE AREA INSETS (Notched Phones)
+   ============================================ */
+@supports (padding: max(0px)) {
+    .container,
+    .hero-content,
+    .story-content {
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+
+    footer {
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+}

@@ -1,0 +1,599 @@
+/* ============================================
+   GLOBAL RESPONSIVE ENHANCEMENTS
+   Purpose: Fluid, modern responsive layout fixes
+   Applied: January 2026
+   Rules: No !important overuse, fluid units, minimal breakpoints
+   ============================================ */
+
+/* ============================================
+   1. FLUID ROOT VARIABLES
+   ============================================ */
+:root {
+    --fluid-padding: clamp(1rem, 3vw, 2rem);
+    --fluid-gap: clamp(1rem, 2vw, 1.5rem);
+    --fluid-section: clamp(3rem, 8vw, 6rem);
+}
+
+/* ============================================
+   2. GLOBAL OVERFLOW PREVENTION
+   ============================================ */
+html {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    overflow-x: hidden;
+    min-width: 320px;
+}
+
+/* Prevent any element from causing horizontal scroll */
+img, video, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================
+   3. FLUID CONTAINER SYSTEM
+   ============================================ */
+.container {
+    width: 100%;
+    max-width: min(1400px, 95vw);
+    margin-inline: auto;
+    padding-inline: var(--fluid-padding);
+}
+
+/* ============================================
+   4. FLUID TYPOGRAPHY
+   ============================================ */
+.section-title {
+    font-size: clamp(1.75rem, 4vw + 0.5rem, 3rem);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.section-subtitle {
+    font-size: clamp(0.7rem, 1.5vw, 0.85rem);
+    letter-spacing: clamp(1px, 0.3vw, 3px);
+}
+
+/* ============================================
+   5. HERO SECTION - FLUID SCALING
+   ============================================ */
+.hero {
+    min-height: clamp(500px, 80vh, 850px);
+    padding-block: clamp(4rem, 10vh, 6rem);
+    padding-inline: var(--fluid-padding);
+}
+
+.hero-content {
+    max-width: min(1100px, 90vw);
+    width: 100%;
+}
+
+.hero h2 {
+    font-size: clamp(1.8rem, 5vw + 1rem, 5.5rem);
+    line-height: 1.1;
+}
+
+.hero p {
+    font-size: clamp(0.95rem, 1.5vw + 0.5rem, 1.4rem);
+    max-width: min(700px, 90%);
+    margin-inline: auto;
+}
+
+.tagline-pill {
+    padding: clamp(0.5rem, 1.5vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    max-width: 100%;
+}
+
+.tagline-pill span {
+    font-size: clamp(0.65rem, 1.2vw, 0.85rem);
+}
+
+/* Hero buttons - flex with proper wrapping */
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+    justify-content: center;
+    width: 100%;
+}
+
+.hero-buttons .btn {
+    min-width: clamp(140px, 20vw, 200px);
+    padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+}
+
+/* ============================================
+   6. NAVIGATION - FLUID SCALING
+   ============================================ */
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1rem, 2vw, 2rem);
+    flex-wrap: nowrap;
+}
+
+.logo h1 {
+    font-size: clamp(1.2rem, 2vw + 0.5rem, 1.8rem);
+}
+
+.logo span {
+    font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+}
+
+.nav-links {
+    gap: clamp(1rem, 2.5vw, 2.5rem);
+}
+
+.nav-links > a,
+.nav-links .dropbtn {
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+    white-space: nowrap;
+}
+
+.user-actions {
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+}
+
+/* ============================================
+   7. MARQUEE - FLUID SCALING
+   ============================================ */
+.features-marquee {
+    padding-block: clamp(0.5rem, 1.5vw, 0.75rem);
+    width: 100%;
+    max-width: 100vw;
+}
+
+.marquee-item {
+    margin-inline: clamp(1rem, 4vw, 3.75rem);
+}
+
+.marquee-item i {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+}
+
+.marquee-title {
+    font-size: clamp(0.9rem, 1.5vw + 0.3rem, 1.3rem);
+}
+
+.marquee-tagline {
+    font-size: clamp(0.6rem, 1vw, 0.85rem);
+}
+
+/* ============================================
+   8. PRODUCT GRID - MODERN CSS GRID
+   ============================================ */
+.product-grid,
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+    gap: var(--fluid-gap);
+    width: 100%;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0; /* Prevent grid blowout */
+}
+
+.product-image-wrapper {
+    aspect-ratio: 1 / 1;
+    height: auto;
+    min-height: 200px;
+    max-height: 350px;
+}
+
+.product-details {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-title {
+    font-size: clamp(1rem, 1.5vw + 0.3rem, 1.35rem);
+}
+
+.product-price {
+    font-size: clamp(0.8rem, 1vw + 0.2rem, 0.95rem);
+}
+
+/* ============================================
+   9. STORY SECTION - FLUID LAYOUT
+   ============================================ */
+.story-section {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.story-visual,
+.story-content {
+    flex: 1 1 400px;
+    min-width: min(100%, 400px);
+}
+
+.story-visual {
+    min-height: clamp(250px, 40vw, 550px);
+}
+
+.story-content {
+    padding: clamp(2rem, 5vw, 5rem);
+}
+
+.story-content h2 {
+    font-size: clamp(1.8rem, 4vw + 0.5rem, 3.5rem);
+}
+
+.story-content p {
+    font-size: clamp(0.9rem, 1.2vw + 0.3rem, 1.1rem);
+}
+
+/* ============================================
+   10. VERIFICATION SECTION - FLUID
+   ============================================ */
+.verification {
+    padding: var(--fluid-section) var(--fluid-padding);
+}
+
+.verify-box {
+    max-width: min(650px, 95%);
+    padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    width: 100%;
+}
+
+.verify-input {
+    flex: 1 1 200px;
+    min-width: 0;
+    padding: clamp(0.875rem, 2vw, 1.125rem);
+}
+
+.verify-btn {
+    flex: 0 0 auto;
+    padding: clamp(0.875rem, 2vw, 1.125rem) clamp(1.5rem, 3vw, 2.5rem);
+    white-space: nowrap;
+}
+
+/* ============================================
+   11. FOOTER - FLUID GRID
+   ============================================ */
+footer {
+    padding: clamp(3rem, 6vw, 5rem) var(--fluid-padding) clamp(1.5rem, 3vw, 2rem);
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+    gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footer-brand .logo h1 {
+    font-size: clamp(1.4rem, 2vw + 0.5rem, 1.8rem);
+}
+
+.footer-col h4 {
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+}
+
+.footer-col ul li a {
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+}
+
+/* Shipping partners - horizontal scroll on small screens */
+.shipping-partners-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.ship-group {
+    flex: 1 1 280px;
+    min-width: min(100%, 280px);
+}
+
+.partner-logos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+    align-items: center;
+}
+
+.partner-text-logo {
+    height: clamp(40px, 5vw, 50px);
+    min-width: clamp(80px, 10vw, 110px);
+    padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 1.5vw, 1.25rem);
+    font-size: clamp(0.7rem, 1vw, 0.95rem);
+}
+
+.footer-bottom {
+    flex-wrap: wrap;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+/* ============================================
+   12. MODALS - RESPONSIVE CENTERING
+   ============================================ */
+.modal-overlay {
+    padding: var(--fluid-padding);
+    align-items: center;
+    justify-content: center;
+}
+
+.region-modal {
+    width: min(750px, 95vw);
+    max-height: calc(100vh - 2rem);
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    margin: auto;
+}
+
+.login-tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: clamp(0.25rem, 0.5vw, 0.375rem);
+}
+
+.login-tab {
+    padding: clamp(0.625rem, 1.5vw, 0.75rem) clamp(0.5rem, 1vw, 1rem);
+    font-size: clamp(0.8rem, 1vw, 0.9rem);
+}
+
+.country-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr));
+    gap: clamp(0.75rem, 1.5vw, 1rem);
+}
+
+/* Track input group */
+.track-input-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.track-input {
+    flex: 1 1 200px;
+    min-width: 0;
+}
+
+.track-btn-square {
+    flex: 0 0 auto;
+}
+
+/* ============================================
+   13. BUTTONS - FLUID SIZING
+   ============================================ */
+.btn {
+    padding: clamp(0.75rem, 1.5vw, 1.125rem) clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(0.75rem, 1vw, 0.85rem);
+}
+
+.add-btn {
+    padding: clamp(0.625rem, 1vw, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.65rem, 0.9vw, 0.7rem);
+}
+
+/* ============================================
+   14. STORE LOCATOR - FLUID GRID
+   ============================================ */
+.store-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: var(--fluid-gap);
+}
+
+.store-card {
+    padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.store-name {
+    font-size: clamp(1.1rem, 1.5vw + 0.3rem, 1.4rem);
+}
+
+/* ============================================
+   15. TIMELINE - FLUID SPACING
+   ============================================ */
+.timeline {
+    padding-left: clamp(0.5rem, 1vw, 0.625rem);
+}
+
+.timeline-step {
+    padding-left: clamp(3rem, 5vw, 4.375rem);
+    padding-bottom: clamp(1.25rem, 3vw, 1.875rem);
+}
+
+/* ============================================
+   16. TABLET LANDSCAPE ENHANCEMENTS
+   (768px - 1024px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .hero {
+        min-height: 90vh;
+        padding-top: 8rem;
+    }
+    
+    .hero h2 {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+    
+    .story-section {
+        flex-direction: row;
+    }
+    
+    .story-visual,
+    .story-content {
+        flex: 1 1 50%;
+        min-width: 0;
+    }
+    
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================
+   17. TABLET PORTRAIT ENHANCEMENTS
+   (768px - 1024px)
+   ============================================ */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+    .hero {
+        min-height: 60vh;
+    }
+    
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================================
+   18. SMALL MOBILE REFINEMENTS (<480px)
+   ============================================ */
+@media (max-width: 480px) {
+    .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .input-group {
+        flex-direction: column;
+    }
+    
+    .verify-input,
+    .verify-btn {
+        width: 100%;
+        border-radius: 0.25rem;
+    }
+    
+    .verify-input {
+        border-right: 1px solid #ddd;
+    }
+    
+    .track-input-group {
+        flex-direction: column;
+    }
+    
+    .track-input,
+    .track-btn-square {
+        width: 100%;
+        border-radius: 0.25rem;
+    }
+    
+    .partner-logos-grid {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding-bottom: 0.5rem;
+    }
+    
+    .partner-text-logo {
+        flex-shrink: 0;
+    }
+    
+    .country-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================
+   19. LARGE DESKTOP (>1440px)
+   ============================================ */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1400px;
+    }
+    
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* ============================================
+   20. ULTRA-WIDE SCREENS (>1920px)
+   ============================================ */
+@media (min-width: 1920px) {
+    .hero-content {
+        max-width: 1200px;
+    }
+    
+    .story-content {
+        max-width: 50%;
+    }
+}
+
+/* ============================================
+   21. HIGH DPI / RETINA DISPLAYS
+   ============================================ */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .partner-text-logo {
+        -webkit-font-smoothing: antialiased;
+    }
+}
+
+/* ============================================
+   22. PRINT MEDIA
+   ============================================ */
+@media print {
+    .hero {
+        min-height: auto;
+        height: auto;
+        page-break-inside: avoid;
+    }
+    
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================
+   23. REDUCED MOTION PREFERENCE
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .marquee-track {
+        animation: none;
+    }
+}
+
+/* ============================================
+   24. SAFE AREA INSETS (Notched Phones)
+   ============================================ */
+@supports (padding: max(0px)) {
+    .container {
+        padding-left: max(var(--fluid-padding), env(safe-area-inset-left));
+        padding-right: max(var(--fluid-padding), env(safe-area-inset-right));
+    }
+    
+    footer {
+        padding-bottom: max(2rem, env(safe-area-inset-bottom));
+    }
+}

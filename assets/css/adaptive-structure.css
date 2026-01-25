@@ -1,0 +1,100 @@
+/* 
+   ==========================================================================
+   GILAF ADAPTIVE STRUCTURE (Strict Category Locking)
+   Overrides existing responsive behavior to enforce fixed column counts.
+   ========================================================================== 
+*/
+
+:root {
+    /* Fluid Scaling Vars - Re-declaring for overriding power */
+    --font-xs: clamp(0.75rem, 1vw, 0.875rem);
+    --font-sm: clamp(0.875rem, 1.2vw, 1rem);
+    --font-base: clamp(1rem, 1.5vw, 1.125rem);
+    --font-lg: clamp(1.25rem, 2vw, 1.5rem);
+    --font-xl: clamp(1.5rem, 3vw, 2.5rem);
+
+    --space-md: clamp(1rem, 2vw, 2rem);
+    --container-padding: clamp(1rem, 5vw, 2rem);
+}
+
+/* --- STRICT GRID ENFORCEMENT --- */
+/* Target the product grid specifically */
+.product-grid {
+    display: grid !important;
+    gap: var(--space-md) !important;
+    width: 100% !important;
+    /* Reset any auto-fit/minmax logic */
+    grid-template-columns: unset !important;
+}
+
+/* 
+   CATEGORY 1: MOBILE (< 768px)
+   Strict Rule: ALWAYS 1 Column
+*/
+@media (max-width: 767px) {
+    .container {
+        max-width: 100% !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Force product cards to look good in 1 column */
+    .product-card {
+        display: flex;
+        /* Optional: standard layout */
+        flex-direction: column;
+    }
+}
+
+/* 
+   CATEGORY 2: TABLET (768px - 1024px)
+   Strict Rule: ALWAYS 2 Columns
+*/
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+        max-width: 95vw !important;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* 
+   CATEGORY 3: DESKTOP (> 1025px)
+   Strict Rule: ALWAYS 4 Columns
+*/
+@media (min-width: 1025px) {
+    .container {
+        max-width: 1400px !important;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+}
+
+/* --- SCALING OVERRIDES --- */
+
+/* Fix text sizes to be fluid */
+h2.section-title {
+    font-size: var(--font-xl) !important;
+}
+
+.product-title {
+    font-size: var(--font-base) !important;
+}
+
+.product-price {
+    font-size: var(--font-sm) !important;
+}
+
+/* Ensure images cover area without breaking layout */
+.product-image-wrapper {
+    height: auto !important;
+    aspect-ratio: 4/5 !important;
+}

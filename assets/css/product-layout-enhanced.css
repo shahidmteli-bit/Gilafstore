@@ -1,0 +1,303 @@
+/* =========================================
+   ENHANCED PRODUCT LAYOUT - FROM REFERENCE DESIGN
+   ========================================= */
+
+/* Product Section */
+.products-section { 
+    padding: 100px 20px; 
+    background-color: var(--color-ivory); 
+}
+
+/* Product Grid - Responsive Auto-fit */
+.product-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px; 
+}
+
+/* Product Card - Enhanced Styling */
+.product-card { 
+    background: var(--color-white); 
+    transition: transform 0.4s, box-shadow 0.4s; 
+    position: relative; 
+    border-radius: 4px; 
+    overflow: hidden; 
+    border: 1px solid rgba(0,0,0,0.03); 
+}
+
+.product-card:hover { 
+    transform: translateY(-10px); 
+    box-shadow: 0 20px 40px rgba(26, 60, 52, 0.1); 
+}
+
+/* Product Image Wrapper - Fixed Height */
+.product-image-wrapper { 
+    height: 320px; 
+    overflow: hidden; 
+    background-color: #f4f4f4; 
+    position: relative; 
+}
+
+.product-image-wrapper img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.8s; 
+}
+
+.product-card:hover .product-image-wrapper img { 
+    transform: scale(1.08); 
+}
+
+/* Badge Container - Top Left Positioning */
+.badge-container { 
+    position: absolute; 
+    top: 15px; 
+    left: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    z-index: 10;
+}
+
+/* Badge Styling */
+.badge { 
+    padding: 5px 12px; 
+    font-size: 0.65rem; 
+    text-transform: uppercase; 
+    font-weight: 600; 
+    letter-spacing: 1px; 
+    border-radius: 2px; 
+    display: inline-block;
+}
+
+.badge.green { 
+    background-color: var(--color-green); 
+    color: white; 
+}
+
+.badge.gold { 
+    background-color: var(--color-gold); 
+    color: white; 
+}
+
+.badge.fresh-badge {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge.discount-badge {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Trust Overlay - Appears on Hover */
+.trust-overlay { 
+    position: absolute; 
+    bottom: 0; 
+    left: 0; 
+    right: 0; 
+    background: rgba(255,255,255,0.9); 
+    padding: 10px; 
+    transform: translateY(100%); 
+    transition: transform 0.3s; 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    border-top: 1px solid var(--color-gold); 
+}
+
+.product-card:hover .trust-overlay { 
+    transform: translateY(0); 
+}
+
+.trust-overlay i {
+    font-size: 1.2rem;
+}
+
+/* Product Details Section */
+.product-details { 
+    padding: 25px; 
+    text-align: center; 
+}
+
+/* Product Category */
+.product-cat { 
+    font-size: 0.7rem; 
+    color: var(--color-gold); 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    font-weight: 600; 
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Product Title */
+.product-title { 
+    font-family: var(--font-serif); 
+    font-size: 1.35rem; 
+    margin: 8px 0; 
+    color: var(--color-text); 
+    line-height: 1.3;
+}
+
+/* Product Origin */
+.product-origin { 
+    display: block; 
+    font-size: 0.8rem; 
+    color: #888; 
+    margin-bottom: 15px; 
+    font-style: italic; 
+}
+
+/* Price Row */
+.price-row { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 10px; 
+    margin-bottom: 20px; 
+}
+
+/* Product Price */
+.product-price { 
+    color: var(--color-green); 
+    font-weight: 700; 
+    font-size: 1.1rem; 
+}
+
+/* Original Price (Strikethrough) */
+.original-price {
+    color: #999;
+    text-decoration: line-through;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+/* Discount Percentage */
+.discount-percent {
+    background-color: #dc3545;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Add to Cart Button */
+.add-btn { 
+    background: transparent; 
+    border: 1px solid var(--color-text); 
+    padding: 10px 24px; 
+    text-transform: uppercase; 
+    font-size: 0.7rem; 
+    letter-spacing: 1.5px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    width: 100%; 
+    font-weight: 600;
+}
+
+.add-btn:hover { 
+    background: var(--color-green); 
+    color: white; 
+    border-color: var(--color-green); 
+}
+
+/* Section Header Card */
+.section-header-card {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+/* Section Title */
+.section-title {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: var(--color-green);
+    line-height: 1.2;
+    font-family: var(--font-serif);
+    font-weight: 700;
+}
+
+/* Section Subtitle */
+.section-subtitle {
+    font-family: var(--font-sans);
+    color: var(--color-gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0 10px;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Tablets & Smaller Laptops */
+@media (max-width: 992px) {
+    .section-title { 
+        font-size: 2.5rem; 
+    }
+    
+    .product-grid { 
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+        gap: 25px; 
+    }
+}
+
+/* Mobile Devices */
+@media (max-width: 768px) {
+    .products-section { 
+        padding: 60px 20px; 
+    }
+    
+    .section-title { 
+        font-size: 2rem; 
+    }
+    
+    .section-subtitle { 
+        font-size: 0.75rem; 
+        letter-spacing: 2px; 
+    }
+    
+    /* Stack products in single column on mobile */
+    .product-grid { 
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+    
+    .product-image-wrapper { 
+        height: 280px; 
+    }
+    
+    .product-title { 
+        font-size: 1.2rem; 
+    }
+    
+    .product-details { 
+        padding: 20px; 
+    }
+}
+
+/* Small Mobile Phones */
+@media (max-width: 480px) {
+    .section-title { 
+        font-size: 1.8rem; 
+    }
+    
+    .product-image-wrapper { 
+        height: 250px; 
+    }
+    
+    .badge-container { 
+        top: 10px; 
+        left: 10px; 
+    }
+    
+    .badge { 
+        font-size: 0.6rem; 
+        padding: 4px 10px; 
+    }
+}

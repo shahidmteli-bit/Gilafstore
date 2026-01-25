@@ -396,7 +396,8 @@
 .shop-filters-mobile-toggle {
     position: fixed;
     bottom: 24px;
-    right: 24px;
+    left: 24px; /* Moved to left side to avoid overlap with chatbot */
+    right: auto;
     padding: 14px 24px;
     background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
     color: #ffffff;

@@ -675,7 +675,7 @@ $hasAdMedia = $adVideo || !empty($adImages);
     <!-- RIGHT: Our Philosophy -->
     <div class="story-content" style="flex: 1 1 50%;">
         <span style="color: var(--color-gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 15px; display: block; font-size: 0.85rem;">Our Philosophy</span>
-        <h2 style="font-size: 2.2rem; white-space: nowrap; margin-bottom: 25px; line-height: 1.2;">Preserving the Art of Taste</h2>
+        <h2 style="font-size: 2.2rem; margin-bottom: 25px; line-height: 1.2;">Preserving the Art of Taste</h2>
         <p style="line-height: 1.8; margin-bottom: 20px;">At <strong>Gilaf Foods & Spices</strong>, we believe that food is not just sustenance, it is memory. Founded by Shahid Mohammad & Muneera Shahid, our mission is to bring the unadulterated taste of Kashmir to your table.</p>
         <p style="line-height: 1.8; margin-bottom: 30px;">We work directly with local farmers, ensuring that every strand of saffron and every drop of honey retains the purity of the mountains.</p>
         <div class="founder-sig" style="margin-top: 20px;">Shahid & Muneera</div>

@@ -190,7 +190,7 @@ a.btn-danger {
 .promo-card-7 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
 .promo-card-content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 20px 30px; text-align: left; }
 .promo-card-badge { display: inline-block; background: rgba(255, 255, 255, 0.95); color: #1A3C34; padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 6px; width: fit-content; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); text-transform: uppercase; }
-.promo-card-title { font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 4px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-family: 'Poppins', sans-serif; line-height: 1.2; letter-spacing: -0.5px; }
+.promo-card-title { font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 4px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-family: 'Playfair Display', serif; line-height: 1.2; letter-spacing: -0.5px; }
 .promo-card-text { font-size: 0.85rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 0; line-height: 1.3; font-weight: 500; }
 .promo-card-btn { display: inline-block; background: #ffffff; color: #1A3C34; padding: 8px 20px; border-radius: 6px; font-weight: 700; font-size: 0.8rem; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); width: fit-content; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
 .promo-card-btn:hover { background: #C9A961; color: #ffffff; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(201, 169, 97, 0.5); }
@@ -224,7 +224,7 @@ a.btn-danger {
     font-size: 0.9rem; 
     font-weight: 600; 
     color: #1A3C34;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
 }
 .shop-sort-select { 
@@ -710,7 +710,7 @@ a.btn-danger {
 </script>
 
 <!-- Mobile Filter Toggle -->
-<button class="shop-filters-mobile-toggle" onclick="document.getElementById('shopFilters').classList.toggle('open'); document.getElementById('filterOverlay').classList.toggle('open');">
+<button class="shop-filters-mobile-toggle" style="left: 24px !important; right: auto !important;" onclick="document.getElementById('shopFilters').classList.toggle('open'); document.getElementById('filterOverlay').classList.toggle('open');">
   <i class="fas fa-filter"></i> Filters
 </button>
 <div class="shop-filters-overlay" id="filterOverlay" onclick="document.getElementById('shopFilters').classList.remove('open'); this.classList.remove('open');"></div>
