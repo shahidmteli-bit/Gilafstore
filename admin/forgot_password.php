@@ -1,7 +1,20 @@
 <?php
+require_once __DIR__ . '/../includes/auth.php';
+
+// ─── Admin Gate Check ─────────────────────────────────────────
+$hasGateToken = !empty($_SESSION['_admin_gate_token']) 
+    && !empty($_SESSION['_admin_gate_time']) 
+    && (time() - $_SESSION['_admin_gate_time'] < 1800);
+if (!is_admin() && !$hasGateToken) {
+    http_response_code(404);
+    echo '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>';
+    echo '<h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+    echo '</body></html>';
+    exit;
+}
+// ─── End Gate Check ───────────────────────────────────────────
+
 $pageTitle = 'Forgot Password — Gilaf Admin';
-require_once __DIR__ . '/../includes/db_connect.php';
-require_once __DIR__ . '/../includes/functions.php';
 
 $success = false;
 $error = '';
@@ -48,10 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Special handling for admin self-email
                     $subject = 'Admin Password Reset - Gilaf Store (Self-Reset)';
                     $body = generate_admin_self_reset_email($user['name'], $resetLink);
-                    $emailSent = send_email($email, $subject, $body, 'gilaf.secure@gmail.com', 'Gilaf Security Team');
                 } else {
                     // Standard admin reset
-                    $emailSent = send_password_reset_email($email, $resetLink, $user['name']);
+                    $subject = 'Password Reset Request - Gilaf Store';
+                    $body = generate_admin_self_reset_email($user['name'], $resetLink);
+                }
+                // Use dynamic routing (Security@gilafstore.com) if available
+                if (function_exists('send_task_email')) {
+                    $emailSent = send_task_email('password_reset', $email, $subject, $body, 'Security@gilafstore.com', 'Gilaf Security Team');
+                } else {
+                    $emailSent = send_email($email, $subject, $body, 'Security@gilafstore.com', 'Gilaf Security Team');
                 }
                 
                 if ($emailSent) {

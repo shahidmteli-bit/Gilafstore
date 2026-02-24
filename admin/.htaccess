@@ -1,0 +1,46 @@
+# ============================================================
+# Gilaf Admin Security — Block common scanner paths
+# ============================================================
+# This file blocks direct access to common admin paths that
+# scanners and bots try to probe. Does NOT affect authenticated
+# admin users or any user-facing pages.
+# ============================================================
+
+# Disable directory listing
+Options -Indexes
+
+# Block access to common admin scanner paths
+# These are paths that automated tools try to find admin panels
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block common admin probe paths (return 404)
+    # /admin/login, /admin/login.php, /admin/signin, /admin/dashboard (without session)
+    RewriteCond %{REQUEST_URI} ^/admin/(login|signin|wp-admin|wp-login|administrator|panel|cp|controlpanel|backend|manage)(\.php)?$ [NC]
+    RewriteRule ^ - [R=404,L]
+
+    # Block direct access to sensitive setup/debug files
+    RewriteRule ^(debug_|test_|setup_|schema_fix|add_|verify_|check_|fix_|run_|install_) - [R=404,L]
+</IfModule>
+
+# Prevent access to SQL files
+<FilesMatch "\.(sql|log|txt|md)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Security headers for admin pages
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    # Prevent caching of admin pages
+    Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header always set Pragma "no-cache"
+</IfModule>

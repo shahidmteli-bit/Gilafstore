@@ -8,7 +8,10 @@ require_once __DIR__ . '/../includes/language_manager.php';
 
 // Check admin authentication
 if (!isset($_SESSION['user']['is_admin']) || !$_SESSION['user']['is_admin']) {
-    header('Location: ' . base_url('admin/admin_login.php'));
+    http_response_code(404);
+    echo '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>';
+    echo '<h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+    echo '</body></html>';
     exit;
 }
 

@@ -1,6 +1,14 @@
 # Enable Rewrite Engine
 RewriteEngine On
 
+# ─── Admin Secure Portal Gateway ───────────────────────────────
+# Map clean URL /gs-secure-portal-92XK to the gateway PHP file
+RewriteRule ^gs-secure-portal-92XK$ gs-secure-portal-92XK.php [L,QSA]
+
+# Block common admin scanner paths (return 404)
+RewriteRule ^(admin_login|administrator|wp-admin|wp-login|login|signin|backend|panel|cpanel|controlpanel)(\.php)?$ - [R=404,L]
+# ─── End Admin Gateway ─────────────────────────────────────────
+
 # WebP Image Support - Serve WebP if available and browser supports it
 <IfModule mod_rewrite.c>
     RewriteCond %{HTTP_ACCEPT} image/webp
@@ -107,6 +115,10 @@ AddType image/webp .webp
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.google.com https://www.gstatic.com https://checkout.razorpay.com https://maps.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; img-src 'self' data: blob: https: http:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; connect-src 'self' https://api.razorpay.com https://www.google-analytics.com https://generativelanguage.googleapis.com; frame-src 'self' https://api.razorpay.com https://www.google.com;"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
 </IfModule>
 
 # Disable ETags
@@ -114,3 +126,40 @@ AddType image/webp .webp
     Header unset ETag
 </IfModule>
 FileETag None
+
+# ============ SECURITY: Block Sensitive Files ============
+# Block access to .env, .git, .sql, .log, .bak, config files
+<FilesMatch "\.(env|git|sql|log|bak|ini|sh|bash|yml|yaml|toml|lock|dist)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Block access to hidden files and directories (.git, .env, etc.)
+<IfModule mod_rewrite.c>
+    RewriteRule (^|/)\.(?!well-known/) - [F,L]
+</IfModule>
+
+# Block access to backup files
+<FilesMatch "(~|\.orig|\.save|\.swp|\.swo)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# Block access to composer files
+<FilesMatch "(composer\.json|composer\.lock|composer\.phar)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+# Disable Directory Listing
+Options -Indexes
+
+# Disable Server Signature
+ServerSignature Off

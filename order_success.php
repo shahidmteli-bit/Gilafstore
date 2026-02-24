@@ -68,63 +68,113 @@ include __DIR__ . '/includes/new-header.php';
 
 <style>
 .success-container {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 25px;
+    max-width: 650px;
+    margin: 40px auto;
+    padding: 50px 40px;
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.08);
     text-align: center;
+    border-top: 5px solid #C5A059;
+    position: relative;
+    overflow: hidden;
+}
+
+.success-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #C5A059 0%, #1A3C34 50%, #C5A059 100%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .success-icon {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #1A3C34 0%, #2d5a4d 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 15px;
-    animation: scaleIn 0.5s ease-out;
+    margin: 0 auto 25px;
+    animation: scaleIn 0.6s ease-out;
+    box-shadow: 0 10px 40px rgba(26, 60, 52, 0.3);
+    position: relative;
+}
+
+.success-icon::before {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    background: rgba(197, 160, 89, 0.1);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
 }
 
 @keyframes scaleIn {
     0% {
-        transform: scale(0);
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
     }
     50% {
         transform: scale(1.1);
-    }
-    100% {
-        transform: scale(1);
+        opacity: 0.3;
     }
 }
 
 .success-icon i {
-    font-size: 35px;
-    color: white;
+    font-size: 55px;
+    color: #C5A059;
+    z-index: 1;
 }
 
 .success-title {
-    font-size: 24px;
+    font-size: 32px;
     font-weight: 700;
-    color: #1f2937;
-    margin-bottom: 8px;
+    color: #1A3C34;
+    margin-bottom: 12px;
+    font-family: var(--font-serif);
+    letter-spacing: -0.5px;
 }
 
 .success-subtitle {
-    font-size: 14px;
+    font-size: 16px;
     color: #6b7280;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    font-weight: 400;
 }
 
 .order-details {
-    background: #f9fafb;
-    padding: 18px;
-    border-radius: 10px;
-    margin: 20px 0;
+    background: linear-gradient(135deg, #F8F5F2 0%, #f9fafb 100%);
+    padding: 25px;
+    border-radius: 12px;
+    margin: 30px 0;
     text-align: left;
+    border: 1px solid rgba(197, 160, 89, 0.2);
 }
 
 .order-detail-row {
@@ -152,12 +202,13 @@ include __DIR__ . '/includes/new-header.php';
 
 .payment-badge {
     display: inline-block;
-    padding: 4px 10px;
-    background: #dcfce7;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #dcfce7 0%, #d1fae5 100%);
     color: #166534;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 13px;
     font-weight: 600;
+    border: 1px solid #86efac;
 }
 
 .action-buttons {
@@ -168,67 +219,72 @@ include __DIR__ . '/includes/new-header.php';
 
 .btn-primary-action {
     flex: 1;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #C5A059 0%, #b08d4b 100%);
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    letter-spacing: 0.5px;
 }
 
 .btn-primary-action:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.4);
     color: white;
+    background: linear-gradient(135deg, #b08d4b 0%, #C5A059 100%);
 }
 
 .btn-secondary-action {
     flex: 1;
     background: white;
-    color: #10b981;
-    border: 2px solid #10b981;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 14px;
+    color: #1A3C34;
+    border: 2px solid #1A3C34;
+    padding: 14px 24px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    letter-spacing: 0.5px;
 }
 
 .btn-secondary-action:hover {
-    background: #f0fdf4;
-    color: #059669;
+    background: #F8F5F2;
+    color: #1A3C34;
+    border-color: #C5A059;
 }
 
 .info-box {
-    background: #eff6ff;
-    padding: 15px;
-    border-radius: 10px;
-    margin-top: 20px;
-    border-left: 4px solid #3b82f6;
+    background: linear-gradient(135deg, #F8F5F2 0%, #fffbf5 100%);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 25px;
+    border-left: 4px solid #C5A059;
+    border: 1px solid rgba(197, 160, 89, 0.3);
 }
 
 .info-box h6 {
-    color: #1e40af;
+    color: #1A3C34;
     font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 10px;
+    font-size: 15px;
 }
 
 .info-box p {
-    color: #475569;
+    color: #6b7280;
     margin: 0;
-    font-size: 13px;
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 @media (max-width: 768px) {
@@ -259,11 +315,11 @@ include __DIR__ . '/includes/new-header.php';
 
 <div class="success-container">
     <div class="success-icon">
-        <i class="fas fa-check"></i>
+        <i class="fas fa-shopping-bag"></i>
     </div>
 
-    <h1 class="success-title">Payment Received!</h1>
-    <p class="success-subtitle">Thank you for your order. We're processing it now.</p>
+    <h1 class="success-title">Your Order Has Been Placed!</h1>
+    <p class="success-subtitle">Thank you for shopping with Gilaf. We're preparing your order.</p>
 
     <div class="order-details">
         <div class="order-detail-row">

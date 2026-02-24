@@ -5,7 +5,10 @@ require_once '../includes/functions.php';
 
 // Check if admin is logged in
 if (empty($_SESSION['user']) || empty($_SESSION['user']['is_admin'])) {
-    header('Location: admin_login.php');
+    http_response_code(404);
+    echo '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>';
+    echo '<h1>Not Found</h1><p>The requested URL was not found on this server.</p>';
+    echo '</body></html>';
     exit();
 }
 
