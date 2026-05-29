@@ -5,11 +5,8 @@
  */
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/crm_engine.php';
 
 require_admin();
-
-$crm = CRMEngine::getInstance();
 
 // Handle AJAX actions
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
@@ -28,67 +25,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 
     switch ($action) {
         case 'test_connection':
-            $result = $crm->testConnection();
-            echo json_encode($result);
+            // Simple connection test
+            $baseUrl = db_fetch_one("SELECT setting_value FROM crm_settings WHERE setting_key = 'crm_api_url'");
+            $url = rtrim($baseUrl['setting_value'] ?? 'http://localhost:3000', '/') . '/api/integration/health';
+            
+            $ch = curl_init();
+            curl_setopt_array($ch, [
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 10,
+                CURLOPT_CONNECTTIMEOUT => 5,
+                CURLOPT_SSL_VERIFYPEER => false,
+            ]);
+            
+            $startTime = microtime(true);
+            $response = curl_exec($ch);
+            $latency = (int)((microtime(true) - $startTime) * 1000);
+            $httpCode = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+            
+            echo json_encode([
+                'connected' => $httpCode >= 200 && $httpCode < 300,
+                'http_code' => $httpCode,
+                'latency_ms' => $latency,
+                'error' => $error ?: null,
+                'response' => json_decode($response, true),
+            ]);
             exit;
 
         case 'save_settings':
             try {
                 $settings = $_POST['settings'] ?? [];
-
-                // Debug logging
-                error_log('[CRM Integration] Save settings called with: ' . json_encode($settings));
-
                 $savedKeys = [];
+                
                 foreach ($settings as $key => $value) {
-                    if (strpos($key, 'crm_') === 0 || strpos($key, 'whatsapp_') === 0 ||
-                        strpos($key, 'cart_') === 0 || strpos($key, 'order_') === 0 ||
-                        strpos($key, 'customer_') === 0) {
-                        try {
-                            $crm->updateSetting($key, $value);
-                            $savedKeys[] = $key;
-                        } catch (\Exception $innerEx) {
-                            error_log('[CRM Integration] Error saving key ' . $key . ': ' . $innerEx->getMessage());
-                            throw new \Exception('Failed to save ' . $key . ': ' . $innerEx->getMessage());
-                        }
+                    if (strpos($key, 'crm_') === 0 || strpos($key, 'whatsapp_') === 0) {
+                        $stmt = $pdo->prepare("UPDATE crm_settings SET setting_value = ? WHERE setting_key = ?");
+                        $stmt->execute([$value, $key]);
+                        $savedKeys[] = $key;
                     }
                 }
-
-                $crm->logActivity('admin', (string)($_SESSION['user']['id'] ?? 0), 'settings_updated', 'crm_settings', null, $settings);
-
-                echo json_encode(['success' => true, 'message' => 'Settings saved successfully', 'saved_keys' => $savedKeys]);
+                
+                echo json_encode(['success' => true, 'message' => 'Settings saved', 'saved_keys' => $savedKeys]);
             } catch (\Exception $e) {
-                error_log('[CRM Integration] Save settings error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
                 http_response_code(500);
-                echo json_encode(['success' => false, 'error' => 'Save failed: ' . $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+                echo json_encode(['success' => false, 'error' => $e->getMessage()]);
             }
-            exit;
-
-        case 'generate_api_key':
-            $name = $_POST['key_name'] ?? 'New Key';
-            $result = $crm->generateApiKey($name);
-            echo json_encode(['success' => true, 'data' => $result]);
             exit;
 
         case 'toggle_crm':
-            $newState = $_POST['enabled'] === '1';
-            $crm->updateSetting('crm_enabled', $newState);
-            echo json_encode(['success' => true, 'enabled' => $newState]);
-            exit;
-
-        case 'retry_failed':
-            $processed = $crm->processQueue(50);
-            echo json_encode(['success' => true, 'processed' => $processed]);
-            exit;
-
-        case 'sync_all_customers':
-            $users = db_fetch_all("SELECT id FROM users LIMIT 100");
-            $synced = 0;
-            foreach ($users as $u) {
-                $result = $crm->syncCustomer((int)$u['id']);
-                if ($result['success']) $synced++;
-            }
-            echo json_encode(['success' => true, 'synced' => $synced, 'total' => count($users)]);
+            $newState = $_POST['enabled'] === '1' ? '1' : '0';
+            $pdo->prepare("UPDATE crm_settings SET setting_value = ? WHERE setting_key = 'crm_enabled'")->execute([$newState]);
+            echo json_encode(['success' => true, 'enabled' => $newState === '1']);
             exit;
 
         default:
@@ -98,9 +87,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
 }
 
 // Fetch data for display
-$stats = $crm->getStats();
-$apiKey = $crm->getActiveApiKey();
-$isEnabled = $crm->isEnabled();
+$stats = [
+    'total_synced_customers' => 0,
+    'recovered_carts' => 0,
+    'recovered_revenue' => 0,
+    'webhook_success_rate' => 100,
+    'pending_events' => 0,
+    'failed_events' => 0,
+];
+
+$apiKey = db_fetch_one("SELECT * FROM crm_api_keys WHERE is_active = 1 LIMIT 1");
+$isEnabledRow = db_fetch_one("SELECT setting_value FROM crm_settings WHERE setting_key = 'crm_enabled'");
+$isEnabled = ($isEnabledRow['setting_value'] ?? '0') === '1';
 
 // Recent webhook logs
 try {
@@ -266,7 +264,10 @@ require_once __DIR__ . '/../includes/admin_header.php';
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">WACRM API URL</label>
                         <input type="text" class="form-control" name="settings[crm_api_url]"
-                               value="<?= htmlspecialchars($crm->getSetting('crm_api_url', 'http://localhost:3000')) ?>"
+                               value="<?php 
+                                   $url = db_fetch_one("SELECT setting_value FROM crm_settings WHERE setting_key = 'crm_api_url'");
+                                   echo htmlspecialchars($url['setting_value'] ?? 'http://localhost:3000');
+                               ?>"
                                placeholder="https://wacrm-wyjo.onrender.com or http://localhost:3000"
                                pattern="https?://.*"
                                title="Enter full URL including https://">
@@ -275,7 +276,10 @@ require_once __DIR__ . '/../includes/admin_header.php';
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Webhook Secret</label>
                         <input type="text" class="form-control" name="settings[crm_webhook_secret]" 
-                               value="<?= htmlspecialchars($crm->getSetting('crm_webhook_secret', '')) ?>" 
+                               value="<?php 
+                                   $secret = db_fetch_one("SELECT setting_value FROM crm_settings WHERE setting_key = 'crm_webhook_secret'");
+                                   echo htmlspecialchars($secret['setting_value'] ?? '');
+                               ?>" 
                                placeholder="Auto-generated if empty">
                         <small class="text-muted">Shared secret for webhook signature verification</small>
                     </div>
@@ -381,32 +385,28 @@ require_once __DIR__ . '/../includes/admin_header.php';
                 <div class="row g-3">
                     <div class="col-md-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="settings[order_notifications_enabled]" value="1"
-                                   <?= $crm->getSetting('order_notifications_enabled') ? 'checked' : '' ?>>
+                            <input class="form-check-input" type="checkbox" name="settings[order_notifications_enabled]" value="1">
                             <label class="form-check-label fw-semibold">Order Lifecycle Notifications</label>
                         </div>
                         <small class="text-muted">Send WhatsApp notifications for order status changes</small>
                     </div>
                     <div class="col-md-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="settings[cart_recovery_enabled]" value="1"
-                                   <?= $crm->getSetting('cart_recovery_enabled') ? 'checked' : '' ?>>
+                            <input class="form-check-input" type="checkbox" name="settings[cart_recovery_enabled]" value="1">
                             <label class="form-check-label fw-semibold">Cart Recovery Messages</label>
                         </div>
                         <small class="text-muted">Send reminders for abandoned carts</small>
                     </div>
                     <div class="col-md-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="settings[whatsapp_otp_enabled]" value="1"
-                                   <?= $crm->getSetting('whatsapp_otp_enabled') ? 'checked' : '' ?>>
+                            <input class="form-check-input" type="checkbox" name="settings[whatsapp_otp_enabled]" value="1">
                             <label class="form-check-label fw-semibold">WhatsApp OTP Login</label>
                         </div>
                         <small class="text-muted">Allow customers to login via WhatsApp OTP</small>
                     </div>
                     <div class="col-md-6">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" name="settings[customer_sync_enabled]" value="1"
-                                   <?= $crm->getSetting('customer_sync_enabled') ? 'checked' : '' ?>>
+                            <input class="form-check-input" type="checkbox" name="settings[customer_sync_enabled]" value="1">
                             <label class="form-check-label fw-semibold">Auto Customer Sync</label>
                         </div>
                         <small class="text-muted">Automatically sync customer data to CRM</small>
@@ -426,22 +426,22 @@ require_once __DIR__ . '/../includes/admin_header.php';
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">OTP Expiry (seconds)</label>
                         <input type="number" class="form-control" name="settings[whatsapp_otp_expiry]" 
-                               value="<?= $crm->getSetting('whatsapp_otp_expiry', 300) ?>" min="60" max="600">
+                               value="300" min="60" max="600">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Max Verification Attempts</label>
                         <input type="number" class="form-control" name="settings[whatsapp_otp_max_attempts]" 
-                               value="<?= $crm->getSetting('whatsapp_otp_max_attempts', 5) ?>" min="3" max="10">
+                               value="5" min="3" max="10">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Resend Cooldown (seconds)</label>
                         <input type="number" class="form-control" name="settings[whatsapp_otp_resend_cooldown]" 
-                               value="<?= $crm->getSetting('whatsapp_otp_resend_cooldown', 60) ?>" min="30" max="300">
+                               value="60" min="30" max="300">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Rate Limit (per phone/hour)</label>
                         <input type="number" class="form-control" name="settings[whatsapp_otp_rate_limit]" 
-                               value="<?= $crm->getSetting('whatsapp_otp_rate_limit', 10) ?>" min="3" max="20">
+                               value="10" min="3" max="20">
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save me-1"></i> Save OTP Settings</button>
@@ -463,25 +463,25 @@ require_once __DIR__ . '/../includes/admin_header.php';
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">1st Reminder Delay (minutes)</label>
                         <input type="number" class="form-control" name="settings[cart_recovery_delay_1]" 
-                               value="<?= $crm->getSetting('cart_recovery_delay_1', 15) ?>" min="5" max="60">
+                               value="15" min="5" max="60">
                         <small class="text-muted">Gentle reminder</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">2nd Reminder Delay (minutes)</label>
                         <input type="number" class="form-control" name="settings[cart_recovery_delay_2]" 
-                               value="<?= $crm->getSetting('cart_recovery_delay_2', 60) ?>" min="30" max="240">
+                               value="60" min="30" max="240">
                         <small class="text-muted">Urgency message</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">3rd Reminder Delay (minutes)</label>
                         <input type="number" class="form-control" name="settings[cart_recovery_delay_3]" 
-                               value="<?= $crm->getSetting('cart_recovery_delay_3', 1440) ?>" min="120" max="2880">
+                               value="1440" min="120" max="2880">
                         <small class="text-muted">Discount offer</small>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Recovery Discount Code</label>
                         <input type="text" class="form-control" name="settings[cart_recovery_discount]" 
-                               value="<?= htmlspecialchars($crm->getSetting('cart_recovery_discount', '')) ?>" 
+                               value="" 
                                placeholder="e.g., COMEBACK10">
                         <small class="text-muted">Promo code offered in 3rd reminder</small>
                     </div>
@@ -561,7 +561,7 @@ require_once __DIR__ . '/../includes/admin_header.php';
                 <div class="col-md-4">
                     <label class="form-label fw-semibold">Sync Interval (seconds)</label>
                     <input type="number" class="form-control" name="settings[customer_sync_interval]" 
-                           value="<?= $crm->getSetting('customer_sync_interval', 300) ?>" min="60" max="3600">
+                           value="300" min="60" max="3600">
                 </div>
                 <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save me-1"></i> Save</button>
             </form>
