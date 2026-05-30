@@ -4,6 +4,7 @@
  */
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php'; // ISSUE-009: CSRF protection
 
 require_admin();
 
@@ -21,9 +22,13 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['action'])) {
     ob_clean();
     header('Content-Type: application/json');
-    
+
+    // ISSUE-009: Validate CSRF token — rejects with HTTP 403 if token is missing or invalid.
+    // Token is read from X-CSRF-TOKEN header (AJAX) or csrf_token POST field (form fallback).
+    require_csrf_token();
+
     $action = $_POST['action'];
-    
+
     if (!$crm) {
         echo json_encode(['success' => false, 'error' => 'CRM Engine not available: ' . $crmError]);
         exit;
@@ -88,6 +93,8 @@ if ($pdo) {
 
 $pageTitle = 'WhatsApp CRM Integration - Gilaf Admin';
 require_once __DIR__ . '/admin_header.php';
+// ISSUE-009: Output CSRF token as <meta> tag for JavaScript fetch() calls
+echo csrf_meta();
 ?>
 
 <?php if ($crmError): ?>
@@ -232,20 +239,29 @@ require_once __DIR__ . '/admin_header.php';
 </div>
 
 <script>
+// ISSUE-009: Read CSRF token from <meta name="csrf-token"> for all AJAX requests
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+}
+
 function testConnection() {
     const resultDiv = document.getElementById('connectionResult');
     resultDiv.innerHTML = '<div class="alert alert-info">Testing connection...</div>';
-    
+
     fetch(location.href, {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': getCsrfToken()  // ISSUE-009
+        },
         body: 'action=test_connection'
     })
     .then(r => r.json())
     .then(data => {
         if (data.connected) {
             resultDiv.innerHTML = `<div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> <strong>Connected!</strong> 
+                <i class="fas fa-check-circle"></i> <strong>Connected!</strong>
                 Latency: ${data.latency_ms}ms
             </div>`;
         } else {
@@ -263,11 +279,15 @@ function testConnection() {
 function saveSettings(form) {
     const resultDiv = document.getElementById('connectionResult');
     resultDiv.innerHTML = '<div class="alert alert-info">Saving...</div>';
-    
+
     const formData = new FormData(form);
     formData.append('action', 'save_settings');
-    
-    fetch(location.href, { method: 'POST', body: formData })
+
+    fetch(location.href, {
+        method: 'POST',
+        headers: { 'X-CSRF-TOKEN': getCsrfToken() },  // ISSUE-009
+        body: formData
+    })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
@@ -285,7 +305,10 @@ function saveSettings(form) {
 function toggleCRM(el) {
     fetch(location.href, {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': getCsrfToken()  // ISSUE-009
+        },
         body: 'action=toggle_crm&enabled=' + (el.checked ? '1' : '0')
     })
     .then(r => r.json())
@@ -298,10 +321,13 @@ function toggleCRM(el) {
 
 function generateApiKey() {
     if (!confirm('Generate new API key?')) return;
-    
+
     fetch(location.href, {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': getCsrfToken()  // ISSUE-009
+        },
         body: 'action=generate_api_key'
     })
     .then(r => r.json())

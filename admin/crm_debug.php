@@ -4,6 +4,7 @@
  */
 require_once __DIR__ . '/../includes/db_connect.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php'; // ISSUE-009: CSRF protection
 
 require_admin();
 
@@ -20,7 +21,10 @@ try {
 // Handle AJAX debug request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'fetch_debug') {
     header('Content-Type: application/json');
-    
+
+    // ISSUE-009: Validate CSRF token before executing any admin action
+    require_csrf_token();
+
     if (!$crm) {
         echo json_encode(['success' => false, 'error' => 'CRM Engine not available']);
         exit;
@@ -67,6 +71,8 @@ $localDebug = [
 ];
 
 require_once __DIR__ . '/admin_header.php';
+// ISSUE-009: Output CSRF token as <meta> tag for JavaScript fetch() calls
+echo csrf_meta();
 ?>
 
 <?php if ($crmError): ?>
@@ -142,13 +148,22 @@ require_once __DIR__ . '/admin_header.php';
 </div>
 
 <script>
+// ISSUE-009: Read CSRF token from <meta name="csrf-token"> for all AJAX requests
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+}
+
 function fetchRemoteDebug() {
     const container = document.getElementById('remoteDebug');
     container.innerHTML = '<div class="alert alert-info">Fetching...</div>';
-    
+
     fetch(window.location.href, {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': getCsrfToken()  // ISSUE-009
+        },
         body: 'action=fetch_debug'
     })
     .then(r => r.json())
@@ -167,10 +182,13 @@ function fetchRemoteDebug() {
 function testConnection() {
     const container = document.getElementById('testResult');
     container.innerHTML = '<div class="alert alert-info">Testing...</div>';
-    
+
     fetch('crm_integration.php', {
         method: 'POST',
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-TOKEN': getCsrfToken()  // ISSUE-009
+        },
         body: 'action=test_connection'
     })
     .then(r => r.json())
