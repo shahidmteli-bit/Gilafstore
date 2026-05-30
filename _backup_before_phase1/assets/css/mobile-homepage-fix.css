@@ -1,0 +1,4027 @@
+/* ============================================
+   MOBILE HOMEPAGE FIX - Professional Layout
+   Target: All phones (max-width: 767px)
+   Impact: ZERO effect on desktop or tablet
+   Backup ID: mobile-layout-fix_2026-02-20_01-05-27
+   ============================================ */
+
+/* ============================================
+   1. HERO SECTION - Compact & Professional
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .hero {
+        min-height: 480px !important;
+        padding: 80px 0 50px 0 !important;
+        display: flex;
+        align-items: center;
+    }
+
+    .hero .hero-content {
+        padding: 0 20px;
+    }
+
+    .hero .tagline-pill {
+        padding: 6px 14px;
+        margin-bottom: 16px;
+    }
+
+    .hero .tagline-pill span {
+        font-size: 0.65rem;
+    }
+
+    .hero h2 {
+        font-size: 1.8rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 14px !important;
+    }
+
+    .hero p {
+        font-size: 0.88rem !important;
+        line-height: 1.6;
+        margin-bottom: 22px !important;
+        padding: 0 5px;
+    }
+
+    .hero-buttons {
+        flex-direction: row !important;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        justify-content: center !important;
+    }
+
+    section.hero .hero-buttons .btn-primary,
+    section.hero .hero-buttons .btn-outline,
+    .hero .btn-primary,
+    .hero .btn-outline,
+    .hero .btn {
+        padding: 11px 18px !important;
+        font-size: 0.7rem !important;
+        width: auto !important;
+        min-width: auto !important;
+        letter-spacing: 1px !important;
+        flex: 1;
+        text-align: center;
+    }
+
+    .hero-slider-dots {
+        bottom: 16px !important;
+        gap: 8px !important;
+    }
+
+    .hero-slider-dots .hero-dot {
+        width: 8px !important;
+        height: 8px !important;
+    }
+}
+
+/* ============================================
+   2. MARQUEE TRUST BAR - Tighter on Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .features-marquee {
+        padding: 8px 0 !important;
+    }
+
+    .marquee-item {
+        margin: 0 16px !important;
+        gap: 8px;
+    }
+
+    .marquee-item i {
+        font-size: 1.1rem !important;
+    }
+
+    .marquee-title {
+        font-size: 0.8rem !important;
+    }
+
+    .marquee-tagline {
+        font-size: 0.58rem !important;
+    }
+}
+
+/* ============================================
+   3. SECTION HEADERS - Compact Cards
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .section-header-card {
+        padding: 16px 20px !important;
+        margin-bottom: 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .section-header-card h2.section-title,
+    .section-header-card .section-title {
+        font-size: 1.3rem !important;
+        margin-bottom: 4px !important;
+    }
+
+    .section-header-card p.section-subtitle,
+    .section-header-card .section-subtitle {
+        font-size: 0.65rem !important;
+        letter-spacing: 1.5px !important;
+        margin-bottom: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        display: block !important;
+        width: 100% !important;
+        position: relative !important;
+    }
+    .section-header-card .section-subtitle::after {
+        content: '';
+        display: block;
+    }
+    /* Marquee wrapper - added via JS on phones only */
+    .subtitle-marquee-track {
+        display: inline-block;
+        animation: subtitleMarquee 10s linear infinite;
+    }
+
+    @keyframes subtitleMarquee {
+        0%   { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+
+    .products-section,
+    .freshly-harvested-section,
+    .explore-products-section,
+    #products {
+        padding-top: 30px !important;
+        padding-bottom: 30px !important;
+    }
+}
+
+/* ============================================
+   4. PRODUCT GRID - 2 Columns on Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .product-grid,
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    /* Product Card - Compact for 2-col */
+    .product-card {
+        border-radius: 10px !important;
+        overflow: hidden;
+    }
+
+    .product-image-wrapper {
+        height: 160px !important;
+        aspect-ratio: unset !important;
+    }
+
+    .product-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        image-rendering: -webkit-optimize-contrast;
+        padding: 4px;
+    }
+
+    .product-details {
+        padding: 10px 10px 12px !important;
+    }
+
+    /* Badge - Smaller for 2-col */
+    .badge-container {
+        top: 6px !important;
+        left: 6px !important;
+        gap: 4px !important;
+    }
+
+    .badge {
+        font-size: 0.5rem !important;
+        padding: 3px 6px !important;
+    }
+
+    .badge.discount-badge {
+        font-size: 0.5rem !important;
+        padding: 3px 6px !important;
+    }
+
+    .badge.discount-badge i {
+        font-size: 0.5rem !important;
+    }
+
+    /* Trust overlay icons */
+    .trust-overlay {
+        gap: 4px !important;
+    }
+
+    .trust-overlay i {
+        font-size: 0.7rem !important;
+    }
+
+    /* Premium label */
+    .premium-label {
+        font-size: 0.5rem !important;
+        letter-spacing: 1px !important;
+    }
+
+    .product-cat {
+        font-size: 0.5rem !important;
+    }
+
+    /* Product Title - 2 lines max */
+    .product-title {
+        font-size: 0.78rem !important;
+        min-height: 32px !important;
+        margin: 4px 0 !important;
+        line-height: 1.3 !important;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        display: -webkit-box !important;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Rating stars */
+    .product-rating-small {
+        margin: 2px 0 !important;
+    }
+
+    .product-rating-small i {
+        font-size: 0.55rem !important;
+    }
+
+    .product-rating-small .rating-count {
+        font-size: 0.55rem !important;
+    }
+
+    /* Weight display */
+    .product-weights {
+        font-size: 0.55rem !important;
+        margin: 2px 0 4px !important;
+    }
+
+    /* Origin text */
+    .product-origin {
+        font-size: 0.55rem !important;
+    }
+
+    /* Price Row */
+    .price-row {
+        margin: 4px 0 8px !important;
+        gap: 4px !important;
+    }
+
+    .product-price {
+        font-size: 0.75rem !important;
+    }
+
+    .product-price-original {
+        font-size: 0.6rem !important;
+    }
+
+    /* Add to Cart Button */
+    .product-card .add-btn {
+        padding: 7px 10px !important;
+        font-size: 0.7rem !important;
+        border-radius: 6px !important;
+    }
+}
+
+/* ============================================
+   5. VERY SMALL PHONES (320px - 374px)
+   ============================================ */
+@media only screen and (max-width: 374px) {
+    .product-grid {
+        gap: 8px !important;
+    }
+
+    .product-image-wrapper {
+        height: 130px !important;
+        aspect-ratio: unset !important;
+    }
+
+    .product-details {
+        padding: 8px 8px 10px !important;
+    }
+
+    .product-title {
+        font-size: 0.7rem !important;
+        min-height: 28px !important;
+    }
+
+    .product-price {
+        font-size: 0.68rem !important;
+    }
+
+    .product-card .add-btn {
+        padding: 6px 8px !important;
+        font-size: 0.65rem !important;
+    }
+
+    .hero h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .hero p {
+        font-size: 0.82rem !important;
+    }
+
+    section.hero .hero-buttons .btn-primary,
+    section.hero .hero-buttons .btn-outline {
+        padding: 9px 14px !important;
+        font-size: 0.62rem !important;
+    }
+
+    .section-header-card h2.section-title,
+    .section-header-card .section-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* ============================================
+   6. VIEW ALL BUTTON - Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .view-all-container {
+        margin-top: 24px !important;
+    }
+
+    .btn-view-all {
+        padding: 12px 28px !important;
+        font-size: 0.8rem !important;
+        letter-spacing: 0.5px !important;
+    }
+}
+
+/* ============================================
+   7. STORY / ABOUT SECTION - Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .story-section {
+        padding: 20px 0 !important;
+    }
+
+    .story-ad-screen {
+        min-height: 250px !important;
+        padding: 12px !important;
+    }
+
+    .story-section {
+        flex-direction: column-reverse !important;
+    }
+
+    .story-content {
+        padding: 28px 20px 24px !important;
+        text-align: left !important;
+    }
+
+    /* "OUR PHILOSOPHY" label */
+    .story-content > span {
+        font-size: 0.7rem !important;
+        letter-spacing: 2.5px !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+        display: block !important;
+    }
+
+    .story-content h2 {
+        font-size: 1.35rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+    }
+
+    .story-content p {
+        font-size: 0.88rem !important;
+        line-height: 1.7 !important;
+        margin-bottom: 14px !important;
+        text-align: left !important;
+        opacity: 0.9 !important;
+    }
+
+    .founder-sig {
+        font-size: 1.15rem !important;
+        margin-top: 10px !important;
+        text-align: center !important;
+        padding-top: 14px !important;
+        border-top: 1px solid rgba(197, 160, 89, 0.3) !important;
+    }
+}
+
+/* ============================================
+   8. VERIFICATION SECTION - Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .verify-box {
+        padding: 24px 16px !important;
+    }
+
+    .verify-box h2 {
+        font-size: 1.3rem !important;
+    }
+}
+
+/* ============================================
+   9. SHIPPING PARTNERS - Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .shipping-partners-section {
+        gap: 20px !important;
+    }
+
+    .ship-group h3 {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ============================================
+   10. FOOTER - Mobile Compact
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .site-footer {
+        padding: 30px 0 20px !important;
+    }
+
+    .footer-grid {
+        gap: 24px !important;
+    }
+
+    .footer-bottom {
+        padding-top: 16px !important;
+        font-size: 0.75rem !important;
+    }
+}
+
+/* ============================================
+   11. GENERAL MOBILE SPACING
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .container {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* Prevent horizontal overflow */
+    body,
+    html {
+        overflow-x: hidden !important;
+    }
+
+    /* Smooth scrolling */
+    html {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* ============================================
+   ============================================
+   PRODUCT DETAIL PAGE - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   12. PRODUCT DETAIL - Layout & Image
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .product-detail-page {
+        padding: 16px 0 !important;
+    }
+
+    .product-detail-grid {
+        gap: 20px !important;
+    }
+
+    /* Image section - not sticky on mobile */
+    .product-image-section {
+        position: static !important;
+    }
+
+    .product-main-image-wrapper {
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+
+    .product-main-image {
+        padding: 0 !important;
+    }
+
+    .product-thumbnail-list {
+        gap: 8px !important;
+        margin-top: 12px !important;
+        justify-content: center;
+    }
+
+    .product-thumbnail {
+        width: 56px !important;
+        height: 56px !important;
+        border-radius: 8px !important;
+    }
+}
+
+/* ============================================
+   13. PRODUCT DETAIL - Info Section
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .product-info-section {
+        padding: 0 4px !important;
+    }
+
+    .product-brand {
+        font-size: 11px !important;
+        margin-bottom: 4px !important;
+    }
+
+    /* Override the product-title specifically on product detail page */
+    .product-info-section .product-title,
+    .product-detail-page .product-title {
+        font-size: 20px !important;
+        min-height: auto !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+        -webkit-line-clamp: unset !important;
+        line-clamp: unset !important;
+        overflow: visible !important;
+    }
+
+    .product-size-info {
+        font-size: 13px !important;
+        margin-bottom: 10px !important;
+    }
+
+    /* Price */
+    .product-price-section {
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .product-price-section .product-price {
+        font-size: 26px !important;
+    }
+
+    .product-price-symbol {
+        font-size: 20px !important;
+    }
+
+    /* Rating */
+    .product-rating-section {
+        gap: 8px !important;
+        margin-bottom: 12px !important;
+        flex-wrap: wrap;
+    }
+
+    .product-rating-badge {
+        font-size: 12px !important;
+        padding: 4px 10px !important;
+    }
+
+    .product-rating-count {
+        font-size: 12px !important;
+    }
+
+    /* Delivery info + Share row — equal height */
+    .product-delivery-row {
+        display: inline-flex !important;
+        align-items: stretch !important;
+        gap: 8px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .product-delivery-row .product-delivery-info {
+        padding: 10px 12px !important;
+        margin-bottom: 0 !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    .product-delivery-row .share-trigger {
+        padding: 10px 12px !important;
+        font-size: 12px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Size selector */
+    .product-size-selector {
+        margin-bottom: 16px !important;
+    }
+
+    .size-selector-label {
+        font-size: 14px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .size-options {
+        gap: 8px !important;
+    }
+
+    .size-option {
+        padding: 8px 14px !important;
+        font-size: 12px !important;
+    }
+
+    /* Action buttons - side by side */
+    .product-actions {
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .btn-add-to-cart,
+    .btn-buy-now {
+        padding: 13px 16px !important;
+        font-size: 14px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Shipping badges */
+    .shipping-badges {
+        gap: 6px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .shipping-badge {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+    }
+
+    /* Certification badges */
+    .certification-badges {
+        gap: 6px !important;
+    }
+
+    .badge-lab-tested,
+    .badge-organic {
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+    }
+
+    /* Highlights */
+    .product-highlights-bullets {
+        padding: 16px !important;
+        margin-bottom: 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .highlights-bullets-title {
+        font-size: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .highlight-bullet-item {
+        font-size: 13px !important;
+        padding-left: 18px !important;
+        margin-bottom: 8px !important;
+    }
+
+    /* Expandable details */
+    .product-details-expandable {
+        padding-top: 16px !important;
+        margin-top: 16px !important;
+    }
+
+    .details-toggle {
+        padding: 12px 0 !important;
+    }
+
+    .details-toggle-title {
+        font-size: 14px !important;
+    }
+
+    .detail-row {
+        padding: 8px 0 !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+    }
+
+    .detail-label {
+        font-size: 12px !important;
+        min-width: 100px !important;
+    }
+
+    .detail-value {
+        font-size: 12px !important;
+    }
+
+    /* Delivery checker */
+    .delivery-checker {
+        padding: 16px !important;
+        margin-bottom: 20px !important;
+        border-radius: 10px !important;
+    }
+
+    .delivery-checker-title {
+        font-size: 15px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .delivery-input-group {
+        gap: 8px !important;
+    }
+
+    .delivery-input {
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+    }
+
+    .delivery-check-btn {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+
+    /* Return policy */
+    .return-policy-section {
+        padding-top: 16px !important;
+        margin-top: 16px !important;
+    }
+
+    .return-policy-title {
+        font-size: 14px !important;
+    }
+}
+
+/* ============================================
+   14. PRODUCT DETAIL - Reviews on Mobile
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .reviews-section {
+        margin-top: 30px !important;
+        padding-top: 20px !important;
+    }
+
+    .reviews-header h3 {
+        font-size: 17px !important;
+    }
+
+    .reviews-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .rating-summary-card {
+        padding: 20px 16px !important;
+    }
+
+    .rating-big-number {
+        font-size: 40px !important;
+    }
+
+    .rating-stars-row .star-filled,
+    .rating-stars-row .star-empty {
+        font-size: 15px !important;
+    }
+
+    .rating-bar-row {
+        margin-bottom: 8px !important;
+    }
+
+    .review-card {
+        padding: 14px 16px !important;
+    }
+
+    .review-card-header {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .review-meta {
+        text-align: left !important;
+    }
+
+    .review-verified {
+        justify-content: flex-start !important;
+    }
+
+    .review-comment {
+        font-size: 13px !important;
+    }
+
+    .no-reviews-box {
+        padding: 32px 16px !important;
+    }
+}
+
+/* ============================================
+   15. PRODUCT DETAIL - Related Products
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .related-products-carousel .row {
+        gap: 12px;
+    }
+
+    .related-products-carousel .col-md-4 {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+}
+
+/* ============================================
+   ============================================
+   SHOP PAGE - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   16. SHOP PAGE - Header & Filters
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .shop-page {
+        padding: 16px 0 !important;
+        gap: 16px !important;
+    }
+
+    .shop-header {
+        padding: 14px !important;
+        margin-bottom: 12px !important;
+        border-radius: 10px !important;
+    }
+
+    .shop-title {
+        font-size: 1.3rem !important;
+    }
+
+    .shop-results-count {
+        font-size: 12px !important;
+    }
+
+    .shop-search-input {
+        font-size: 14px !important;
+        padding: 10px 10px 10px 36px !important;
+    }
+
+    .shop-controls {
+        gap: 8px !important;
+    }
+
+    .shop-sort-select {
+        font-size: 12px !important;
+        padding: 6px 10px !important;
+    }
+
+    /* Shop product grid - 2 columns */
+    .shop-products .products-grid,
+    .shop-products .product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .shop-products .product-image-wrapper {
+        height: 150px !important;
+        aspect-ratio: unset !important;
+    }
+
+    .shop-products .product-details {
+        padding: 8px 8px 10px !important;
+    }
+
+    .shop-products .product-title {
+        font-size: 0.75rem !important;
+        min-height: 30px !important;
+    }
+
+    .shop-products .product-price {
+        font-size: 0.72rem !important;
+    }
+
+    .shop-products .add-btn {
+        padding: 6px 8px !important;
+        font-size: 0.65rem !important;
+    }
+
+    /* Breadcrumb */
+    .shop-breadcrumb {
+        font-size: 11px !important;
+        margin-bottom: 12px !important;
+        flex-wrap: wrap;
+    }
+
+    /* Pagination */
+    .shop-pagination {
+        padding: 12px !important;
+        margin-top: 20px !important;
+        gap: 4px !important;
+    }
+
+    .pagination-btn {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+
+    /* Filter mobile toggle */
+    .shop-filters-mobile-toggle {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+        bottom: 16px !important;
+        left: 16px !important;
+    }
+
+    /* Empty state */
+    .shop-empty {
+        padding: 40px 16px !important;
+    }
+
+    .shop-empty-icon {
+        font-size: 3rem !important;
+    }
+
+    .shop-empty-title {
+        font-size: 1.1rem !important;
+    }
+}
+
+/* ============================================
+   ============================================
+   CART PAGE - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   17. CART PAGE - Compact Layout
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .cart-page {
+        padding: 16px 0 !important;
+    }
+
+    .cart-header {
+        margin-bottom: 16px !important;
+    }
+
+    .cart-title {
+        font-size: 1.4rem !important;
+    }
+
+    .cart-subtitle {
+        font-size: 13px !important;
+    }
+
+    .cart-items {
+        padding: 12px !important;
+        border-radius: 10px !important;
+    }
+
+    .cart-item {
+        padding: 12px !important;
+        border-radius: 8px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .cart-item-image {
+        width: 64px !important;
+        height: 64px !important;
+    }
+
+    .cart-item-name {
+        font-size: 14px !important;
+    }
+
+    .cart-item-price {
+        font-size: 15px !important;
+    }
+
+    .cart-item-subtotal {
+        font-size: 16px !important;
+    }
+
+    .quantity-btn {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 14px !important;
+    }
+
+    .quantity-input {
+        width: 40px !important;
+        font-size: 14px !important;
+    }
+
+    .cart-item-remove,
+    .cart-item-update {
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+    }
+
+    /* Cart summary */
+    .cart-summary {
+        padding: 16px !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* ============================================
+   ============================================
+   CHECKOUT PAGE - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   18. CHECKOUT PAGE - Compact Layout
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .checkout-page {
+        padding: 16px 0 !important;
+    }
+
+    .checkout-grid {
+        gap: 16px !important;
+    }
+
+    /* Progress steps */
+    .checkout-progress {
+        padding: 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .progress-step-number {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 14px !important;
+    }
+
+    .progress-step-label {
+        font-size: 10px !important;
+    }
+
+    /* Form sections */
+    .checkout-section {
+        padding: 14px !important;
+        border-radius: 10px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .checkout-section-title {
+        font-size: 15px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Address form */
+    .address-form .form-row {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    /* Order summary sidebar */
+    .checkout-summary {
+        padding: 14px !important;
+        border-radius: 10px !important;
+    }
+}
+
+/* ============================================
+   ============================================
+   FOOTER - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   19. FOOTER - Compact & Clean
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    .site-footer {
+        padding: 24px 0 16px !important;
+    }
+
+    .site-footer .container {
+        padding: 0 16px !important;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .footer-col h3 {
+        font-size: 14px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .footer-col a,
+    .footer-col p,
+    .footer-col li {
+        font-size: 12px !important;
+    }
+
+    .footer-bottom {
+        padding-top: 14px !important;
+        font-size: 11px !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        text-align: center !important;
+    }
+
+    /* Newsletter section in footer */
+    .footer-newsletter input {
+        font-size: 13px !important;
+        padding: 10px 12px !important;
+    }
+
+    .footer-newsletter button {
+        font-size: 12px !important;
+        padding: 10px 16px !important;
+    }
+}
+
+/* ============================================
+   ============================================
+   LOGIN / REGISTER - Mobile Professional
+   ============================================
+   ============================================ */
+
+/* ============================================
+   20. AUTH PAGES - Compact Forms
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    /* Login modal */
+    #loginModal .region-modal {
+        padding: 20px !important;
+    }
+
+    .login-tabs {
+        margin: 12px 0 16px !important;
+    }
+
+    .login-tab {
+        padding: 10px 8px !important;
+        font-size: 13px !important;
+    }
+
+    .login-input {
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+    }
+
+    /* Register page */
+    .register-container {
+        padding: 20px 16px !important;
+    }
+}
+
+/* ============================================
+   21. GLOBAL MOBILE TYPOGRAPHY OVERRIDES
+   (Override adaptive-structure.css fluid fonts)
+   ============================================ */
+@media only screen and (max-width: 767px) {
+    /* Section titles on homepage product grids */
+    h2.section-title {
+        font-size: 1.3rem !important;
+    }
+
+    /* Product titles in grid cards only */
+    .product-grid .product-title,
+    .products-grid .product-title {
+        font-size: 0.78rem !important;
+    }
+
+    /* Product prices in grid cards only */
+    .product-grid .product-price,
+    .products-grid .product-price {
+        font-size: 0.75rem !important;
+    }
+
+    /* =============================================
+       TRACK SHIPMENT MODAL - Button Fix
+       ============================================= */
+    .track-btn-square {
+        padding: 14px 35px !important;
+        font-size: 0.9rem !important;
+        border-radius: 6px !important;
+        letter-spacing: 1.5px !important;
+    }
+    .track-input {
+        padding: 14px !important;
+        border-radius: 6px !important;
+    }
+    .track-input-group {
+        border: none !important;
+        gap: 10px !important;
+    }
+
+    /* =============================================
+       22. POLICY / INFO PAGES - Mobile Fixes
+       Covers: Shipping, Privacy, Terms, Refund,
+       Order Cancellation, Payment, Disclaimer
+       ============================================= */
+    .policy-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .policy-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .policy-hero h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .policy-hero p {
+        font-size: 0.7rem !important;
+        letter-spacing: 1px !important;
+        white-space: normal !important;
+    }
+    .policy-container {
+        padding: 20px 14px 40px 14px !important;
+    }
+    .policy-section {
+        margin-bottom: 28px !important;
+    }
+    .policy-section h2 {
+        font-size: 1.25rem !important;
+        margin-bottom: 12px !important;
+    }
+    .policy-section h3 {
+        font-size: 1.05rem !important;
+        margin-bottom: 10px !important;
+        margin-top: 18px !important;
+    }
+    .policy-section p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+        margin-bottom: 10px !important;
+    }
+    .policy-section ul {
+        margin-left: 18px !important;
+        margin-bottom: 14px !important;
+    }
+    .policy-section li {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+        margin-bottom: 6px !important;
+    }
+    .last-updated {
+        padding: 12px 14px !important;
+        font-size: 0.85rem !important;
+        margin-bottom: 24px !important;
+    }
+    .shipping-table {
+        font-size: 0.78rem !important;
+        display: block !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    .shipping-table th,
+    .shipping-table td {
+        padding: 8px 10px !important;
+        white-space: nowrap !important;
+    }
+
+    /* =============================================
+       23. GIFTING & HAMPERS PAGE - Mobile Fixes
+       ============================================= */
+    .gifting-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .gifting-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .gifting-hero h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .gifting-hero p {
+        font-size: 0.75rem !important;
+        letter-spacing: 1px !important;
+    }
+    .gifting-container {
+        padding: 20px 14px 40px 14px !important;
+    }
+    .gifting-intro {
+        margin-bottom: 30px !important;
+    }
+    .gifting-intro h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 12px !important;
+    }
+    .gifting-intro p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+    }
+    .hamper-categories {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin-bottom: 30px !important;
+    }
+    .hamper-image {
+        height: 180px !important;
+        font-size: 3rem !important;
+    }
+    .hamper-content {
+        padding: 16px !important;
+    }
+    .hamper-content h3 {
+        font-size: 1.15rem !important;
+        margin-bottom: 8px !important;
+    }
+    .hamper-content p {
+        font-size: 0.88rem !important;
+        margin-bottom: 12px !important;
+    }
+    .hamper-features li {
+        font-size: 0.85rem !important;
+        padding: 5px 0 !important;
+    }
+    .hamper-cta {
+        padding: 10px 22px !important;
+        font-size: 0.88rem !important;
+    }
+    .why-choose {
+        padding: 30px 14px !important;
+        margin-bottom: 30px !important;
+    }
+    .why-choose h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 24px !important;
+    }
+    .features-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .feature-item i {
+        font-size: 2rem !important;
+        margin-bottom: 10px !important;
+    }
+    .feature-item h3 {
+        font-size: 1.05rem !important;
+        margin-bottom: 6px !important;
+    }
+    .feature-item p {
+        font-size: 0.88rem !important;
+    }
+
+    /* =============================================
+       24. OFFERS PAGE - Mobile Fixes
+       ============================================= */
+    .offers-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .offers-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .offers-hero h1 {
+        font-size: 1.4rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .offers-hero p {
+        font-size: 0.7rem !important;
+        letter-spacing: 1px !important;
+    }
+    .offers-container {
+        padding: 20px 14px 40px 14px !important;
+    }
+    .offers-intro {
+        margin-bottom: 30px !important;
+    }
+    .offers-intro h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 12px !important;
+    }
+    .offers-intro p {
+        font-size: 0.9rem !important;
+    }
+    .promo-banner {
+        padding: 24px 16px !important;
+        margin-bottom: 30px !important;
+        border-radius: 10px !important;
+    }
+    .promo-banner h2 {
+        font-size: 1.15rem !important;
+        margin-bottom: 10px !important;
+    }
+    .promo-banner p {
+        font-size: 0.9rem !important;
+        margin-bottom: 12px !important;
+    }
+    .promo-code {
+        font-size: 1.1rem !important;
+        padding: 10px 20px !important;
+    }
+    .offer-categories {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin-bottom: 30px !important;
+    }
+    .offer-image {
+        height: 160px !important;
+        font-size: 3rem !important;
+    }
+    .offer-badge {
+        top: 12px !important;
+        right: 12px !important;
+        padding: 5px 10px !important;
+        font-size: 0.72rem !important;
+    }
+    .offer-content {
+        padding: 16px !important;
+    }
+    .offer-content h3 {
+        font-size: 1.15rem !important;
+        margin-bottom: 8px !important;
+    }
+    .offer-content p {
+        font-size: 0.88rem !important;
+        margin-bottom: 12px !important;
+    }
+    .offer-details li {
+        font-size: 0.85rem !important;
+        padding: 5px 0 !important;
+    }
+    .offer-cta {
+        padding: 10px 22px !important;
+        font-size: 0.88rem !important;
+    }
+    .benefits-section {
+        padding: 30px 14px 10px 14px !important;
+        margin-bottom: 10px !important;
+    }
+    .benefits-section h2 {
+        font-size: 1.3rem !important;
+        margin-bottom: 24px !important;
+    }
+    .benefits-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .benefit-item i {
+        font-size: 2rem !important;
+        margin-bottom: 10px !important;
+    }
+    .benefit-item h3 {
+        font-size: 1.05rem !important;
+        margin-bottom: 6px !important;
+    }
+    .benefit-item p {
+        font-size: 0.88rem !important;
+    }
+
+    /* =============================================
+       25. FAQs PAGE - Mobile Fixes
+       ============================================= */
+    .faqs-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .faqs-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .faqs-hero h1 {
+        font-size: 1.4rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .faqs-hero p {
+        font-size: 0.68rem !important;
+        letter-spacing: 0.8px !important;
+        white-space: normal !important;
+    }
+    .faqs-container {
+        padding: 20px 10px 40px 10px !important;
+    }
+    .faq-categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+        margin-bottom: 24px !important;
+    }
+    .category-card {
+        padding: 14px 10px !important;
+        border-radius: 8px !important;
+    }
+    .category-card i {
+        font-size: 1.6rem !important;
+        margin-bottom: 8px !important;
+    }
+    .category-card h3 {
+        font-size: 0.82rem !important;
+        margin-bottom: 4px !important;
+    }
+    .category-card p {
+        font-size: 0.72rem !important;
+    }
+    .faq-content-panel {
+        padding: 16px 12px !important;
+        border-radius: 10px !important;
+        min-height: auto !important;
+    }
+    .faq-content-panel .faq-header {
+        margin-bottom: 20px !important;
+        padding-bottom: 14px !important;
+    }
+    .faq-content-panel .faq-header h2 {
+        font-size: 1.2rem !important;
+    }
+    .faq-content-panel .faq-header h2::before,
+    .faq-content-panel .faq-header h2::after {
+        width: 16px !important;
+    }
+    .faq-content-panel .faq-header p {
+        font-size: 0.88rem !important;
+    }
+    .faq-content-panel .faq-question {
+        padding: 14px 14px !important;
+    }
+    .faq-content-panel .faq-question-text {
+        font-size: 0.92rem !important;
+        padding-right: 12px !important;
+    }
+    .faq-content-panel .faq-answer-content {
+        padding: 14px !important;
+        font-size: 0.88rem !important;
+        line-height: 1.7 !important;
+    }
+    .faq-content-panel .faq-category-badge {
+        font-size: 0.68rem !important;
+        padding: 3px 10px !important;
+    }
+
+    /* =============================================
+       26. CONTACT US / SUPPORT TICKET - Mobile Fixes
+       ============================================= */
+    .ticket-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .ticket-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .ticket-hero h1 {
+        font-size: 1.4rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+    }
+    .ticket-hero p {
+        font-size: 0.72rem !important;
+        letter-spacing: 0.8px !important;
+    }
+    .create-ticket-container {
+        padding: 20px 12px 40px 12px !important;
+    }
+    .create-ticket-container .form-card {
+        padding: 18px 14px !important;
+        border-radius: 12px !important;
+    }
+    .issue-type-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+    }
+    .issue-type-label {
+        padding: 12px !important;
+        gap: 10px !important;
+    }
+    .issue-icon {
+        font-size: 1.2rem !important;
+    }
+    .issue-name {
+        font-size: 0.88rem !important;
+    }
+    .issue-desc {
+        font-size: 0.75rem !important;
+    }
+    .chatbot-hint {
+        padding: 14px !important;
+        margin-bottom: 20px !important;
+    }
+    .chatbot-hint-text {
+        font-size: 0.82rem !important;
+    }
+    .priority-options {
+        display: flex !important;
+        gap: 8px !important;
+    }
+    .priority-option {
+        flex: 1 !important;
+    }
+    .priority-label {
+        width: 100% !important;
+        text-align: center !important;
+        padding: 10px 12px !important;
+        font-size: 0.85rem !important;
+        border-radius: 24px !important;
+    }
+
+    /* =============================================
+       27. ABOUT US PAGE - Mobile Fixes
+       ============================================= */
+    .about-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .about-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .about-hero h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .about-hero p {
+        font-size: 0.7rem !important;
+        letter-spacing: 1px !important;
+    }
+    .about-section {
+        padding: 30px 12px !important;
+    }
+    .philosophy-section {
+        padding: 30px 18px !important;
+    }
+    .philosophy-grid {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+        margin-top: 20px !important;
+    }
+    .philosophy-text {
+        text-align: center !important;
+    }
+    .philosophy-text h2 {
+        font-size: 0.7rem !important;
+        letter-spacing: 2px !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+    }
+    .philosophy-text h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+    }
+    .philosophy-text p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+        margin-bottom: 12px !important;
+        text-align: justify !important;
+    }
+    .philosophy-text .founders {
+        font-size: 1rem !important;
+        margin-top: 20px !important;
+        text-align: center !important;
+    }
+    .philosophy-image {
+        transform: none !important;
+        border-radius: 12px !important;
+    }
+    .philosophy-image img {
+        height: 250px !important;
+    }
+    .mission-section {
+        padding: 30px 12px !important;
+    }
+    .mission-content h2 {
+        font-size: 1.4rem !important;
+        margin-bottom: 20px !important;
+    }
+    .mission-content p {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+    }
+    .values-section {
+        padding: 30px 12px !important;
+    }
+    .values-content h2 {
+        font-size: 1.4rem !important;
+        margin-bottom: 24px !important;
+    }
+    .values-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        margin-top: 20px !important;
+    }
+    .value-card {
+        padding: 24px 18px !important;
+        border-radius: 12px !important;
+    }
+    .value-icon {
+        width: 56px !important;
+        height: 56px !important;
+        margin-bottom: 16px !important;
+        font-size: 1.5rem !important;
+    }
+    .value-card h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 8px !important;
+    }
+    .value-card p {
+        font-size: 0.88rem !important;
+    }
+    .image-gallery {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+        margin-top: 24px !important;
+    }
+    .gallery-item img {
+        height: 180px !important;
+    }
+
+    /* About Us: Leadership section inline-style overrides */
+    .about-section .values-content > div:first-child {
+        padding: 18px 14px !important;
+        margin-bottom: 24px !important;
+    }
+    .about-section .values-content > div:first-child h2 {
+        font-size: 1.5rem !important;
+        margin-bottom: 8px !important;
+    }
+    .about-section .values-content > div:first-child p {
+        font-size: 0.82rem !important;
+    }
+    /* Leadership cards grid - force 1 column */
+    .about-section .values-content > div:nth-child(2) {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    /* Leadership profile card inner padding */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) {
+        padding: 20px 16px !important;
+    }
+    /* Profile photo + info flex row */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child {
+        flex-direction: column !important;
+        gap: 16px !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+    }
+    /* Profile photo circle */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child > div:first-child > div {
+        width: 100px !important;
+        height: 100px !important;
+        margin: 0 auto !important;
+    }
+    /* Profile name */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child > div:nth-child(2) h3 {
+        font-size: 1.3rem !important;
+        text-align: center !important;
+    }
+    /* Profile role */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child > div:nth-child(2) p {
+        font-size: 0.95rem !important;
+        text-align: center !important;
+    }
+    /* Profile badges */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child > div:nth-child(2) > div {
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:first-child > div:nth-child(2) > div span {
+        font-size: 0.72rem !important;
+        padding: 4px 10px !important;
+    }
+    /* Profile bio text */
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) {
+        padding-top: 16px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) p {
+        font-size: 0.88rem !important;
+        line-height: 1.7 !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* About Us: Vision & Mission section inline-style overrides */
+    .mission-section .mission-content > div:first-child {
+        padding: 18px 14px !important;
+        margin-bottom: 24px !important;
+    }
+    .mission-section .mission-content > div:first-child h2 {
+        font-size: 1.5rem !important;
+    }
+    .mission-section .mission-content > div:nth-child(2) h3 {
+        font-size: 1.15rem !important;
+        margin-bottom: 10px !important;
+    }
+    .mission-section .mission-content > div:nth-child(2) p {
+        font-size: 0.9rem !important;
+        margin-bottom: 24px !important;
+    }
+
+    /* About Us: Quality & Standards header card */
+    .about-section .values-content > div:first-child h2 {
+        font-size: 1.5rem !important;
+    }
+
+    /* About Us: Closing statement section */
+    .philosophy-section .philosophy-content h2 {
+        font-size: 1.4rem !important;
+        margin-bottom: 16px !important;
+    }
+    .philosophy-section .philosophy-content > p {
+        font-size: 0.92rem !important;
+        line-height: 1.7 !important;
+    }
+    .philosophy-section .philosophy-content > div p {
+        font-size: 0.88rem !important;
+    }
+
+    /* =============================================
+       28. OUR VALUES PAGE - Mobile Fixes
+       ============================================= */
+    .values-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .values-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .values-hero h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .values-hero p {
+        font-size: 0.7rem !important;
+        letter-spacing: 1px !important;
+    }
+    .values-container {
+        padding: 20px 12px 40px 12px !important;
+    }
+    .value-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 10px !important;
+    }
+    .value-description {
+        font-size: 0.9rem !important;
+        line-height: 1.7 !important;
+    }
+
+    /* =============================================
+       29. BLOGS PAGE - Mobile Fixes
+       ============================================= */
+    .blog-hero {
+        padding: 20px 12px 15px 12px !important;
+    }
+    .blog-hero-content {
+        padding: 18px 16px !important;
+        border-radius: 10px !important;
+    }
+    .blog-hero h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 10px !important;
+        line-height: 1.2 !important;
+    }
+    .blog-hero p {
+        font-size: 0.7rem !important;
+        letter-spacing: 1px !important;
+    }
+    .blog-container {
+        padding: 20px 12px 40px 12px !important;
+    }
+    .blog-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .blog-image {
+        height: 200px !important;
+    }
+    .blog-content {
+        padding: 18px 16px !important;
+    }
+    .blog-category {
+        font-size: 0.72rem !important;
+        padding: 4px 12px !important;
+        margin-bottom: 10px !important;
+    }
+    .blog-title {
+        font-size: 1.15rem !important;
+        margin-bottom: 10px !important;
+    }
+    .blog-excerpt {
+        font-size: 0.88rem !important;
+        margin-bottom: 14px !important;
+    }
+    .blog-meta {
+        font-size: 0.8rem !important;
+        padding-top: 14px !important;
+    }
+    .empty-state {
+        padding: 40px 16px !important;
+    }
+    .empty-state i {
+        font-size: 3rem !important;
+        margin-bottom: 16px !important;
+    }
+
+    /* =============================================
+       30. TRACK REQUESTS / MY TICKETS - Mobile Fixes
+       ============================================= */
+    .tickets-shell {
+        padding: 20px 0 20px 0 !important;
+    }
+    .tickets-container {
+        padding: 16px 12px !important;
+    }
+    .tickets-hero {
+        padding: 16px !important;
+        margin-bottom: 14px !important;
+        border-radius: 14px !important;
+    }
+    .tickets-hero-top {
+        flex-direction: column !important;
+        gap: 14px !important;
+    }
+    .tickets-hero-title {
+        font-size: 1.4rem !important;
+    }
+    .tickets-hero-subtitle {
+        font-size: 0.85rem !important;
+        margin-top: 6px !important;
+    }
+    .btn-glass {
+        padding: 10px 14px !important;
+        font-size: 0.82rem !important;
+        border-radius: 10px !important;
+        width: 100% !important;
+        justify-content: center !important;
+    }
+    .tickets-chips {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+        margin-top: 14px !important;
+    }
+    .tickets-chip {
+        padding: 10px 8px !important;
+        border-radius: 10px !important;
+        text-align: center !important;
+    }
+    .tickets-chip .label {
+        font-size: 9px !important;
+        letter-spacing: 0.4px !important;
+    }
+    .tickets-chip .value {
+        font-size: 15px !important;
+        margin-top: 4px !important;
+    }
+    .filters.glass {
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 12px !important;
+        border-radius: 12px !important;
+    }
+    .filters.glass label {
+        font-size: 0.85rem !important;
+    }
+    .filters.glass select {
+        width: 100% !important;
+        padding: 10px 12px !important;
+    }
+    .ticket-card {
+        padding: 16px !important;
+        margin-bottom: 12px !important;
+        border-radius: 14px !important;
+    }
+    .ticket-header {
+        flex-direction: column !important;
+        gap: 8px !important;
+        margin-bottom: 10px !important;
+    }
+    .ticket-id {
+        font-size: 0.78rem !important;
+    }
+    .ticket-subject {
+        font-size: 1.05rem !important;
+        margin: 6px 0 !important;
+    }
+    .ticket-meta {
+        gap: 10px !important;
+        font-size: 0.78rem !important;
+        margin-top: 10px !important;
+        padding-top: 10px !important;
+    }
+    /* Detail view */
+    .detail-header {
+        padding: 18px 14px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+    }
+    .detail-header h2 {
+        font-size: 1.2rem !important;
+    }
+    .detail-header .ticket-id,
+    .detail-header > div > div > div:first-child {
+        font-size: 0.8rem !important;
+    }
+    .ticket-detail-view {
+        padding: 16px 14px !important;
+        border-radius: 12px !important;
+        margin-bottom: 16px !important;
+    }
+    .ticket-detail-view h3 {
+        font-size: 1.05rem !important;
+        margin-bottom: 14px !important;
+    }
+    .description-box {
+        padding: 14px !important;
+        font-size: 0.9rem !important;
+    }
+    .comment {
+        padding: 14px !important;
+        margin-bottom: 10px !important;
+    }
+    .comment-header {
+        flex-direction: column !important;
+        gap: 4px !important;
+        margin-bottom: 8px !important;
+    }
+    .comment-author {
+        font-size: 0.88rem !important;
+    }
+    .comment-time {
+        font-size: 0.75rem !important;
+    }
+    .back-link {
+        font-size: 0.88rem !important;
+        margin-bottom: 14px !important;
+    }
+    .create-ticket-btn {
+        padding: 12px 24px !important;
+        font-size: 0.9rem !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .page-header h1 {
+        font-size: 1.5rem !important;
+        margin-bottom: 8px !important;
+    }
+    .page-header p {
+        font-size: 0.9rem !important;
+    }
+
+    /* =============================================
+       31. USER PROFILE PAGE - Mobile Fixes
+       ============================================= */
+    .profile-page {
+        padding: 10px 10px !important;
+        margin-top: 0 !important;
+    }
+    .profile-container {
+        padding: 0 !important;
+    }
+    .profile-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    .profile-sidebar {
+        position: static !important;
+        border-radius: 10px !important;
+    }
+    .profile-header {
+        padding: 20px 16px !important;
+    }
+    .profile-avatar {
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 1.3rem !important;
+        margin-bottom: 10px !important;
+    }
+    .profile-welcome {
+        font-size: 0.75rem !important;
+    }
+    .profile-name {
+        font-size: 1rem !important;
+        margin-bottom: 4px !important;
+    }
+    .profile-email {
+        font-size: 0.78rem !important;
+        word-break: break-all !important;
+    }
+    .profile-nav {
+        padding: 8px !important;
+    }
+    .profile-nav-item {
+        padding: 10px 12px !important;
+        font-size: 0.88rem !important;
+        margin-bottom: 4px !important;
+    }
+    .profile-content {
+        border-radius: 10px !important;
+    }
+    .content-header {
+        padding: 16px 14px !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+    .content-title {
+        font-size: 1.2rem !important;
+        margin-bottom: 2px !important;
+    }
+    .content-subtitle {
+        font-size: 0.82rem !important;
+    }
+    .content-body {
+        padding: 16px 14px !important;
+    }
+    .profile-form .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
+    .profile-form .form-group {
+        margin-bottom: 14px !important;
+    }
+    .profile-form .form-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 6px !important;
+    }
+    .profile-form .form-input {
+        font-size: 0.88rem !important;
+        height: 42px !important;
+        padding: 0 12px !important;
+    }
+    .address-display {
+        padding: 12px !important;
+        font-size: 0.85rem !important;
+    }
+    .password-section {
+        margin-top: 20px !important;
+        padding-top: 20px !important;
+    }
+    .password-section h3 {
+        font-size: 1rem !important;
+    }
+    .password-section p {
+        font-size: 0.85rem !important;
+    }
+    .feature-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        margin-top: 20px !important;
+    }
+    .feature-card {
+        padding: 16px !important;
+    }
+    .feature-card h5 {
+        font-size: 1rem !important;
+        margin-bottom: 6px !important;
+    }
+    .feature-card p {
+        font-size: 0.85rem !important;
+    }
+    #editProfileBtn {
+        padding: 10px 20px !important;
+        font-size: 0.82rem !important;
+        width: 100% !important;
+    }
+    #saveChangesBtn {
+        width: 100% !important;
+    }
+}
+
+/* =============================================================================
+   TABLET-ONLY FIXES (768px - 1024px)
+   Zero impact on phone (<767px) and desktop/laptop (>1024px)
+   ============================================================================= */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+
+    /* =============================================
+       T-GLOBAL. Container & content full-width on Tablets
+       Overrides new-design.css, adaptive-structure.css,
+       tablet-layout-fixes.css max-width constraints
+       ============================================= */
+    body .container,
+    .container {
+        max-width: 100vw !important;
+        width: 100% !important;
+        padding: 0 20px !important;
+        box-sizing: border-box !important;
+    }
+    section,
+    section.py-5,
+    .about-section,
+    .mission-section,
+    .philosophy-section {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    /* Override inline max-width on ALL content wrappers across pages */
+    .values-content,
+    .mission-content,
+    .philosophy-content,
+    .policy-container,
+    .faqs-container,
+    .gifting-container,
+    .offers-container,
+    .blog-container,
+    .values-content > div,
+    .mission-content > div,
+    .about-section .values-content > div:first-child,
+    .about-section .values-content > div:nth-child(2) {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    /* Override ALL inline max-width styles on tablet */
+    .about-section [style*="max-width"],
+    .mission-section [style*="max-width"],
+    .philosophy-section [style*="max-width"],
+    .gifting-hero-content [style*="max-width"],
+    section [style*="max-width"],
+    div[style*="max-width: 1200"],
+    div[style*="max-width: 1400"],
+    div[style*="max-width: 1100"],
+    div[style*="max-width: 1000"],
+    div[style*="max-width: 900"] {
+        max-width: 100% !important;
+    }
+    /* Shop page - full width on tablets */
+    .shop-page {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .products-grid {
+        width: 100% !important;
+    }
+    /* Filter drawer - proper width and padding for tablets */
+    .shop-filters {
+        width: 320px !important;
+        max-width: 85vw !important;
+        padding: 20px !important;
+    }
+
+    /* =============================================
+       T-STORY. Our Philosophy Section - Tablet Layout
+       Stacked like phones for consistent look
+       ============================================= */
+    .story-section {
+        flex-direction: column-reverse !important;
+        flex-wrap: wrap !important;
+    }
+    .story-visual,
+    .story-content,
+    .story-content[style*="flex"],
+    div.story-content {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex-basis: 100% !important;
+    }
+    .story-content,
+    .story-content[style*="flex"] {
+        padding: 8px 28px 20px !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .story-content > span {
+        font-size: 0.95rem !important;
+        letter-spacing: 2.5px !important;
+        margin-bottom: 8px !important;
+        text-align: center !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    .story-content h2 {
+        font-size: 1.6rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 18px !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+    .story-content p {
+        font-size: 0.92rem !important;
+        line-height: 1.75 !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .founder-sig {
+        font-size: 1.2rem !important;
+        margin-top: 16px !important;
+        text-align: center !important;
+        padding-top: 16px !important;
+        border-top: 1px solid rgba(197, 160, 89, 0.3) !important;
+        width: 60% !important;
+    }
+    .story-visual,
+    .story-ad-screen {
+        min-height: 320px !important;
+    }
+
+    /* =============================================
+       T-PRODUCT. Product Page Buttons - Side by Side
+       ============================================= */
+    .product-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 12px !important;
+        margin-bottom: 24px !important;
+    }
+    .btn-add-to-cart,
+    .btn-buy-now {
+        flex: 1 !important;
+        padding: 14px 20px !important;
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        width: auto !important;
+    }
+
+    /* =============================================
+       T-CHATBOT. Chatbot Widget - Desktop Style on Tablets
+       Overrides chatbot.css @media (max-width: 768px)
+       ============================================= */
+    .chatbot-window {
+        width: 380px !important;
+        height: 560px !important;
+        bottom: 90px !important;
+        right: 30px !important;
+        border-radius: 20px !important;
+    }
+    .chatbot-toggle {
+        bottom: 25px !important;
+        right: 25px !important;
+        width: 56px !important;
+        height: 56px !important;
+    }
+    .chatbot-toggle i {
+        font-size: 26px !important;
+    }
+
+    /* =============================================
+       T-HERO. Hero Buttons - Side by Side on Tablets
+       Overrides style.css/new-design.css flex-direction:column
+       ============================================= */
+    .hero-buttons {
+        flex-direction: row !important;
+        gap: 16px !important;
+        width: auto !important;
+        max-width: none !important;
+        justify-content: center !important;
+        flex-wrap: nowrap !important;
+    }
+    .hero-buttons .btn,
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-outline,
+    section.hero .hero-buttons .btn-primary,
+    section.hero .hero-buttons .btn-outline {
+        width: auto !important;
+        min-width: 160px !important;
+        padding: 14px 28px !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* =============================================
+       T-ORDERS. Orders List Page - Desktop Layout on Tablets
+       Overrides orders.php @media (max-width: 768px)
+       ============================================= */
+    /* Header: filter + back button in a row */
+    .orders-page .content-header {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .orders-page .header-actions {
+        flex-direction: row !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+    .orders-page .filter-form {
+        width: auto !important;
+    }
+    .orders-page .btn-back-profile {
+        width: auto !important;
+    }
+    /* Order card header: meta fields in a row with status on right */
+    .order-header-row {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .order-meta {
+        flex-direction: row !important;
+        gap: 30px !important;
+        width: auto !important;
+    }
+    .order-status-wrapper {
+        align-items: flex-end !important;
+    }
+
+    /* =============================================
+       T-ORDER-DETAIL. Order Details - Desktop Layout on Tablets
+       Overrides order_details.php @media (max-width: 992px)
+       ============================================= */
+    /* Header card: items + delivery + status in a row */
+    .order-header-card {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .delivery-details-container {
+        width: auto !important;
+        min-width: 260px !important;
+    }
+    /* Tracking + Payment side by side */
+    .tracking-payment-row {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    /* Product item grid */
+    .product-item {
+        grid-template-columns: 70px 1fr auto !important;
+        text-align: left !important;
+    }
+    .product-image {
+        margin: 0 !important;
+    }
+    .product-price {
+        text-align: right !important;
+    }
+
+    /* =============================================
+       T0. NAVIGATION - Force Hamburger Menu on Tablets
+       Overrides tablet-layout-fixes.css & navigation-separation.css
+       ============================================= */
+    .desktop-nav,
+    .nav-links.desktop-nav {
+        display: none !important;
+    }
+    .menu-toggle {
+        display: block !important;
+        font-size: 1.3rem;
+        z-index: 10;
+        color: white;
+        cursor: pointer;
+    }
+    .mobile-nav {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 85% !important;
+        max-width: 380px !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        background: #ffffff !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1) !important;
+        transition: left 0.3s ease !important;
+    }
+    .mobile-nav.mobile-open {
+        display: flex !important;
+        left: 0 !important;
+    }
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0,0,0,0.5) !important;
+        z-index: 9998 !important;
+    }
+    .mobile-menu-overlay.active {
+        display: block !important;
+    }
+    .mobile-submenu-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 85% !important;
+        max-width: 380px !important;
+        height: 100vh !important;
+        z-index: 10000 !important;
+        background: #ffffff !important;
+        overflow-y: auto !important;
+        transition: left 0.3s ease !important;
+    }
+    .mobile-submenu-panel.open,
+    .mobile-submenu-panel.active {
+        left: 0 !important;
+    }
+    /* Override mobile-menu-redesign.css restoring .nav-links at 769px+ */
+    .nav-links {
+        display: none !important;
+    }
+    .nav-container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 15px 20px !important;
+    }
+    .logo h1 {
+        font-size: 1.4rem !important;
+    }
+    .logo span {
+        font-size: 0.6rem !important;
+    }
+    .user-actions {
+        display: flex !important;
+        gap: 14px !important;
+        align-items: center !important;
+    }
+    .top-bar.desktop-utility-bar {
+        display: none !important;
+    }
+    /* Override mobile-menu-redesign.css which hides menu content at 769px+ */
+    .mobile-menu-header-bar {
+        display: flex !important;
+        justify-content: flex-end !important;
+        padding: 15px 20px !important;
+        background: #ffffff !important;
+    }
+    .mobile-menu-list {
+        display: flex !important;
+        flex-direction: column !important;
+        background: #ffffff !important;
+    }
+    .mobile-menu-item-wrapper {
+        display: block !important;
+        width: 100% !important;
+    }
+    .mobile-menu-item {
+        display: flex !important;
+        align-items: center !important;
+        padding: 16px 24px !important;
+        font-size: 0.95rem !important;
+        color: #333 !important;
+        text-decoration: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+    .mobile-menu-item i:first-child {
+        width: 24px !important;
+        margin-right: 14px !important;
+        color: #C5A059 !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-menu-item.has-submenu {
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        background: none !important;
+        border: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        cursor: pointer !important;
+        font-family: inherit !important;
+    }
+    .mobile-menu-item.has-submenu span {
+        flex: 1 !important;
+        text-align: left !important;
+    }
+    .mobile-menu-item .arrow-icon,
+    .mobile-menu-item i.fa-chevron-right {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 0.75rem !important;
+        color: #999 !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-menu-close {
+        display: block !important;
+        background: none !important;
+        border: none !important;
+        font-size: 1.5rem !important;
+        color: #333 !important;
+        cursor: pointer !important;
+    }
+    .mobile-utility-section {
+        display: block !important;
+        padding: 20px !important;
+        margin-top: auto !important;
+        border-top: 1px solid #f0f0f0 !important;
+        background: #fafafa !important;
+    }
+    .mobile-utility-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 8px 0 !important;
+        font-size: 0.85rem !important;
+        color: #666 !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-header,
+    .mobile-submenu-panel .mobile-submenu-title,
+    .mobile-submenu-panel .mobile-submenu-list,
+    .mobile-submenu-panel .mobile-submenu-item,
+    .mobile-submenu-panel .mobile-submenu-back {
+        display: block !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-header {
+        display: flex !important;
+        padding: 15px 20px !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-back {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        font-size: 0.95rem !important;
+        color: #333 !important;
+        font-family: inherit !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-title {
+        padding: 10px 20px !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        color: #1A3C34 !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-list {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-item {
+        display: block !important;
+        padding: 14px 24px !important;
+        color: #333 !important;
+        text-decoration: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* =============================================
+       T1. GIFTING & HAMPERS - Tablet Fixes
+       ============================================= */
+    .gifting-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .gifting-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .gifting-hero-content {
+        padding: 25px 30px !important;
+    }
+    .gifting-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .gifting-intro {
+        margin-bottom: 40px !important;
+    }
+    .gifting-intro h2 {
+        font-size: 2rem !important;
+    }
+    .hamper-categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px !important;
+    }
+    .hamper-image {
+        height: 200px !important;
+    }
+    .hamper-content {
+        padding: 20px !important;
+    }
+    .hamper-content h3 {
+        font-size: 1.3rem !important;
+    }
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px !important;
+    }
+    .why-choose {
+        padding: 40px 20px !important;
+    }
+    .why-choose h2 {
+        font-size: 1.9rem !important;
+        margin-bottom: 30px !important;
+    }
+
+    /* =============================================
+       T2. OFFERS - Tablet Fixes
+       ============================================= */
+    .offers-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .offers-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .offers-hero-content {
+        padding: 25px 30px !important;
+    }
+    .offers-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .offers-intro {
+        margin-bottom: 40px !important;
+    }
+    .offers-intro h2 {
+        font-size: 2rem !important;
+    }
+    .offer-categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px !important;
+    }
+    .offer-image {
+        height: 200px !important;
+    }
+    .offer-content {
+        padding: 20px !important;
+    }
+    .offer-content h3 {
+        font-size: 1.3rem !important;
+    }
+    .promo-banner {
+        padding: 30px !important;
+        margin-bottom: 40px !important;
+    }
+    .promo-banner h2 {
+        font-size: 1.7rem !important;
+    }
+    .promo-code {
+        font-size: 1.3rem !important;
+        padding: 12px 24px !important;
+    }
+    .benefits-section {
+        padding: 40px 20px 11px 20px !important;
+    }
+    .benefits-section h2 {
+        font-size: 1.9rem !important;
+        margin-bottom: 30px !important;
+    }
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px !important;
+    }
+
+    /* =============================================
+       T3. SHIPPING & POLICY PAGES - Tablet Fixes
+       (Shared: shipping, privacy, terms, refund,
+        cancellation, payment, disclaimer)
+       ============================================= */
+    .policy-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .policy-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .policy-hero-content {
+        padding: 25px 30px !important;
+    }
+    .policy-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .policy-section h2 {
+        font-size: 1.7rem !important;
+    }
+    .policy-section h3 {
+        font-size: 1.3rem !important;
+    }
+    .policy-section p,
+    .policy-section li {
+        font-size: 1rem !important;
+    }
+    .shipping-table th,
+    .shipping-table td {
+        padding: 12px !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* =============================================
+       T4. FAQs - Tablet Fixes
+       ============================================= */
+    .faqs-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .faqs-hero p {
+        font-size: 0.95rem !important;
+        letter-spacing: 1.5px !important;
+        white-space: normal !important;
+    }
+    .faqs-hero-content {
+        padding: 25px 30px !important;
+    }
+    .faqs-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .faq-categories {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 16px !important;
+    }
+    .category-card {
+        padding: 20px !important;
+    }
+    .category-card i {
+        font-size: 2rem !important;
+    }
+    .category-card h3 {
+        font-size: 1.05rem !important;
+    }
+    .faq-content-panel {
+        padding: 30px !important;
+    }
+    .faq-content-panel .faq-header h2 {
+        font-size: 1.9rem !important;
+    }
+    .faq-content-panel .faq-question {
+        padding: 18px 22px !important;
+    }
+    .faq-content-panel .faq-question-text {
+        font-size: 1.05rem !important;
+    }
+
+    /* =============================================
+       T5. ABOUT US - Tablet Fixes
+       ============================================= */
+    .about-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .about-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .about-hero-content {
+        padding: 25px 30px !important;
+    }
+    .about-section {
+        padding: 50px 20px !important;
+    }
+    .philosophy-section {
+        padding: 50px 20px !important;
+    }
+    .philosophy-grid {
+        gap: 30px !important;
+    }
+    .philosophy-text h1 {
+        font-size: 2.5rem !important;
+    }
+    .philosophy-text p {
+        font-size: 1.05rem !important;
+    }
+    .philosophy-image img {
+        height: 380px !important;
+    }
+    .mission-section {
+        padding: 50px 20px !important;
+    }
+    .mission-content h2 {
+        font-size: 2.1rem !important;
+    }
+    .mission-content p {
+        font-size: 1.05rem !important;
+    }
+    .values-section {
+        padding: 50px 20px !important;
+    }
+    .values-content h2 {
+        font-size: 2.1rem !important;
+        margin-bottom: 35px !important;
+    }
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 24px !important;
+    }
+    .value-card {
+        padding: 30px 24px !important;
+    }
+    .image-gallery {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+    }
+    /* About Us - Leadership section inline-style overrides for tablet */
+    .about-section .values-content > div:first-child {
+        padding: 25px 30px !important;
+    }
+    .about-section .values-content > div:first-child h2 {
+        font-size: 2.4rem !important;
+    }
+    .about-section .values-content > div:nth-child(2) {
+        grid-template-columns: 1fr !important;
+        gap: 30px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div {
+        border-radius: 20px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div:last-child {
+        padding: 35px 28px !important;
+        padding-top: 55px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    /* Avatar circle - consistent size & spacing for both cards */
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:first-child > div {
+        width: 130px !important;
+        height: 130px !important;
+        margin: 0 auto !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) {
+        text-align: center !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) h3 {
+        font-size: 1.7rem !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) > div {
+        justify-content: center !important;
+    }
+    /* About Us - Vision & Mission header for tablet */
+    .mission-section .mission-content > div:first-child h2 {
+        font-size: 2.4rem !important;
+    }
+    /* About Us - Quality & Standards header for tablet */
+    .about-section .values-content > div:first-child h2 {
+        font-size: 2.4rem !important;
+    }
+    /* About Us - Closing statement for tablet */
+    .philosophy-section .philosophy-content h2 {
+        font-size: 2.1rem !important;
+    }
+    .philosophy-section .philosophy-content p {
+        font-size: 1.1rem !important;
+    }
+
+    /* =============================================
+       T6. OUR VALUES - Tablet Fixes
+       ============================================= */
+    .values-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .values-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .values-hero-content {
+        padding: 25px 30px !important;
+    }
+    .values-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .values-container .values-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .values-container .value-card {
+        padding: 35px 28px !important;
+    }
+    .value-title {
+        font-size: 1.5rem !important;
+    }
+    .value-icon {
+        width: 70px !important;
+        height: 70px !important;
+        font-size: 2rem !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* =============================================
+       T7. BLOGS - Tablet Fixes
+       ============================================= */
+    .blog-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .blog-hero p {
+        font-size: 1.1rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .blog-hero-content {
+        padding: 25px 30px !important;
+    }
+    .blog-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .blog-image {
+        height: 220px !important;
+    }
+    .blog-content {
+        padding: 22px !important;
+    }
+    .blog-title {
+        font-size: 1.3rem !important;
+    }
+
+    /* =============================================
+       T8. TRACK REQUESTS / MY TICKETS - Tablet Fixes
+       ============================================= */
+    .tickets-shell {
+        padding: 30px 0 !important;
+    }
+    .tickets-container {
+        padding: 30px 20px !important;
+    }
+    .page-header h1 {
+        font-size: 2.1rem !important;
+    }
+    .page-header p {
+        font-size: 1rem !important;
+    }
+    .ticket-card {
+        padding: 22px !important;
+    }
+    .ticket-subject {
+        font-size: 1.15rem !important;
+    }
+    .ticket-meta {
+        gap: 14px !important;
+    }
+    .detail-header {
+        padding: 24px !important;
+    }
+    .detail-header h2 {
+        font-size: 1.6rem !important;
+    }
+    .comment-box {
+        padding: 18px !important;
+    }
+
+    /* =============================================
+       T9. CREATE TICKET - Tablet Fixes
+       ============================================= */
+    .ticket-hero h1 {
+        font-size: 2.4rem !important;
+    }
+    .ticket-hero p {
+        font-size: 0.85rem !important;
+        letter-spacing: 1.5px !important;
+    }
+    .ticket-hero-content {
+        padding: 25px 30px !important;
+    }
+    .create-ticket-container {
+        padding: 30px 20px 60px 20px !important;
+    }
+    .form-card {
+        padding: 30px !important;
+    }
+    .issue-type-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    .priority-options {
+        display: flex !important;
+        gap: 10px !important;
+    }
+    .priority-option {
+        flex: 1 !important;
+    }
+    .priority-label {
+        width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* =============================================
+       T10. USER PROFILE - Tablet Fixes
+       ============================================= */
+    .profile-page {
+        padding: 15px !important;
+    }
+    .profile-grid {
+        grid-template-columns: 260px 1fr !important;
+        gap: 20px !important;
+    }
+    .profile-header {
+        padding: 24px 18px !important;
+    }
+    .profile-avatar {
+        width: 56px !important;
+        height: 56px !important;
+        font-size: 1.3rem !important;
+    }
+    .profile-name {
+        font-size: 1.05rem !important;
+    }
+    .profile-email {
+        font-size: 0.82rem !important;
+    }
+    .content-header {
+        padding: 20px 22px !important;
+    }
+    .content-title {
+        font-size: 1.35rem !important;
+    }
+    .content-body {
+        padding: 22px !important;
+    }
+    .feature-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 14px !important;
+    }
+    .feature-card {
+        padding: 20px !important;
+    }
+    .feature-card h5 {
+        font-size: 1.05rem !important;
+    }
+
+    /* =============================================
+       T11. TRACK SHIPMENT MODAL - Tablet Fix
+       ============================================= */
+    .track-btn-square {
+        padding: 14px 30px !important;
+        font-size: 0.88rem !important;
+    }
+
+    /* =============================================
+       T12. FOOTER - Tablet Professional Layout
+       ============================================= */
+    footer {
+        padding: 50px 0 25px !important;
+    }
+    footer .container {
+        padding: 0 20px !important;
+    }
+    .footer-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 35px 40px !important;
+        margin-bottom: 35px !important;
+    }
+    .footer-brand {
+        grid-column: 1 / 2 !important;
+    }
+    .footer-brand .logo {
+        text-align: left !important;
+    }
+    .footer-brand .logo h1 {
+        font-size: 1.5rem !important;
+        text-align: left !important;
+    }
+    .footer-brand .logo span {
+        font-size: 0.55rem !important;
+        text-align: center !important;
+    }
+    .footer-brand p {
+        font-size: 0.85rem !important;
+        line-height: 1.7 !important;
+        margin-top: 14px !important;
+        white-space: normal !important;
+        text-align: left !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .social-icons {
+        margin-top: 16px !important;
+        text-align: left !important;
+    }
+    .social-icons a {
+        font-size: 1rem !important;
+        margin-right: 12px !important;
+    }
+    /* Override global centering from tablet-layout-fixes.css for footer */
+    footer h3,
+    .footer-col h3 {
+        font-size: 0.9rem !important;
+        margin-bottom: 18px !important;
+        letter-spacing: 1px !important;
+        text-align: left !important;
+    }
+    footer p,
+    .footer-col p {
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+    .footer-col ul li {
+        margin-bottom: 10px !important;
+    }
+    .footer-col ul li a {
+        font-size: 0.85rem !important;
+    }
+    /* Shipping Partners - side by side */
+    .shipping-partners-section {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 30px !important;
+        padding-top: 30px !important;
+        margin-bottom: 30px !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .ship-group {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    .shipping-title {
+        font-size: 1rem !important;
+        margin-bottom: 4px !important;
+    }
+    .shipping-subtitle {
+        font-size: 0.75rem !important;
+        margin-bottom: 12px !important;
+    }
+    .partner-logos-grid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+        overflow-x: auto !important;
+    }
+    .partner-text-logo {
+        flex: 0 0 auto !important;
+        height: 40px !important;
+        min-width: 85px !important;
+        padding: 8px 14px !important;
+        font-size: 0.8rem !important;
+        border-radius: 6px !important;
+    }
+    /* Footer Bottom */
+    .footer-bottom {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+        gap: 10px !important;
+        padding-top: 20px !important;
+        margin-top: 0 !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .footer-bottom span {
+        font-size: 0.78rem !important;
+    }
+    .footer-bottom span:last-child {
+        justify-content: center !important;
+    }
+
+}
+
+/* =============================================================================
+   IPAD PRO / LARGE TABLET FIXES (1025px - 1366px)
+   Covers iPad Mini Pro, iPad Pro 11", iPad Pro 12.9" portrait, etc.
+   Zero impact on phone, small tablet (≤1024px), or desktop (>1366px)
+   ============================================================================= */
+@media only screen and (min-width: 1025px) and (max-width: 1366px) {
+
+    /* =============================================
+       P-GLOBAL. Container & content full-width on iPad Pro
+       Overrides new-design.css, adaptive-structure.css
+       max-width constraints
+       ============================================= */
+    body .container,
+    .container {
+        max-width: 100vw !important;
+        width: 100% !important;
+        padding: 0 20px !important;
+        box-sizing: border-box !important;
+    }
+    section,
+    section.py-5,
+    .about-section,
+    .mission-section,
+    .philosophy-section {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    /* Override inline max-width on ALL content wrappers across pages */
+    .values-content,
+    .mission-content,
+    .philosophy-content,
+    .policy-container,
+    .faqs-container,
+    .gifting-container,
+    .offers-container,
+    .blog-container,
+    .values-content > div,
+    .mission-content > div,
+    .about-section .values-content > div:first-child,
+    .about-section .values-content > div:nth-child(2) {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    /* Override ALL inline max-width styles on iPad Pro */
+    .about-section [style*="max-width"],
+    .mission-section [style*="max-width"],
+    .philosophy-section [style*="max-width"],
+    .gifting-hero-content [style*="max-width"],
+    section [style*="max-width"],
+    div[style*="max-width: 1200"],
+    div[style*="max-width: 1400"],
+    div[style*="max-width: 1100"],
+    div[style*="max-width: 1000"],
+    div[style*="max-width: 900"] {
+        max-width: 100% !important;
+    }
+    /* Shop page - full width on iPad Pro */
+    .shop-page {
+        width: 100% !important;
+        max-width: 100% !important;
+        grid-template-columns: 260px 1fr !important;
+    }
+    .products-grid {
+        width: 100% !important;
+    }
+    /* Filter sidebar width for iPad Pro */
+    .shop-filters {
+        width: 260px !important;
+        padding: 16px !important;
+    }
+
+    /* =============================================
+       P-STORY. Our Philosophy Section - iPad Pro Layout
+       Stacked like phones for consistent look
+       ============================================= */
+    .story-section {
+        flex-direction: column-reverse !important;
+        flex-wrap: wrap !important;
+    }
+    .story-visual,
+    .story-content,
+    .story-content[style*="flex"],
+    div.story-content {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex-basis: 100% !important;
+    }
+    .story-content,
+    .story-content[style*="flex"] {
+        padding: 10px 36px 22px !important;
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .story-content > span {
+        font-size: 0.98rem !important;
+        letter-spacing: 2.5px !important;
+        margin-bottom: 10px !important;
+        text-align: center !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    .story-content h2 {
+        font-size: 1.8rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 20px !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+    .story-content p {
+        font-size: 0.95rem !important;
+        line-height: 1.75 !important;
+        margin-bottom: 16px !important;
+        text-align: center !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .founder-sig {
+        font-size: 1.25rem !important;
+        margin-top: 18px !important;
+        text-align: center !important;
+        padding-top: 18px !important;
+        border-top: 1px solid rgba(197, 160, 89, 0.3) !important;
+        width: 50% !important;
+    }
+    .story-visual,
+    .story-ad-screen {
+        min-height: 380px !important;
+    }
+
+    /* =============================================
+       P-PRODUCT. Product Page Buttons - Side by Side
+       ============================================= */
+    .product-actions {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 14px !important;
+        margin-bottom: 28px !important;
+    }
+    .btn-add-to-cart,
+    .btn-buy-now {
+        flex: 1 !important;
+        padding: 15px 24px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        width: auto !important;
+    }
+
+    /* =============================================
+       P-ORDERS. Orders List Page - Desktop Layout on iPad Pro
+       ============================================= */
+    .orders-page .content-header {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .orders-page .header-actions {
+        flex-direction: row !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+    .orders-page .filter-form {
+        width: auto !important;
+    }
+    .orders-page .btn-back-profile {
+        width: auto !important;
+    }
+    .order-header-row {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .order-meta {
+        flex-direction: row !important;
+        gap: 40px !important;
+        width: auto !important;
+    }
+    .order-status-wrapper {
+        align-items: flex-end !important;
+    }
+
+    /* =============================================
+       P-ORDER-DETAIL. Order Details - Desktop Layout on iPad Pro
+       ============================================= */
+    .order-header-card {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+    }
+    .delivery-details-container {
+        width: auto !important;
+        min-width: 280px !important;
+    }
+    .tracking-payment-row {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    .product-item {
+        grid-template-columns: 70px 1fr auto !important;
+        text-align: left !important;
+    }
+    .product-image {
+        margin: 0 !important;
+    }
+    .product-price {
+        text-align: right !important;
+    }
+
+    /* =============================================
+       P0. NAVIGATION - Force Hamburger Menu on iPad Pro
+       Overrides navigation-separation.css desktop nav
+       ============================================= */
+    .desktop-nav,
+    .nav-links.desktop-nav {
+        display: none !important;
+    }
+    .menu-toggle {
+        display: block !important;
+        font-size: 1.3rem;
+        z-index: 10;
+        color: white;
+        cursor: pointer;
+    }
+    .mobile-nav {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 75% !important;
+        max-width: 400px !important;
+        height: 100vh !important;
+        z-index: 9999 !important;
+        background: #ffffff !important;
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        box-shadow: 2px 0 16px rgba(0, 0, 0, 0.1) !important;
+        transition: left 0.3s ease !important;
+    }
+    .mobile-nav.mobile-open {
+        display: flex !important;
+        left: 0 !important;
+    }
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background: rgba(0,0,0,0.5) !important;
+        z-index: 9998 !important;
+    }
+    .mobile-menu-overlay.active {
+        display: block !important;
+    }
+    .mobile-submenu-panel {
+        display: flex !important;
+        flex-direction: column !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: -100% !important;
+        width: 75% !important;
+        max-width: 400px !important;
+        height: 100vh !important;
+        z-index: 10000 !important;
+        background: #ffffff !important;
+        overflow-y: auto !important;
+        transition: left 0.3s ease !important;
+    }
+    .mobile-submenu-panel.open,
+    .mobile-submenu-panel.active {
+        left: 0 !important;
+    }
+    /* Override mobile-menu-redesign.css restoring .nav-links at 769px+ */
+    .nav-links {
+        display: none !important;
+    }
+    .nav-container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 15px 25px !important;
+    }
+    .logo h1 {
+        font-size: 1.5rem !important;
+    }
+    .logo span {
+        font-size: 0.65rem !important;
+    }
+    .user-actions {
+        display: flex !important;
+        gap: 16px !important;
+        align-items: center !important;
+    }
+    .top-bar.desktop-utility-bar {
+        display: none !important;
+    }
+    /* Override mobile-menu-redesign.css which hides menu content at 769px+ */
+    .mobile-menu-header-bar {
+        display: flex !important;
+        justify-content: flex-end !important;
+        padding: 15px 20px !important;
+        background: #ffffff !important;
+    }
+    .mobile-menu-list {
+        display: flex !important;
+        flex-direction: column !important;
+        background: #ffffff !important;
+    }
+    .mobile-menu-item-wrapper {
+        display: block !important;
+        width: 100% !important;
+    }
+    .mobile-menu-item {
+        display: flex !important;
+        align-items: center !important;
+        padding: 18px 28px !important;
+        font-size: 1rem !important;
+        color: #333 !important;
+        text-decoration: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+    }
+    .mobile-menu-item i:first-child {
+        width: 24px !important;
+        margin-right: 14px !important;
+        color: #C5A059 !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-menu-item.has-submenu {
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        background: none !important;
+        border: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        cursor: pointer !important;
+        font-family: inherit !important;
+    }
+    .mobile-menu-item.has-submenu span {
+        flex: 1 !important;
+        text-align: left !important;
+    }
+    .mobile-menu-item .arrow-icon,
+    .mobile-menu-item i.fa-chevron-right {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        font-size: 0.75rem !important;
+        color: #999 !important;
+        margin-left: auto !important;
+        flex-shrink: 0 !important;
+    }
+    .mobile-menu-close {
+        display: block !important;
+        background: none !important;
+        border: none !important;
+        font-size: 1.5rem !important;
+        color: #333 !important;
+        cursor: pointer !important;
+    }
+    .mobile-utility-section {
+        display: block !important;
+        padding: 20px !important;
+        margin-top: auto !important;
+        border-top: 1px solid #f0f0f0 !important;
+        background: #fafafa !important;
+    }
+    .mobile-utility-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 8px 0 !important;
+        font-size: 0.88rem !important;
+        color: #666 !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-header,
+    .mobile-submenu-panel .mobile-submenu-title,
+    .mobile-submenu-panel .mobile-submenu-list,
+    .mobile-submenu-panel .mobile-submenu-item,
+    .mobile-submenu-panel .mobile-submenu-back {
+        display: block !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-header {
+        display: flex !important;
+        padding: 15px 20px !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-back {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer !important;
+        font-size: 1rem !important;
+        color: #333 !important;
+        font-family: inherit !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-title {
+        padding: 10px 24px !important;
+        font-size: 1.15rem !important;
+        font-weight: 700 !important;
+        color: #1A3C34 !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-list {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    .mobile-submenu-panel .mobile-submenu-item {
+        display: block !important;
+        padding: 16px 28px !important;
+        color: #333 !important;
+        text-decoration: none !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        font-size: 1rem !important;
+    }
+
+    /* =============================================
+       P1. GIFTING & HAMPERS - iPad Pro Fixes
+       ============================================= */
+    .gifting-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .gifting-hero-content {
+        padding: 28px 35px !important;
+    }
+    .gifting-intro h2 {
+        font-size: 2.2rem !important;
+    }
+    .hamper-categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .hamper-image {
+        height: 220px !important;
+    }
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .why-choose h2 {
+        font-size: 2rem !important;
+    }
+
+    /* =============================================
+       P2. OFFERS - iPad Pro Fixes
+       ============================================= */
+    .offers-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .offers-hero-content {
+        padding: 28px 35px !important;
+    }
+    .offers-intro h2 {
+        font-size: 2.2rem !important;
+    }
+    .offer-categories {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .offer-image {
+        height: 220px !important;
+    }
+    .promo-banner {
+        padding: 35px !important;
+    }
+    .promo-banner h2 {
+        font-size: 1.8rem !important;
+    }
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .benefits-section h2 {
+        font-size: 2rem !important;
+    }
+
+    /* =============================================
+       P3. SHIPPING & POLICY PAGES - iPad Pro Fixes
+       ============================================= */
+    .policy-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .policy-hero-content {
+        padding: 28px 35px !important;
+    }
+    .policy-section h2 {
+        font-size: 1.8rem !important;
+    }
+
+    /* =============================================
+       P4. FAQs - iPad Pro Fixes
+       ============================================= */
+    .faqs-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .faqs-hero-content {
+        padding: 28px 35px !important;
+    }
+    .faq-categories {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 18px !important;
+    }
+    .category-card {
+        padding: 22px !important;
+    }
+    .faq-content-panel .faq-header h2 {
+        font-size: 2rem !important;
+    }
+
+    /* =============================================
+       P5. ABOUT US - iPad Pro Fixes
+       ============================================= */
+    .about-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .about-hero-content {
+        padding: 28px 35px !important;
+    }
+    .philosophy-section {
+        padding: 60px 20px !important;
+    }
+    .philosophy-grid {
+        gap: 40px !important;
+    }
+    .philosophy-text h1 {
+        font-size: 2.8rem !important;
+    }
+    .philosophy-image img {
+        height: 420px !important;
+    }
+    .mission-content h2 {
+        font-size: 2.3rem !important;
+    }
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 28px !important;
+    }
+    .values-content h2 {
+        font-size: 2.3rem !important;
+    }
+    .image-gallery {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+    /* About Us - Leadership section for iPad Pro */
+    .about-section .values-content > div:first-child h2 {
+        font-size: 2.6rem !important;
+    }
+    .about-section .values-content > div:nth-child(2) {
+        grid-template-columns: 1fr !important;
+        gap: 35px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div:last-child {
+        padding: 40px 35px !important;
+        padding-top: 55px !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child {
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+    /* Avatar circle - consistent size & spacing for both cards */
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:first-child > div {
+        width: 140px !important;
+        height: 140px !important;
+        margin: 0 auto !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) {
+        text-align: center !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) h3 {
+        font-size: 1.8rem !important;
+    }
+    .about-section .values-content > div:nth-child(2) > div > div > div:first-child > div:nth-child(2) > div {
+        justify-content: center !important;
+    }
+    /* About Us - Vision & Mission header */
+    .mission-section .mission-content > div:first-child h2 {
+        font-size: 2.6rem !important;
+    }
+    /* About Us - Quality & Standards header */
+    .about-section .values-content > div:first-child h2 {
+        font-size: 2.6rem !important;
+    }
+    /* About Us - Closing statement */
+    .philosophy-section .philosophy-content h2 {
+        font-size: 2.3rem !important;
+    }
+
+    /* =============================================
+       P6. OUR VALUES - iPad Pro Fixes
+       ============================================= */
+    .values-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .values-hero-content {
+        padding: 28px 35px !important;
+    }
+    .values-container .values-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 30px !important;
+    }
+    .values-container .value-card {
+        padding: 40px 30px !important;
+    }
+    .value-title {
+        font-size: 1.6rem !important;
+    }
+
+    /* =============================================
+       P7. BLOGS - iPad Pro Fixes
+       ============================================= */
+    .blog-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .blog-hero-content {
+        padding: 28px 35px !important;
+    }
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 32px !important;
+    }
+    .blog-image {
+        height: 250px !important;
+    }
+    .blog-title {
+        font-size: 1.4rem !important;
+    }
+
+    /* =============================================
+       P8. TRACK REQUESTS / MY TICKETS - iPad Pro Fixes
+       ============================================= */
+    .page-header h1 {
+        font-size: 2.2rem !important;
+    }
+    .ticket-card {
+        padding: 24px !important;
+    }
+    .ticket-subject {
+        font-size: 1.2rem !important;
+    }
+    .detail-header h2 {
+        font-size: 1.7rem !important;
+    }
+
+    /* =============================================
+       P9. CREATE TICKET - iPad Pro Fixes
+       ============================================= */
+    .ticket-hero h1 {
+        font-size: 2.7rem !important;
+    }
+    .ticket-hero p {
+        font-size: 0.9rem !important;
+    }
+    .ticket-hero-content {
+        padding: 28px 35px !important;
+    }
+    .form-card {
+        padding: 35px !important;
+    }
+    .issue-type-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+    }
+
+    /* =============================================
+       P10. USER PROFILE - iPad Pro Fixes
+       ============================================= */
+    .profile-page {
+        padding: 20px !important;
+    }
+    .profile-grid {
+        grid-template-columns: 280px 1fr !important;
+        gap: 24px !important;
+    }
+    .profile-avatar {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    .content-title {
+        font-size: 1.4rem !important;
+    }
+    .feature-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 16px !important;
+    }
+
+    /* =============================================
+       P11. FOOTER - iPad Pro Professional Layout
+       ============================================= */
+    footer {
+        padding: 55px 0 28px !important;
+    }
+    footer .container {
+        padding: 0 20px !important;
+    }
+    .footer-grid {
+        display: grid !important;
+        grid-template-columns: 1.3fr 1fr 1fr 1fr !important;
+        gap: 30px !important;
+        margin-bottom: 40px !important;
+    }
+    .footer-brand .logo {
+        text-align: left !important;
+    }
+    .footer-brand .logo h1 {
+        font-size: 1.6rem !important;
+        text-align: left !important;
+    }
+    .footer-brand .logo span {
+        font-size: 0.58rem !important;
+        text-align: center !important;
+    }
+    .footer-brand p {
+        font-size: 0.85rem !important;
+        line-height: 1.7 !important;
+        margin-top: 15px !important;
+        white-space: normal !important;
+        text-align: left !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .social-icons {
+        margin-top: 18px !important;
+        text-align: left !important;
+    }
+    .social-icons a {
+        font-size: 1.05rem !important;
+        margin-right: 14px !important;
+    }
+    footer h3,
+    .footer-col h3 {
+        font-size: 0.92rem !important;
+        margin-bottom: 20px !important;
+        text-align: left !important;
+    }
+    footer p,
+    .footer-col p {
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        text-align: left !important;
+    }
+    .footer-col ul li {
+        margin-bottom: 10px !important;
+    }
+    .footer-col ul li a {
+        font-size: 0.85rem !important;
+    }
+    /* Shipping Partners */
+    .shipping-partners-section {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 35px !important;
+        padding-top: 32px !important;
+        margin-bottom: 32px !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .ship-group {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    .shipping-title {
+        font-size: 1.05rem !important;
+    }
+    .shipping-subtitle {
+        font-size: 0.78rem !important;
+        margin-bottom: 14px !important;
+    }
+    .partner-logos-grid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+    }
+    .partner-text-logo {
+        flex: 0 0 auto !important;
+        height: 42px !important;
+        min-width: 90px !important;
+        padding: 9px 15px !important;
+        font-size: 0.82rem !important;
+        border-radius: 6px !important;
+    }
+    /* Footer Bottom - 3 col row */
+    .footer-bottom {
+        grid-template-columns: 1fr auto 1fr !important;
+        align-items: center !important;
+        gap: 12px !important;
+        padding-top: 22px !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    .footer-bottom span {
+        font-size: 0.8rem !important;
+    }
+    .footer-bottom span:last-child {
+        justify-content: flex-end !important;
+    }
+
+}

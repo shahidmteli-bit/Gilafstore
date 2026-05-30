@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gilaf Store — Complete Technical Audit Report (Steps 1–5)</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  @media print {
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; color: #1a1a1a; line-height: 1.55; background: #f5f5f5; font-size: 12.5px; }
+  .container { max-width: 860px; margin: 0 auto; background: #fff; padding: 40px 38px; box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+  .cover { text-align: center; padding: 50px 0 35px; border-bottom: 3px solid #1A3C34; margin-bottom: 35px; }
+  .cover-logo { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; color: #D4AF37; font-weight: 600; margin-bottom: 6px; }
+  .cover h1 { font-size: 28px; color: #1A3C34; font-weight: 700; margin-bottom: 5px; }
+  .cover h2 { font-size: 15px; color: #555; font-weight: 400; margin-bottom: 20px; }
+  .cover-meta { font-size: 12px; color: #888; }
+  .cover-meta span { display: inline-block; margin: 0 10px; }
+  .score-banner { display: flex; gap: 12px; margin-bottom: 30px; }
+  .score-card { flex: 1; padding: 14px 12px; border-radius: 8px; text-align: center; }
+  .score-card.critical { background: #fef2f2; border: 1px solid #fecaca; }
+  .score-card.high { background: #fff7ed; border: 1px solid #fed7aa; }
+  .score-card.medium { background: #fffbeb; border: 1px solid #fde68a; }
+  .score-card.low { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .score-card.pass { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .score-number { font-size: 28px; font-weight: 700; }
+  .score-card.critical .score-number { color: #dc2626; }
+  .score-card.high .score-number { color: #ea580c; }
+  .score-card.medium .score-number { color: #ca8a04; }
+  .score-card.low .score-number { color: #16a34a; }
+  .score-card.pass .score-number { color: #16a34a; }
+  .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-top: 2px; }
+  h2 { font-size: 17px; color: #1A3C34; border-bottom: 2px solid #e5e7eb; padding-bottom: 6px; margin: 30px 0 12px; }
+  h3 { font-size: 14px; color: #374151; margin: 16px 0 8px; }
+  h2 .sn { color: #D4AF37; margin-right: 5px; }
+  .step-header { background: #1A3C34; color: #fff; padding: 12px 18px; border-radius: 8px; margin: 30px 0 16px; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; }
+  .step-header span { color: #D4AF37; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 16px; font-size: 12px; }
+  th { background: #1A3C34; color: #fff; padding: 8px 10px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.3px; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  tr:nth-child(even) { background: #f9fafb; }
+  .b { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; letter-spacing: 0.2px; }
+  .b-ex { background: #d1fae5; color: #065f46; }
+  .b-pa { background: #fef3c7; color: #92400e; }
+  .b-mi { background: #fee2e2; color: #991b1b; }
+  .b-ok { background: #d1fae5; color: #065f46; }
+  .b-cr { background: #fee2e2; color: #991b1b; }
+  .b-hi { background: #ffedd5; color: #9a3412; }
+  .b-me { background: #fef3c7; color: #854d0e; }
+  .b-lo { background: #e0f2fe; color: #075985; }
+  .b-fo { background: #d1fae5; color: #065f46; }
+  code { background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-family: Consolas, monospace; font-size: 11px; color: #374151; }
+  .box { padding: 12px 16px; border-radius: 6px; margin: 10px 0; font-size: 12px; }
+  .box.bad { background: #fef2f2; border-left: 3px solid #dc2626; }
+  .box.good { background: #f0fdf4; border-left: 3px solid #16a34a; }
+  .box.warn { background: #fffbeb; border-left: 3px solid #eab308; }
+  .box strong { color: #111; }
+  .print-btn { position: fixed; bottom: 20px; right: 20px; background: #1A3C34; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 999; }
+  .print-btn:hover { background: #2d5a4e; }
+  .toc { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; margin: 16px 0 24px; }
+  .toc-title { font-size: 12px; font-weight: 700; color: #1A3C34; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
+  .toc-list { list-style: none; columns: 2; column-gap: 24px; }
+  .toc-list li { padding: 3px 0; font-size: 11.5px; break-inside: avoid; }
+  .toc-list li b { color: #D4AF37; margin-right: 4px; }
+  .footer { margin-top: 30px; padding-top: 16px; border-top: 2px solid #e5e7eb; text-align: center; font-size: 11px; color: #999; }
+  ul.compact { margin: 4px 0 8px 18px; font-size: 12px; }
+  ul.compact li { padding: 2px 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Save as PDF</button>
+
+<div class="container">
+
+<!-- ==================== COVER ==================== -->
+<div class="cover">
+  <div class="cover-logo">Gilaf Store</div>
+  <h1>Complete Technical Audit Report</h1>
+  <h2>Project Structure &bull; SEO &bull; Performance &bull; Conversion &amp; Trust</h2>
+  <div class="cover-meta">
+    <span>Date: May 8, 2026</span><span>|</span>
+    <span>Platform: Custom PHP Ecommerce</span><span>|</span>
+    <span>Domain: gilafstore.com</span><span>|</span>
+    <span>Steps 1 &ndash; 5</span>
+  </div>
+</div>
+
+<!-- ===== OVERALL SEVERITY ===== -->
+<div class="score-banner">
+  <div class="score-card critical"><div class="score-number">4</div><div class="score-label">Critical</div></div>
+  <div class="score-card high"><div class="score-number">2</div><div class="score-label">High</div></div>
+  <div class="score-card medium"><div class="score-number">15</div><div class="score-label">Medium</div></div>
+  <div class="score-card low"><div class="score-number">7</div><div class="score-label">Low</div></div>
+  <div class="score-card pass"><div class="score-number">40+</div><div class="score-label">Pass</div></div>
+</div>
+
+<!-- ===== TOC ===== -->
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ul class="toc-list">
+    <li><b>Step 1</b> Executive Summary</li>
+    <li><b>Step 2</b> Project Structure Map</li>
+    <li><b>Step 3</b> SEO Files Deep Scan</li>
+    <li><b>Step 4</b> Performance &amp; Speed Audit</li>
+    <li><b>Step 5</b> Conversion &amp; Trust Audit</li>
+    <li><b>A.</b> SEO File Inventory</li>
+    <li><b>B.</b> Title, Meta, Canonical</li>
+    <li><b>C.</b> Structured Data / JSON-LD</li>
+    <li><b>D.</b> Open Graph &amp; Twitter</li>
+    <li><b>E.</b> Robots &amp; Sitemap</li>
+    <li><b>F.</b> Heading Hierarchy</li>
+    <li><b>G.</b> Image Alt Audit</li>
+    <li><b>H.</b> Domain Consistency</li>
+    <li><b>I.</b> Render-Blocking Scripts</li>
+    <li><b>J.</b> Heavy JS &amp; CSS Bloat</li>
+    <li><b>K.</b> Oversized Images</li>
+    <li><b>L.</b> Third-Party Scripts</li>
+    <li><b>M.</b> Product Page CRO</li>
+    <li><b>N.</b> Trust Signals</li>
+    <li><b>O.</b> Header &amp; Footer</li>
+    <li><b>P.</b> Complete Issue Registry</li>
+    <li><b>Q.</b> Recommended Action Plan</li>
+  </ul>
+</div>
+
+<!-- ==================== STEP 1: EXECUTIVE SUMMARY ==================== -->
+<div class="step-header"><span>STEP 1</span> &mdash; Executive Summary</div>
+
+<p style="margin-bottom:10px;">Gilaf Store is a custom PHP ecommerce platform selling premium Kashmiri food products. It has a <strong>strong SEO foundation</strong> (dedicated 782-line SEO library, JSON-LD, OG tags) and <strong>good trust signals</strong> (FSSAI, lab tested, organic badges). However, <strong>4 critical issues</strong> undermine performance and search visibility.</p>
+
+<h3>What&rsquo;s Working Well</h3>
+<ul class="compact">
+  <li>Dynamic &lt;title&gt;, meta description, canonical with intelligent fallbacks</li>
+  <li>Multi-variant Product JSON-LD with real AggregateRating (no fake stars)</li>
+  <li>Complete Open Graph + Twitter Card coverage (product-specific OG tags)</li>
+  <li>Organization + WebSite schema on all pages with SearchAction</li>
+  <li>Self-hosted fonts (no Google Fonts CDN &mdash; faster)</li>
+  <li>Chatbot lazy-loaded on interaction (good performance pattern)</li>
+  <li>Full reviews system, trust badges, FSSAI, batch verification</li>
+  <li>7 shipping partner logos, 6 policy pages, support ticket system</li>
+</ul>
+
+<h3>Critical Issues Found</h3>
+<ul class="compact">
+  <li><strong>www vs non-www domain split:</strong> Canonicals use <code>www.gilafstore.com</code>, all sitemaps use <code>gilafstore.com</code></li>
+  <li><strong>Logo &lt;h1&gt; on every page:</strong> Every page has 2+ &lt;h1&gt; tags</li>
+  <li><strong>30 product images >200 KB:</strong> 12 images are >5 MB each (total ~103 MB)</li>
+  <li><strong>109 KB unminified CSS on every page:</strong> <code>mobile-homepage-fix.css</code> loaded everywhere</li>
+</ul>
+
+<!-- ==================== STEP 2: PROJECT STRUCTURE ==================== -->
+<div class="page-break"></div>
+<div class="step-header"><span>STEP 2</span> &mdash; Project Structure Map</div>
+
+<h3>Layout Files (<code>includes/</code>)</h3>
+<table>
+  <tr><th>File</th><th>Size</th><th>Tag</th></tr>
+  <tr><td><code>includes/new-header.php</code></td><td>37.4 KB</td><td>[THEME-ROOT] [HEADER]</td></tr>
+  <tr><td><code>includes/new-footer.php</code></td><td>37.4 KB</td><td>[FOOTER]</td></tr>
+  <tr><td><code>includes/header.php</code></td><td>7.2 KB</td><td>[HEADER] [LEGACY]</td></tr>
+  <tr><td><code>includes/footer.php</code></td><td>24.8 KB</td><td>[FOOTER] [LEGACY]</td></tr>
+  <tr><td><code>includes/admin_header.php</code></td><td>22.0 KB</td><td>[ADMIN]</td></tr>
+  <tr><td><code>includes/settings.php</code></td><td>5.8 KB</td><td>[CONFIG]</td></tr>
+  <tr><td><code>includes/db_connect.php</code></td><td>8.7 KB</td><td>[CONFIG]</td></tr>
+</table>
+
+<h3>Template Files (Root Pages)</h3>
+<table>
+  <tr><th>File</th><th>Size</th><th>Tag</th></tr>
+  <tr><td><code>index.php</code></td><td>54.8 KB</td><td>[HOMEPAGE]</td></tr>
+  <tr><td><code>product.php</code></td><td>77.4 KB</td><td>[PDP]</td></tr>
+  <tr><td><code>shop.php</code></td><td>49.2 KB</td><td>[PLP]</td></tr>
+  <tr><td><code>cart.php</code></td><td>40.7 KB</td><td>[CART]</td></tr>
+  <tr><td><code>checkout.php</code></td><td>44.5 KB</td><td>[CHECKOUT]</td></tr>
+  <tr><td><code>register.php</code></td><td>19.7 KB</td><td>[AUTH]</td></tr>
+  <tr><td><code>blogs.php</code></td><td>7.2 KB</td><td>[BLOG]</td></tr>
+  <tr><td><code>about-us.php</code></td><td>23.0 KB</td><td>[PAGE]</td></tr>
+  <tr><td><code>search.php</code></td><td>11.0 KB</td><td>[SEARCH]</td></tr>
+  <tr><td>7 policy pages</td><td>~10 KB ea</td><td>[PAGE]</td></tr>
+  <tr><td>6 payment pages</td><td>~10 KB ea</td><td>[CHECKOUT]</td></tr>
+</table>
+
+<h3>Asset Files Summary</h3>
+<table>
+  <tr><th>Type</th><th>Count</th><th>Total Size</th><th>Key Finding</th></tr>
+  <tr><td>JavaScript (<code>assets/js/</code>)</td><td>4 files</td><td>150 KB</td><td>Chatbot 99.9 KB lazy-loaded; new-main.js 29.4 KB deferred</td></tr>
+  <tr><td>CSS (<code>assets/css/</code>)</td><td>31 files</td><td>696 KB</td><td>28/31 unminified; <code>mobile-homepage-fix.css</code> 109 KB on all pages</td></tr>
+  <tr><td>Images (<code>assets/images/</code>)</td><td>55+ files</td><td>~105 MB</td><td>30 product JPGs are OVERSIZED; 12 files &gt;5 MB each</td></tr>
+  <tr><td>Fonts (<code>assets/fonts/</code>)</td><td>21 files</td><td>&mdash;</td><td>Self-hosted WOFF2 (good)</td></tr>
+</table>
+
+<h3>Additional Portals</h3>
+<table>
+  <tr><th>Portal</th><th>Items</th><th>Purpose</th></tr>
+  <tr><td><code>admin/</code></td><td>181</td><td>Full admin panel</td></tr>
+  <tr><td><code>sales-portal/</code></td><td>72</td><td>Sales executive PWA</td></tr>
+  <tr><td><code>user/</code></td><td>15</td><td>Customer account</td></tr>
+  <tr><td><code>api/</code></td><td>15</td><td>REST endpoints</td></tr>
+</table>
+
+<h3>Config Files</h3>
+<table>
+  <tr><th>File</th><th>Status</th></tr>
+  <tr><td><code>.htaccess</code></td><td><span class="b b-ex">EXISTS</span> 7.9 KB &mdash; rewrites, security headers, caching</td></tr>
+  <tr><td><code>robots.txt</code></td><td><span class="b b-ex">EXISTS</span> 0.7 KB</td></tr>
+  <tr><td><code>sitemap.xml</code></td><td><span class="b b-ex">EXISTS</span> sitemap index + 3 children</td></tr>
+  <tr><td><code>manifest.json</code></td><td><span class="b b-ex">EXISTS</span> PWA manifest</td></tr>
+  <tr><td><code>.env</code></td><td><span class="b b-mi">MISSING</span> DB credentials hardcoded in db_connect.php</td></tr>
+</table>
+
+<div class="box warn"><strong>Danger Zone:</strong> 9 debug_*.php, 7 test_*.php, 7 check_*.php, 3 fix_*.php, 18 *.sql files, and 10 *.backup_* files sit in the public web root.</div>
+
+<!-- ==================== STEP 3: SEO ==================== -->
+<div class="page-break"></div>
+<div class="step-header"><span>STEP 3</span> &mdash; SEO Files Deep Scan</div>
+
+<h3>A. SEO File Inventory</h3>
+<table>
+  <tr><th>#</th><th>File</th><th>Status</th><th>Notes</th></tr>
+  <tr><td>1</td><td><code>includes/new-header.php</code> (title, meta, canonical)</td><td><span class="b b-ex">EXISTS</span></td><td>Dynamic, escaped, with fallbacks</td></tr>
+  <tr><td>2</td><td><code>includes/seo_functions.php</code></td><td><span class="b b-ex">EXISTS</span></td><td>782-line dedicated SEO library</td></tr>
+  <tr><td>3</td><td>JSON-LD <code>@type: Product</code></td><td><span class="b b-ex">EXISTS</span></td><td>Multi-variant, AggregateRating, GTIN</td></tr>
+  <tr><td>4</td><td>Structured data (inline)</td><td><span class="b b-ex">EXISTS</span></td><td>Product+Breadcrumb on PDP; Org+WebSite global</td></tr>
+  <tr><td>5</td><td><code>robots.txt</code></td><td><span class="b b-ex">EXISTS</span></td><td>Missing test_*, check_*, fix_* patterns</td></tr>
+  <tr><td>6</td><td>Sitemaps (4 files)</td><td><span class="b b-ex">EXISTS</span></td><td>Non-www domain conflict</td></tr>
+  <tr><td>7</td><td>Open Graph tags</td><td><span class="b b-ex">EXISTS</span></td><td>Full OG suite on all pages</td></tr>
+  <tr><td>8</td><td>Twitter Card tags</td><td><span class="b b-ex">EXISTS</span></td><td>summary_large_image</td></tr>
+  <tr><td>9</td><td>Breadcrumbs</td><td><span class="b b-pa">PARTIAL</span></td><td>Product: JSON-LD; Shop: HTML only</td></tr>
+  <tr><td>10</td><td>AggregateRating</td><td><span class="b b-ex">EXISTS</span></td><td>Real reviews only, no fake inflation</td></tr>
+</table>
+
+<h3>B. Title, Meta Description &amp; Canonical</h3>
+<div class="box good"><strong>&lt;title&gt;:</strong> PASS &mdash; Dynamic in header line 54. Product: <code>seo_title &gt; "Name &mdash; Category | Gilaf Store"</code>, max 65 chars.</div>
+<div class="box good"><strong>Meta Description:</strong> PASS &mdash; Line 55. Product fallback chain: seo_description &gt; short_description &gt; first 155 chars.</div>
+<div class="box good"><strong>Canonical:</strong> PASS (with caveat) &mdash; Line 75. Dynamic with override. <strong>BUT</strong> uses <code>www.gilafstore.com</code> while sitemaps use <code>gilafstore.com</code>.</div>
+
+<h3>C. Structured Data / JSON-LD</h3>
+<table>
+  <tr><th>Schema Type</th><th>Location</th><th>Status</th></tr>
+  <tr><td>Product (multi-variant offers, GTIN, AggregateRating)</td><td><code>product.php</code> line 168</td><td><span class="b b-ok">OK</span></td></tr>
+  <tr><td>BreadcrumbList (Home &rarr; Category &rarr; Product)</td><td><code>product.php</code> line 169</td><td><span class="b b-ok">OK</span></td></tr>
+  <tr><td>Organization</td><td><code>new-footer.php</code> line 619</td><td><span class="b b-ok">OK</span></td></tr>
+  <tr><td>WebSite + SearchAction</td><td><code>new-footer.php</code> line 620</td><td><span class="b b-ok">OK</span></td></tr>
+</table>
+<div class="box warn"><strong>Missing:</strong> BreadcrumbList JSON-LD on shop, category, blog, and policy pages.</div>
+
+<h3>D. Open Graph &amp; Twitter Card</h3>
+<div class="box good"><strong>PASS:</strong> Product pages get <code>og:type=product</code> with brand, availability, condition. Generic pages use <code>og:type=website</code>. Twitter: <code>summary_large_image</code> with dynamic content.</div>
+
+<h3>E. Robots.txt &amp; Sitemap</h3>
+<div class="box good"><strong>robots.txt:</strong> Blocks admin, internal paths, SQL files. Points to sitemap.</div>
+<div class="box bad"><strong>CRITICAL:</strong> ALL sitemap URLs use <code>https://gilafstore.com</code> (no www). Canonicals use <code>https://www.gilafstore.com</code>. Domain split dilutes crawl budget.</div>
+
+<h3>F. Heading Hierarchy (&lt;h1&gt;) Audit</h3>
+<table>
+  <tr><th>Page</th><th>&lt;h1&gt; Count</th><th>Severity</th></tr>
+  <tr><td><code>new-header.php</code> (global logo)</td><td>1 on ALL pages</td><td><span class="b b-cr">Critical</span></td></tr>
+  <tr><td><code>product.php</code></td><td>1 body + 1 header = 2</td><td><span class="b b-cr">Critical</span></td></tr>
+  <tr><td><code>shop.php</code></td><td>1 body + 1 header = 2</td><td><span class="b b-cr">Critical</span></td></tr>
+  <tr><td><code>about-us.php</code></td><td>2 body + 1 header = 3</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td><code>index.php</code></td><td>0 body + 1 header = 1</td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td><code>faqs / blogs / offers</code></td><td>1 body + 1 header = 2 each</td><td><span class="b b-cr">Critical</span></td></tr>
+</table>
+
+<h3>G. Image Alt Text Audit</h3>
+<div class="box good"><strong>Public pages:</strong> PASS &mdash; All main pages have proper descriptive alt text with product names.</div>
+<div class="box warn"><strong>Internal:</strong> 4 files have empty <code>alt=""</code> (emails, admin, sales-portal, razorpay_payment.php).</div>
+
+<h3>H. Domain Consistency (www vs non-www)</h3>
+<table>
+  <tr><th>Source</th><th>Domain</th><th>Match?</th></tr>
+  <tr><td>Canonical tag, JSON-LD, OG image</td><td><code>www.gilafstore.com</code></td><td><span class="b b-ok">www</span></td></tr>
+  <tr><td>robots.txt Sitemap directive</td><td><code>www.gilafstore.com</code></td><td><span class="b b-ok">www</span></td></tr>
+  <tr style="background:#fee2e2"><td>sitemap.xml, pages-sitemap, product-sitemap, category-sitemap</td><td><code>gilafstore.com</code></td><td><span class="b b-cr">NON-www</span></td></tr>
+</table>
+
+<h3>Additional SEO Checks</h3>
+<table>
+  <tr><th>Check</th><th>Status</th><th>Severity</th></tr>
+  <tr><td>Hreflang tags</td><td><span class="b b-mi">MISSING</span></td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td>noindex control for thin pages</td><td><span class="b b-mi">MISSING</span></td><td><span class="b b-me">Medium</span></td></tr>
+</table>
+
+<!-- ==================== STEP 4: PERFORMANCE ==================== -->
+<div class="page-break"></div>
+<div class="step-header"><span>STEP 4</span> &mdash; Performance &amp; Speed Audit</div>
+
+<h3>I. Render-Blocking Scripts</h3>
+<table>
+  <tr><th>Script</th><th>Defer?</th><th>Async?</th><th>Location</th><th>Risk</th></tr>
+  <tr><td>Inline promo rotation (~40 lines)</td><td>&mdash;</td><td>&mdash;</td><td>&lt;head&gt;</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td>Google Tag (GA4/GTM/Pixel)</td><td>&mdash;</td><td>Yes*</td><td>&lt;head&gt;</td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td><code>new-main.js</code> (29.4 KB)</td><td>Yes</td><td>&mdash;</td><td>Before &lt;/body&gt;</td><td><span class="b b-ok">OK</span></td></tr>
+  <tr><td><code>checkout-mobile.js</code> (1.3 KB)</td><td>No</td><td>No</td><td>Top of body</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td>Razorpay checkout.js (external)</td><td>No</td><td>No</td><td>Payment page</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td>Chatbot loader (18 lines)</td><td>&mdash;</td><td>Lazy</td><td>Before &lt;/body&gt;</td><td><span class="b b-ok">OK</span></td></tr>
+</table>
+
+<h3>J. Heavy JavaScript (&gt;50 KB)</h3>
+<table>
+  <tr><th>File</th><th>Size</th><th>Loaded</th><th>Risk</th></tr>
+  <tr><td><code>assets/js/chatbot.js</code></td><td>99.9 KB</td><td>Lazy (interaction/idle)</td><td><span class="b b-lo">Low</span></td></tr>
+  <tr><td><code>chatbot.js</code> (root)</td><td>79.8 KB</td><td>Unknown &mdash; possible orphan</td><td><span class="b b-me">Medium</span></td></tr>
+</table>
+
+<h3>CSS Bloat Summary</h3>
+<table>
+  <tr><th>Metric</th><th>Value</th></tr>
+  <tr><td>Total CSS files</td><td>31</td></tr>
+  <tr><td>Minified</td><td>2 (<code>combined.min.css</code>, <code>fontawesome.min.css</code>)</td></tr>
+  <tr><td>Unminified</td><td>28 (+ 1 empty file)</td></tr>
+  <tr><td>Total CSS size</td><td>696 KB</td></tr>
+  <tr><td>Render-blocking CSS (homepage)</td><td>~254 KB</td></tr>
+  <tr><td>Shop page total blocking CSS</td><td>~309 KB</td></tr>
+  <tr style="background:#fee2e2"><td>Worst offender</td><td><code>mobile-homepage-fix.css</code> &mdash; 109 KB unminified, loaded on ALL pages</td></tr>
+</table>
+
+<h3>K. Oversized Images (&gt;150 KB)</h3>
+<table>
+  <tr><th>Category</th><th>Count</th><th>Size Range</th><th>Risk</th></tr>
+  <tr><td>Product JPGs &gt; 5 MB</td><td>12</td><td>6,067 &ndash; 7,932 KB</td><td><span class="b b-cr">Critical</span></td></tr>
+  <tr><td>Product JPGs 1&ndash;2 MB</td><td>12</td><td>1,476 &ndash; 1,940 KB</td><td><span class="b b-cr">Critical</span></td></tr>
+  <tr><td>Product JPGs 500&ndash;600 KB</td><td>10</td><td>540 &ndash; 552 KB</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td>Hero JPG (not loaded)</td><td>1</td><td>244 KB</td><td><span class="b b-lo">Low</span></td></tr>
+</table>
+<div class="box bad"><strong>Total product image size: ~103 MB for 30 images.</strong> All are raw JPG. Converting to WebP would reduce to ~10-15 MB (85-90% savings).</div>
+
+<h3>Image Attribute Audit</h3>
+<table>
+  <tr><th>Page</th><th>lazy</th><th>width/height</th><th>srcset</th></tr>
+  <tr><td>Homepage &mdash; hero</td><td>fetchpriority=high ✓</td><td>Yes ✓</td><td>Yes ✓</td></tr>
+  <tr><td>Homepage &mdash; product cards</td><td>Yes ✓</td><td>Yes ✓</td><td>No ✗</td></tr>
+  <tr><td>Product &mdash; main image</td><td>fetchpriority=high ✓</td><td>No ✗</td><td>No ✗</td></tr>
+  <tr><td>Shop &mdash; product grid</td><td>Yes ✓</td><td>No ✗</td><td>No ✗</td></tr>
+</table>
+
+<h3>L. Third-Party Scripts</h3>
+<table>
+  <tr><th>Script</th><th>Purpose</th><th>Load</th><th>Impact</th></tr>
+  <tr><td><code>googletagmanager.com/gtag/js</code></td><td>GA4 / Google Ads</td><td>async, conditional</td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td><code>googletagmanager.com/gtm.js</code></td><td>GTM</td><td>async inject, conditional</td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td><code>connect.facebook.net/fbevents.js</code></td><td>Meta Pixel</td><td>async, conditional</td><td><span class="b b-me">Medium</span></td></tr>
+  <tr><td><code>checkout.razorpay.com/checkout.js</code></td><td>Payment gateway</td><td>No defer/async</td><td><span class="b b-hi">High</span></td></tr>
+  <tr><td><code>flagcdn.com/*.svg</code></td><td>Country flags (16 images)</td><td>In modal</td><td><span class="b b-lo">Low</span></td></tr>
+</table>
+<div class="box good"><strong>Notable:</strong> No Hotjar, Intercom, Tidio, Zendesk, Klaviyo, or external font CDN. Fonts are self-hosted.</div>
+
+<!-- ==================== STEP 5: CRO ==================== -->
+<div class="page-break"></div>
+<div class="step-header"><span>STEP 5</span> &mdash; Conversion &amp; Trust Audit</div>
+
+<h3>M. Product Page (PDP) Conversion Elements</h3>
+<table>
+  <tr><th>Element</th><th>Status</th><th>Details</th></tr>
+  <tr><td>Add to Cart button</td><td><span class="b b-fo">FOUND</span></td><td>+ Buy Now button</td></tr>
+  <tr><td>Price above fold</td><td><span class="b b-fo">FOUND</span></td><td>Dynamic MRP, discount, Hot Deal badge</td></tr>
+  <tr><td>Reviews section</td><td><span class="b b-fo">FOUND</span></td><td>Built-in: rating bars, review cards, verified badges</td></tr>
+  <tr><td>Trust badges</td><td><span class="b b-fo">FOUND</span></td><td>Flipkart-style: Secure Payment, Certified, Genuine. Plus LAB TESTED, ORGANIC badges</td></tr>
+  <tr><td>Description section</td><td><span class="b b-fo">FOUND</span></td><td>Dynamic with storage, nutritional, shipping sections</td></tr>
+  <tr><td>Subscribe &amp; Save</td><td><span class="b b-mi">MISSING</span></td><td>No subscription option</td></tr>
+  <tr><td>Cross-sell / Related</td><td><span class="b b-fo">FOUND</span></td><td>&ldquo;You may also like&rdquo; carousel by category</td></tr>
+  <tr><td>Free shipping bar</td><td><span class="b b-pa">PARTIAL</span></td><td>Threshold calculated, &ldquo;Free Delivery&rdquo; shown. No progress bar.</td></tr>
+  <tr><td>Weight/variant selector</td><td><span class="b b-fo">FOUND</span></td><td>Dynamic pills with price + image switching</td></tr>
+  <tr><td>FSSAI License</td><td><span class="b b-fo">FOUND</span></td><td>Displayed in product details: 12724064000335</td></tr>
+  <tr><td>Batch verification</td><td><span class="b b-fo">FOUND</span></td><td>Batch input + lab/organic badges + EAN barcode</td></tr>
+  <tr><td>Share button</td><td><span class="b b-fo">FOUND</span></td><td>Inline with delivery info</td></tr>
+</table>
+
+<h3>N. Trust Signals Scan</h3>
+<table>
+  <tr><th>Signal</th><th>Status</th><th>Location</th></tr>
+  <tr><td>FSSAI text</td><td><span class="b b-fo">FOUND</span></td><td>Product page details + admin policies</td></tr>
+  <tr><td>Lab Tested</td><td><span class="b b-fo">FOUND</span></td><td>Product page badge (per batch) + shop overlays</td></tr>
+  <tr><td>Money-back guarantee</td><td><span class="b b-pa">PARTIAL</span></td><td>Legal pages only. No prominent badge on PDP/homepage.</td></tr>
+  <tr><td>Phone number</td><td><span class="b b-fo">FOUND</span></td><td>Contact page: +91 94194 04670</td></tr>
+  <tr><td>Physical address</td><td><span class="b b-fo">FOUND</span></td><td>Contact page: Sopore, Baramulla, J&amp;K</td></tr>
+  <tr><td>Email</td><td><span class="b b-fo">FOUND</span></td><td>support@gilafstore.com</td></tr>
+  <tr><td>Social media</td><td><span class="b b-fo">FOUND</span></td><td>Instagram, Facebook, WhatsApp, LinkedIn</td></tr>
+  <tr><td>Shipping partners</td><td><span class="b b-fo">FOUND</span></td><td>7 partners: DHL, FedEx, DP World, India Post, Delhivery, Blue Dart, DTDC</td></tr>
+</table>
+
+<h3>O. Header &amp; Footer</h3>
+
+<p><strong>Header (<code>new-header.php</code>):</strong></p>
+<table>
+  <tr><th>Element</th><th>Status</th></tr>
+  <tr><td>Logo</td><td><span class="b b-fo">FOUND</span> &mdash; &ldquo;GILAF STORE&rdquo; + tagline</td></tr>
+  <tr><td>Search bar</td><td><span class="b b-fo">FOUND</span> &mdash; Icon toggle + autocomplete</td></tr>
+  <tr><td>Cart icon with count</td><td><span class="b b-fo">FOUND</span> &mdash; Red badge with dynamic count</td></tr>
+  <tr><td>Announcement bar</td><td><span class="b b-fo">FOUND</span> &mdash; Rotating promo codes + &ldquo;Certified Organic&rdquo;</td></tr>
+  <tr><td>Free shipping threshold</td><td><span class="b b-mi">MISSING</span> &mdash; No visible bar/indicator in header</td></tr>
+  <tr><td>Mobile menu</td><td><span class="b b-fo">FOUND</span> &mdash; Full nav with submenu panels</td></tr>
+  <tr><td>Region/currency selector</td><td><span class="b b-fo">FOUND</span> &mdash; 18 countries with flag + currency</td></tr>
+</table>
+
+<p><strong>Footer (<code>new-footer.php</code>):</strong></p>
+<table>
+  <tr><th>Element</th><th>Status</th></tr>
+  <tr><td>Payment icons</td><td><span class="b b-fo">FOUND</span> &mdash; Visa, Mastercard, PayPal, Apple Pay</td></tr>
+  <tr><td>Privacy policy link</td><td><span class="b b-fo">FOUND</span></td></tr>
+  <tr><td>Returns policy link</td><td><span class="b b-fo">FOUND</span></td></tr>
+  <tr><td>6 policy page links</td><td><span class="b b-fo">FOUND</span></td></tr>
+  <tr><td>Contact info in footer</td><td><span class="b b-pa">PARTIAL</span> &mdash; WhatsApp link + ticket link. No direct phone/email.</td></tr>
+  <tr><td>FSSAI in footer</td><td><span class="b b-mi">MISSING</span> &mdash; Only on product pages</td></tr>
+  <tr><td>Shipping partners</td><td><span class="b b-fo">FOUND</span> &mdash; 7 partners in 2 groups</td></tr>
+  <tr><td>Social media links</td><td><span class="b b-fo">FOUND</span> &mdash; 4 platforms</td></tr>
+</table>
+
+<!-- ==================== COMPLETE ISSUE REGISTRY ==================== -->
+<div class="page-break"></div>
+<div class="step-header"><span>P.</span> Complete Issue Registry (All Steps)</div>
+
+<table>
+  <tr><th>#</th><th>Issue</th><th>Step</th><th>Severity</th><th>Fix</th></tr>
+  <tr style="background:#fef2f2"><td>1</td><td>www vs non-www domain split in sitemaps vs canonicals</td><td>3</td><td><span class="b b-cr">Critical</span></td><td>Update 4 sitemap files</td></tr>
+  <tr style="background:#fef2f2"><td>2</td><td>Logo &lt;h1&gt; on ALL pages &mdash; duplicate H1 sitewide</td><td>3</td><td><span class="b b-cr">Critical</span></td><td>Change &lt;h1&gt; to &lt;span&gt;</td></tr>
+  <tr style="background:#fef2f2"><td>3</td><td>30 product images &gt;200 KB (12 &gt; 5 MB) &mdash; raw JPG</td><td>4</td><td><span class="b b-cr">Critical</span></td><td>Convert to WebP</td></tr>
+  <tr style="background:#fef2f2"><td>4</td><td><code>mobile-homepage-fix.css</code> 109 KB unminified on all pages</td><td>4</td><td><span class="b b-cr">Critical</span></td><td>Minify or merge</td></tr>
+  <tr style="background:#ffedd5"><td>5</td><td>Duplicate &lt;h1&gt; on about-us.php (3 total)</td><td>3</td><td><span class="b b-hi">High</span></td><td>Change 2nd to &lt;h2&gt;</td></tr>
+  <tr style="background:#ffedd5"><td>6</td><td>Promo rotation inline script in &lt;head&gt; blocks first paint</td><td>4</td><td><span class="b b-hi">High</span></td><td>Move to body or defer</td></tr>
+  <tr><td>7</td><td>Product main image + shop images missing width/height (CLS)</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Add attributes</td></tr>
+  <tr><td>8</td><td>checkout-mobile.js no defer/async</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Add defer</td></tr>
+  <tr><td>9</td><td>Razorpay checkout.js no defer (payment page only)</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Add defer</td></tr>
+  <tr><td>10</td><td>28/31 CSS files unminified</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Build step</td></tr>
+  <tr><td>11</td><td>No srcset on product/shop images</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Add srcset</td></tr>
+  <tr><td>12</td><td>Missing BreadcrumbList on shop/category/blog pages</td><td>3</td><td><span class="b b-me">Medium</span></td><td>Add schema calls</td></tr>
+  <tr><td>13</td><td>robots.txt missing test_*, check_*, fix_* Disallow</td><td>3</td><td><span class="b b-me">Medium</span></td><td>Add 5 lines</td></tr>
+  <tr><td>14</td><td>No hreflang tags</td><td>3</td><td><span class="b b-me">Medium</span></td><td>Implement if multilingual</td></tr>
+  <tr><td>15</td><td>No noindex on cart/checkout/thank-you</td><td>3</td><td><span class="b b-me">Medium</span></td><td>Add conditional meta</td></tr>
+  <tr><td>16</td><td>No Subscribe &amp; Save option</td><td>5</td><td><span class="b b-me">Medium</span></td><td>Feature build</td></tr>
+  <tr><td>17</td><td>No free shipping progress bar</td><td>5</td><td><span class="b b-me">Medium</span></td><td>Add to cart/PDP</td></tr>
+  <tr><td>18</td><td>No money-back guarantee badge on PDP</td><td>5</td><td><span class="b b-me">Medium</span></td><td>Add trust badge</td></tr>
+  <tr><td>19</td><td>No FSSAI / contact info in global footer</td><td>5</td><td><span class="b b-me">Medium</span></td><td>Add to footer</td></tr>
+  <tr><td>20</td><td>Root chatbot.js (79.8 KB) possible orphan</td><td>4</td><td><span class="b b-me">Medium</span></td><td>Investigate &amp; remove</td></tr>
+  <tr><td>21</td><td>Homepage missing content &lt;h1&gt;</td><td>3</td><td><span class="b b-me">Medium</span></td><td>Add to hero</td></tr>
+  <tr><td>22</td><td>Empty alt on razorpay_payment.php</td><td>3</td><td><span class="b b-lo">Low</span></td><td>Add product name</td></tr>
+  <tr><td>23</td><td>Generic thumbnail alt text</td><td>3</td><td><span class="b b-lo">Low</span></td><td>Use product name</td></tr>
+  <tr><td>24</td><td>Missing &lt;h1&gt; on cart/checkout</td><td>3</td><td><span class="b b-lo">Low</span></td><td>Add heading</td></tr>
+  <tr><td>25</td><td>Empty mobile-section-titles.css</td><td>4</td><td><span class="b b-lo">Low</span></td><td>Delete file</td></tr>
+  <tr><td>26</td><td>Legacy main.js present but not loaded</td><td>4</td><td><span class="b b-lo">Low</span></td><td>Delete file</td></tr>
+  <tr><td>27</td><td>No .env file &mdash; DB creds hardcoded</td><td>2</td><td><span class="b b-lo">Low</span></td><td>Migrate to .env</td></tr>
+  <tr><td>28</td><td>75+ debug/test/SQL files in web root</td><td>2</td><td><span class="b b-lo">Low</span></td><td>Quarantine</td></tr>
+</table>
+
+<!-- ==================== ACTION PLAN ==================== -->
+<div class="step-header"><span>Q.</span> Recommended Action Plan</div>
+
+<h3>Priority 1 &mdash; Critical (Do Immediately)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Effort</th><th>Impact</th></tr>
+  <tr><td>A</td><td>Change logo <code>&lt;h1&gt;</code> to <code>&lt;span&gt;</code> in <code>new-header.php</code> line 373</td><td>1 min</td><td>Fixes duplicate H1 sitewide</td></tr>
+  <tr><td>B</td><td>Update ALL sitemap files to use <code>https://www.gilafstore.com</code></td><td>15 min</td><td>Resolves domain split</td></tr>
+  <tr><td>C</td><td>Convert 30 product JPGs to WebP (batch script exists)</td><td>30 min</td><td>LCP improvement 2-5s</td></tr>
+  <tr><td>D</td><td>Minify <code>mobile-homepage-fix.css</code> (109 KB &rarr; ~60 KB)</td><td>10 min</td><td>49 KB saved every page</td></tr>
+</table>
+
+<h3>Priority 2 &mdash; High/Medium (Within 1 Week)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Effort</th></tr>
+  <tr><td>E</td><td>Fix about-us.php duplicate &lt;h1&gt; (line 290 &rarr; &lt;h2&gt;)</td><td>1 min</td></tr>
+  <tr><td>F</td><td>Add <code>width/height</code> to product + shop images</td><td>15 min</td></tr>
+  <tr><td>G</td><td>Add <code>defer</code> to checkout-mobile.js</td><td>1 min</td></tr>
+  <tr><td>H</td><td>Move promo rotation script from &lt;head&gt; to before &lt;/body&gt;</td><td>10 min</td></tr>
+  <tr><td>I</td><td>Add BreadcrumbList JSON-LD to shop + category pages</td><td>30 min</td></tr>
+  <tr><td>J</td><td>Update robots.txt with missing Disallow patterns</td><td>5 min</td></tr>
+  <tr><td>K</td><td>Add conditional noindex for cart/checkout/thank-you</td><td>10 min</td></tr>
+  <tr><td>L</td><td>Add &lt;h1&gt; to homepage hero</td><td>2 min</td></tr>
+  <tr><td>M</td><td>Add FSSAI number + contact info to global footer</td><td>10 min</td></tr>
+</table>
+
+<h3>Priority 3 &mdash; Enhancements (Within 1 Month)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Effort</th></tr>
+  <tr><td>N</td><td>Add free shipping progress bar to PDP + cart</td><td>2 hrs</td></tr>
+  <tr><td>O</td><td>Add money-back guarantee badge to product page</td><td>30 min</td></tr>
+  <tr><td>P</td><td>Implement srcset on product/shop images</td><td>2 hrs</td></tr>
+  <tr><td>Q</td><td>Implement hreflang if multilingual content served</td><td>4 hrs</td></tr>
+  <tr><td>R</td><td>Build Subscribe &amp; Save feature</td><td>1-2 weeks</td></tr>
+  <tr><td>S</td><td>Quarantine debug/test/SQL files from web root</td><td>1 hr</td></tr>
+  <tr><td>T</td><td>Migrate DB credentials to .env</td><td>2 hrs</td></tr>
+</table>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  <p><strong>Gilaf Store &mdash; Complete Technical Audit Report (Steps 1&ndash;5)</strong></p>
+  <p>Generated: May 8, 2026 &nbsp;|&nbsp; Platform: Custom PHP &nbsp;|&nbsp; Domain: gilafstore.com</p>
+  <p style="margin-top:4px;">This report is confidential and intended for internal use only.</p>
+</div>
+
+</div>
+</body>
+</html>

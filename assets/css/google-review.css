@@ -1,0 +1,438 @@
+/* ============================================================
+   Google Review Section — Cinematic Premium Redesign
+   Colors: --color-green (#1A3C34), --color-gold (#C5A059),
+           --color-ivory (#F8F5F2)
+   Fonts:  Playfair Display (headings), Inter (body)
+   ============================================================ */
+
+/* ---- Section Background: Professional Deep Navy-Midnight Blue ---- */
+.google-review-section {
+    padding: 50px 20px;
+    background: linear-gradient(135deg, #1a237e 0%, #0d1b69 35%, #0a1458 70%, #070d3a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle blue ambient light + professional texture */
+.google-review-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(63, 81, 181, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(48, 63, 159, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(48, 63, 159, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Cinematic top/bottom vignette */
+.google-review-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        linear-gradient(to bottom, rgba(7, 13, 58, 0.7) 0%, transparent 20%),
+        linear-gradient(to top, rgba(7, 13, 58, 0.7) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ---- Container: 50% focused width ---- */
+.google-review-inner {
+    max-width: 50%;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* ---- Gold radial glow behind the glass card ---- */
+.google-review-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle at center, rgba(212, 175, 55, 0.12) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ---- Glass Card ---- */
+.google-review-card {
+    position: relative;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.055);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    padding: 32px 40px 13px;
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+/* ---- Google Icon Badge with white background ---- */
+.google-review-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #ffffff;
+    border: none;
+    border-radius: 50%;
+    margin-bottom: 16px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Cinematic glow behind icon */
+.google-review-badge::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 65%);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.google-review-badge svg {
+    width: 28px;
+    height: 28px;
+}
+
+/* ---- Stars Row ---- */
+.google-review-stars {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.google-review-stars i {
+    font-size: 1.15rem;
+    color: #F4B400;
+    text-shadow: 0 2px 10px rgba(244, 180, 0, 0.4);
+}
+
+/* ---- Divider ---- */
+.google-review-divider {
+    width: 36px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.45), transparent);
+    margin: 0 auto 16px;
+}
+
+/* ---- Heading ---- */
+.google-review-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+    line-height: 1.25;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.google-review-heading span {
+    color: #C5A059;
+    font-style: italic;
+}
+
+/* ---- Subtitle ---- */
+.google-review-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+    margin-bottom: 22px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ---- CTA Button: Premium Pill ---- */
+.google-review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 32px;
+    background: linear-gradient(135deg, #d4af37 0%, #caa34a 100%);
+    color: #0f1f1a;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-radius: 40px;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 24px rgba(212, 175, 55, 0.3);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer overlay on button */
+.google-review-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.google-review-btn:hover::before {
+    left: 100%;
+}
+
+.google-review-btn:hover {
+    background: linear-gradient(135deg, #e0c050 0%, #d4b84e 100%);
+    transform: translateY(-3px);
+    box-shadow:
+        0 8px 32px rgba(212, 175, 55, 0.45),
+        0 0 20px rgba(212, 175, 55, 0.15);
+    color: #0f1f1a;
+    text-decoration: none;
+}
+
+.google-review-btn:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+}
+
+.google-review-btn svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* ---- Trust Strip ---- */
+.google-review-trust {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.76rem;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.5px;
+}
+
+.google-review-trust i {
+    font-size: 0.65rem;
+    color: rgba(197, 160, 89, 0.45);
+}
+
+/* ---- Trust Hub (two-row premium redesign) ---- */
+.gr-trust-hub {
+    margin-top: 10px;
+}
+
+/* Slim gold micro-divider */
+.gr-hub-divider {
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.32), transparent);
+    margin: 0 auto 8px;
+}
+
+/* Row 1: Rotating testimonials */
+.gr-testimonial-wrap {
+    position: relative;
+    height: 15px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.gr-testimonial {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.82);
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    opacity: 0;
+    transition: opacity 0.75s ease;
+    pointer-events: none;
+}
+
+.gr-t-active {
+    opacity: 1;
+}
+
+/* Row 2: Compact trust stat chips */
+.gr-stat-chips {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+}
+
+.gr-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    background: rgba(197, 160, 89, 0.14);
+    border: 1px solid rgba(197, 160, 89, 0.55);
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.61rem;
+    color: #d4af37;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+.gr-chip-globe {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.30);
+    color: rgba(255, 255, 255, 0.70);
+}
+
+/* ---- Responsive: Tablet ---- */
+@media (max-width: 1024px) {
+    .google-review-inner {
+        max-width: 65%;
+    }
+}
+
+/* ---- Responsive: Mobile ---- */
+@media (max-width: 768px) {
+    .google-review-section {
+        padding: 70px 16px;
+    }
+
+    .google-review-inner {
+        max-width: 92%;
+    }
+
+    .google-review-card {
+        padding: 44px 28px 36px;
+        border-radius: 18px;
+    }
+
+    .google-review-badge {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 22px;
+    }
+
+    .google-review-badge svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .google-review-stars {
+        gap: 8px;
+        margin-bottom: 22px;
+    }
+
+    .google-review-stars i {
+        font-size: 1.2rem;
+    }
+
+    .google-review-heading {
+        font-size: 1.65rem;
+        letter-spacing: 0.3px;
+    }
+
+    .google-review-subtitle {
+        font-size: 0.88rem;
+        margin-bottom: 28px;
+        padding: 0 4px;
+    }
+
+    .google-review-btn {
+        padding: 14px 32px;
+        font-size: 0.82rem;
+        letter-spacing: 0.8px;
+    }
+
+    .google-review-trust {
+        font-size: 0.7rem;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .gr-trust-hub {
+        margin-top: 8px;
+    }
+
+    .gr-testimonial {
+        font-size: 0.69rem;
+    }
+
+    .gr-chip {
+        font-size: 0.58rem;
+        padding: 2px 7px;
+    }
+}
+
+/* ---- Responsive: Small phones ---- */
+@media (max-width: 400px) {
+    .google-review-section {
+        padding: 56px 12px;
+    }
+
+    .google-review-inner {
+        max-width: 96%;
+    }
+
+    .google-review-card {
+        padding: 36px 20px 20px;
+        border-radius: 16px;
+    }
+
+    .google-review-heading {
+        font-size: 1.4rem;
+    }
+
+    .google-review-subtitle {
+        font-size: 0.84rem;
+    }
+
+    .google-review-btn {
+        padding: 13px 26px;
+        font-size: 0.78rem;
+        gap: 8px;
+    }
+
+    .gr-chip-globe {
+        display: none;
+    }
+
+    .gr-stat-chips {
+        gap: 4px;
+    }
+}

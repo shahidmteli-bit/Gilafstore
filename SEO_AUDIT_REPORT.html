@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gilaf Store — SEO Technical Audit Report</title>
+<style>
+  @page { size: A4; margin: 18mm 15mm; }
+  @media print {
+    body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+    table { page-break-inside: auto; }
+    tr { page-break-inside: avoid; }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', -apple-system, sans-serif; color: #1a1a1a; line-height: 1.6; background: #f5f5f5; }
+  .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 48px 44px; box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+  
+  /* Cover */
+  .cover { text-align: center; padding: 60px 0 40px; border-bottom: 3px solid #1A3C34; margin-bottom: 40px; }
+  .cover-logo { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; color: #D4AF37; font-weight: 600; margin-bottom: 8px; }
+  .cover h1 { font-size: 32px; color: #1A3C34; font-weight: 700; margin-bottom: 6px; }
+  .cover h2 { font-size: 18px; color: #555; font-weight: 400; margin-bottom: 24px; }
+  .cover-meta { font-size: 13px; color: #888; }
+  .cover-meta span { display: inline-block; margin: 0 12px; }
+  
+  /* Score banner */
+  .score-banner { display: flex; gap: 16px; margin-bottom: 36px; }
+  .score-card { flex: 1; padding: 18px 16px; border-radius: 10px; text-align: center; }
+  .score-card.critical { background: #fef2f2; border: 1px solid #fecaca; }
+  .score-card.high { background: #fff7ed; border: 1px solid #fed7aa; }
+  .score-card.medium { background: #fffbeb; border: 1px solid #fde68a; }
+  .score-card.low { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .score-number { font-size: 32px; font-weight: 700; }
+  .score-card.critical .score-number { color: #dc2626; }
+  .score-card.high .score-number { color: #ea580c; }
+  .score-card.medium .score-number { color: #ca8a04; }
+  .score-card.low .score-number { color: #16a34a; }
+  .score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin-top: 2px; }
+  
+  /* Headings */
+  h2 { font-size: 20px; color: #1A3C34; border-bottom: 2px solid #e5e7eb; padding-bottom: 8px; margin: 36px 0 16px; }
+  h3 { font-size: 16px; color: #374151; margin: 20px 0 10px; }
+  h2 .section-num { color: #D4AF37; margin-right: 6px; }
+  
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+  th { background: #1A3C34; color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 12px; letter-spacing: 0.3px; }
+  td { padding: 9px 12px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+  tr:nth-child(even) { background: #f9fafb; }
+  
+  /* Badges */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; letter-spacing: 0.3px; }
+  .badge-exists { background: #d1fae5; color: #065f46; }
+  .badge-partial { background: #fef3c7; color: #92400e; }
+  .badge-missing { background: #fee2e2; color: #991b1b; }
+  .badge-ok { background: #d1fae5; color: #065f46; }
+  .badge-critical { background: #fee2e2; color: #991b1b; }
+  .badge-high { background: #ffedd5; color: #9a3412; }
+  .badge-medium { background: #fef3c7; color: #854d0e; }
+  .badge-low { background: #e0f2fe; color: #075985; }
+  .badge-found { background: #fee2e2; color: #991b1b; }
+  
+  /* Code */
+  code { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', 'Courier New', monospace; font-size: 12px; color: #374151; }
+  pre { background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-size: 12px; line-height: 1.5; margin: 10px 0 16px; }
+  
+  /* Info boxes */
+  .info-box { padding: 14px 18px; border-radius: 8px; margin: 14px 0; font-size: 13px; }
+  .info-box.finding { background: #fef2f2; border-left: 4px solid #dc2626; }
+  .info-box.good { background: #f0fdf4; border-left: 4px solid #16a34a; }
+  .info-box.warn { background: #fffbeb; border-left: 4px solid #eab308; }
+  .info-box strong { color: #111; }
+  
+  /* Executive summary list */
+  .exec-list { margin: 12px 0 20px 0; }
+  .exec-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f3f4f6; align-items: flex-start; }
+  .exec-item:last-child { border-bottom: none; }
+  .exec-icon { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+  .exec-icon.pass { background: #d1fae5; color: #065f46; }
+  .exec-icon.fail { background: #fee2e2; color: #991b1b; }
+  .exec-icon.warn { background: #fef3c7; color: #92400e; }
+  .exec-text { font-size: 13px; }
+  
+  /* Print button */
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: #1A3C34; color: #fff; border: none; padding: 14px 28px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 999; }
+  .print-btn:hover { background: #2d5a4e; }
+  
+  /* TOC */
+  .toc { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px 24px; margin: 20px 0 30px; }
+  .toc-title { font-size: 14px; font-weight: 700; color: #1A3C34; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+  .toc-list { list-style: none; }
+  .toc-list li { padding: 4px 0; font-size: 13px; }
+  .toc-list li span { color: #D4AF37; font-weight: 600; margin-right: 6px; }
+  
+  /* Footer */
+  .report-footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: center; font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Save as PDF</button>
+
+<div class="container">
+
+<!-- ===== COVER ===== -->
+<div class="cover">
+  <div class="cover-logo">Gilaf Store</div>
+  <h1>SEO Technical Audit Report</h1>
+  <h2>Comprehensive Analysis of On-Page SEO, Structured Data, Sitemaps & Technical Health</h2>
+  <div class="cover-meta">
+    <span>Date: May 7, 2026</span>
+    <span>|</span>
+    <span>Platform: Custom PHP Ecommerce</span>
+    <span>|</span>
+    <span>Domain: gilafstore.com</span>
+  </div>
+</div>
+
+<!-- ===== SEVERITY SCORE CARDS ===== -->
+<div class="score-banner">
+  <div class="score-card critical"><div class="score-number">4</div><div class="score-label">Critical</div></div>
+  <div class="score-card high"><div class="score-number">1</div><div class="score-label">High</div></div>
+  <div class="score-card medium"><div class="score-number">4</div><div class="score-label">Medium</div></div>
+  <div class="score-card low"><div class="score-number">2</div><div class="score-label">Low</div></div>
+</div>
+
+<!-- ===== TABLE OF CONTENTS ===== -->
+<div class="toc">
+  <div class="toc-title">Table of Contents</div>
+  <ul class="toc-list">
+    <li><span>1.</span> Executive Summary</li>
+    <li><span>2.</span> SEO File Inventory &amp; Status</li>
+    <li><span>3.</span> Title, Meta Description &amp; Canonical Tags</li>
+    <li><span>4.</span> Structured Data / JSON-LD Analysis</li>
+    <li><span>5.</span> Open Graph &amp; Twitter Card Tags</li>
+    <li><span>6.</span> Robots.txt &amp; Sitemap Analysis</li>
+    <li><span>7.</span> Breadcrumb Implementation</li>
+    <li><span>8.</span> Heading Hierarchy (&lt;h1&gt;) Audit</li>
+    <li><span>9.</span> Image Alt Text Audit</li>
+    <li><span>10.</span> Hreflang / Internationalization</li>
+    <li><span>11.</span> Domain Consistency (www vs non-www)</li>
+    <li><span>12.</span> Phase 1 Performance &amp; Security Summary</li>
+    <li><span>13.</span> Complete Issue Registry</li>
+    <li><span>14.</span> Recommended Action Plan</li>
+  </ul>
+</div>
+
+<!-- ===== 1. EXECUTIVE SUMMARY ===== -->
+<h2><span class="section-num">1.</span> Executive Summary</h2>
+
+<p style="margin-bottom: 14px; font-size: 14px;">Gilaf Store has a <strong>solid SEO foundation</strong> with a dedicated 782-line SEO functions library, proper JSON-LD structured data for products, dynamic canonical URLs, and complete Open Graph / Twitter Card coverage. However, several <strong>critical issues</strong> undermine search engine visibility.</p>
+
+<div class="exec-list">
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Title &amp; Meta Description:</strong> Dynamic, properly escaped, with intelligent fallbacks per product and page.</div></div>
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Canonical URLs:</strong> Present on all pages. Product pages use slug-based canonical with override support.</div></div>
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Product JSON-LD:</strong> Multi-variant Offers with real pricing, GTIN/EAN, AggregateRating (real reviews only).</div></div>
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Open Graph + Twitter Cards:</strong> Complete coverage. Product pages get <code>og:type=product</code> with brand, availability, condition.</div></div>
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Organization + WebSite Schema:</strong> Global JSON-LD on all pages via footer, including SearchAction for sitelinks.</div></div>
+  <div class="exec-item"><div class="exec-icon pass">&#10003;</div><div class="exec-text"><strong>Product Sitemap:</strong> Dynamic PHP with image tags, 24h cache, slug-based URLs.</div></div>
+  <div class="exec-item"><div class="exec-icon fail">&#10007;</div><div class="exec-text"><strong>www vs non-www Domain Split:</strong> Canonical uses <code>www.gilafstore.com</code> but ALL sitemaps use <code>gilafstore.com</code>. Google treats these as separate sites.</div></div>
+  <div class="exec-item"><div class="exec-icon fail">&#10007;</div><div class="exec-text"><strong>Logo &lt;h1&gt; on Every Page:</strong> The header logo is wrapped in <code>&lt;h1&gt;</code>, giving every page 2+ &lt;h1&gt; tags. This is the single most impactful on-page SEO fix available.</div></div>
+  <div class="exec-item"><div class="exec-icon warn">!</div><div class="exec-text"><strong>No hreflang tags:</strong> Despite having a language detection system, no hreflang link elements exist in &lt;head&gt;.</div></div>
+  <div class="exec-item"><div class="exec-icon warn">!</div><div class="exec-text"><strong>Missing breadcrumb schema</strong> on shop and category pages (only product pages have BreadcrumbList JSON-LD).</div></div>
+</div>
+
+<!-- ===== 2. SEO FILE INVENTORY ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">2.</span> SEO File Inventory &amp; Status</h2>
+
+<p style="margin-bottom: 12px; font-size: 13px;">This platform is custom PHP (not Shopify/Liquid). The equivalent SEO architecture files are mapped below.</p>
+
+<table>
+  <tr><th style="width:5%">#</th><th style="width:28%">Shopify Equivalent</th><th style="width:32%">Actual PHP File</th><th style="width:12%">Status</th><th style="width:23%">Notes</th></tr>
+  <tr><td>1</td><td><code>layout/theme.liquid</code></td><td><code>includes/new-header.php</code></td><td><span class="badge badge-exists">EXISTS</span></td><td>&lt;title&gt;, meta description, canonical, OG, Twitter all present</td></tr>
+  <tr><td>2</td><td><code>snippets/seo.liquid</code></td><td><code>includes/seo_functions.php</code></td><td><span class="badge badge-exists">EXISTS</span></td><td>782-line dedicated SEO library</td></tr>
+  <tr><td>3</td><td><code>snippets/json-ld.liquid</code></td><td><code>includes/seo_functions.php</code> (lines 375-595)</td><td><span class="badge badge-exists">EXISTS</span></td><td>Product, BreadcrumbList, Organization, WebSite schemas</td></tr>
+  <tr><td>4</td><td><code>snippets/structured-data.liquid</code></td><td><code>product.php</code> + <code>new-footer.php</code></td><td><span class="badge badge-exists">EXISTS</span></td><td>Product: lines 168-169; Global: footer lines 619-620</td></tr>
+  <tr><td>5</td><td><code>robots.txt</code></td><td><code>robots.txt</code></td><td><span class="badge badge-exists">EXISTS</span></td><td>33 lines, blocks admin/internal paths</td></tr>
+  <tr><td>6</td><td><code>sitemap.xml</code></td><td><code>sitemap.xml</code> + 3 child sitemaps</td><td><span class="badge badge-exists">EXISTS</span></td><td>Index + pages + product (dynamic) + category (dynamic)</td></tr>
+  <tr><td>7</td><td>OpenGraph tags</td><td><code>new-header.php</code> + <code>seo_functions.php</code></td><td><span class="badge badge-exists">EXISTS</span></td><td>Full OG suite on all pages</td></tr>
+  <tr><td>8</td><td>Twitter Card tags</td><td><code>new-header.php</code> + <code>seo_functions.php</code></td><td><span class="badge badge-exists">EXISTS</span></td><td><code>summary_large_image</code> with dynamic content</td></tr>
+  <tr><td>9</td><td>Breadcrumb markup</td><td><code>shop.php</code> (HTML) + <code>product.php</code> (JSON-LD)</td><td><span class="badge badge-partial">PARTIAL</span></td><td>Shop has HTML only; Product has JSON-LD only; Category pages have neither</td></tr>
+  <tr><td>10</td><td>AggregateRating</td><td><code>seo_functions.php</code> (lines 495-503)</td><td><span class="badge badge-exists">EXISTS</span></td><td>Real reviews only, no fake inflation</td></tr>
+</table>
+
+<!-- ===== 3. TITLE, META, CANONICAL ===== -->
+<h2><span class="section-num">3.</span> Title, Meta Description &amp; Canonical Tags</h2>
+
+<h3>3.1 &lt;title&gt; Tag</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Dynamic title tag in <code>includes/new-header.php</code> line 54.<br>
+  <code>&lt;title&gt;&lt;?= htmlspecialchars($pageTitle); ?&gt;&lt;/title&gt;</code><br>
+  Product pages use <code>get_seo_title()</code> which follows priority: <code>seo_title &gt; "Name &mdash; Category | Gilaf Store"</code>, truncated to 65 chars.
+</div>
+
+<h3>3.2 Meta Description</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Line 55. Dynamic with intelligent fallback chain.<br>
+  Product pages: <code>seo_description &gt; short_description &gt; first 155 chars of description &gt; generic fallback</code>.<br>
+  Generic pages: default <em>"Gilaf Store &mdash; Premium Kashmiri saffron, organic honey..."</em>
+</div>
+
+<h3>3.3 Canonical URL</h3>
+<div class="info-box good">
+  <strong>Status: PASS (with caveat)</strong> &mdash; Line 75. Dynamic canonical with override support.<br>
+  Auto-detects from <code>REQUEST_URI</code>, preserves only <code>?id=</code> and <code>?category=</code> params.<br>
+  Product pages use slug-based canonical via <code>get_product_canonical_url()</code>.<br>
+  <strong>Domain:</strong> Hardcoded to <code>https://www.gilafstore.com</code> &mdash; see Section 11 for conflict.
+</div>
+
+<h3>3.4 Meta Keywords</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Conditionally rendered when product has <code>seo_keywords</code> field populated. Not rendered when empty (correct behavior &mdash; empty keywords tag is harmful).
+</div>
+
+<!-- ===== 4. STRUCTURED DATA ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">4.</span> Structured Data / JSON-LD Analysis</h2>
+
+<h3>4.1 Product Schema (<code>@type: Product</code>)</h3>
+<div class="info-box good">
+  <strong>Status: PASS &mdash; Enterprise-grade implementation</strong>
+</div>
+
+<table>
+  <tr><th>Field</th><th>Implementation</th><th>Status</th></tr>
+  <tr><td>@type</td><td>Product</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>name</td><td>From <code>$product['name']</code></td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>image</td><td>Array of all product images (image_1 through image_4+)</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>description</td><td>Strip-tagged, max 5000 chars, with category fallback</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>brand</td><td><code>@type: Brand</code>, name: "Gilaf Store"</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>url</td><td>Canonical URL (slug-based)</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>sku</td><td>Product SKU or fallback <code>GILAF-{id}</code></td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>category</td><td>Category name when available</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>offers</td><td><strong>Multi-variant:</strong> One Offer per weight variant with individual price, stock, GTIN. Uses <code>calculate_discount_price()</code> for real pricing.</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>offers.availability</td><td>Per-variant: InStock / OutOfStock based on actual stock_qty</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>offers.priceValidUntil</td><td>Only when auto-discount is active AND has end_date. Promo codes excluded.</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>offers.gtin13</td><td>EAN barcode per variant when available</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td>aggregateRating</td><td>Only when <code>is_actual === true</code> AND <code>count > 0</code>. No fake 4.5-star defaults.</td><td><span class="badge badge-ok">OK</span></td></tr>
+</table>
+
+<h3>4.2 BreadcrumbList Schema</h3>
+<div class="info-box warn">
+  <strong>Status: PARTIAL</strong> &mdash; Only on product pages via <code>build_product_breadcrumb_schema()</code>.<br>
+  Structure: Home &rarr; Category &rarr; Product Name.<br>
+  <strong>Missing on:</strong> Shop page, category pages, policy pages, blog pages.
+</div>
+
+<h3>4.3 Organization Schema</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Global on all pages via <code>includes/new-footer.php</code> line 619.<br>
+  Includes name, URL, logo, description, sameAs (Instagram, Facebook), contactPoint.
+</div>
+
+<h3>4.4 WebSite Schema with SearchAction</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Global on all pages via footer line 620.<br>
+  Enables Google Sitelinks Search Box. Target URL: <code>shop.php?search={query}</code>.
+</div>
+
+<!-- ===== 5. OG + TWITTER ===== -->
+<h2><span class="section-num">5.</span> Open Graph &amp; Twitter Card Tags</h2>
+
+<h3>5.1 Product Pages</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Rendered via <code>render_product_meta_tags()</code> in <code>seo_functions.php</code>.
+</div>
+<table>
+  <tr><th>Tag</th><th>Value</th></tr>
+  <tr><td><code>og:type</code></td><td><code>product</code></td></tr>
+  <tr><td><code>og:title</code></td><td>Dynamic from <code>get_seo_title()</code></td></tr>
+  <tr><td><code>og:description</code></td><td>Dynamic from <code>get_seo_description()</code></td></tr>
+  <tr><td><code>og:url</code></td><td>Canonical URL (slug-based)</td></tr>
+  <tr><td><code>og:image</code></td><td>Product image with 1200x630 dimensions declared</td></tr>
+  <tr><td><code>og:site_name</code></td><td>Gilaf Store</td></tr>
+  <tr><td><code>og:locale</code></td><td>en_IN</td></tr>
+  <tr><td><code>product:brand</code></td><td>Gilaf Store</td></tr>
+  <tr><td><code>product:availability</code></td><td>in stock</td></tr>
+  <tr><td><code>product:condition</code></td><td>new</td></tr>
+  <tr><td><code>twitter:card</code></td><td>summary_large_image</td></tr>
+  <tr><td><code>twitter:title / description / image</code></td><td>Mirrors OG values</td></tr>
+</table>
+
+<h3>5.2 Generic Pages</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; Fallback block in <code>new-header.php</code> lines 87-97.<br>
+  Uses <code>og:type=website</code>, dynamic title/description from page variables, default OG image.
+</div>
+
+<!-- ===== 6. ROBOTS + SITEMAP ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">6.</span> Robots.txt &amp; Sitemap Analysis</h2>
+
+<h3>6.1 robots.txt (33 lines)</h3>
+<div class="info-box good">
+  <strong>Status: MOSTLY GOOD</strong> &mdash; Blocks admin, sales-portal, includes, vendor, cache, backups, API, debug scripts, payment endpoints, and old query-param product URLs.
+</div>
+
+<div class="info-box finding">
+  <strong>ISSUE: Missing Disallow rules</strong><br>
+  The following publicly accessible file patterns are NOT blocked:<br>
+  &bull; <code>test_*</code> &mdash; 9 test scripts exposing internal data<br>
+  &bull; <code>check_*</code> &mdash; 7 check scripts<br>
+  &bull; <code>fix_*</code> &mdash; 3 fix scripts<br>
+  &bull; <code>clear_*</code> &mdash; 1 data deletion script<br>
+  &bull; <code>*.sql</code> &mdash; Currently blocked as <code>database_*.sql</code> and <code>migration_*.sql</code>, but <code>add_*.sql</code>, <code>check_*.sql</code>, <code>create_*.sql</code>, <code>fix_*.sql</code>, <code>shipping_*.sql</code> are NOT blocked.
+</div>
+
+<h3>6.2 Sitemap Architecture</h3>
+<table>
+  <tr><th>File</th><th>Type</th><th>Content</th><th>Issue</th></tr>
+  <tr><td><code>sitemap.xml</code></td><td>Sitemap Index</td><td>3 child sitemaps</td><td><span class="badge badge-critical">Non-www domain</span></td></tr>
+  <tr><td><code>pages-sitemap.xml</code></td><td>Static XML</td><td>22 pages with priority &amp; changefreq</td><td><span class="badge badge-critical">Non-www domain</span></td></tr>
+  <tr><td><code>product-sitemap.php</code></td><td>Dynamic PHP</td><td>All products with image tags, 24h cache</td><td><span class="badge badge-critical">Non-www domain</span></td></tr>
+  <tr><td><code>category-sitemap.php</code></td><td>Dynamic PHP</td><td>All categories</td><td><span class="badge badge-critical">Non-www domain</span></td></tr>
+</table>
+
+<div class="info-box finding">
+  <strong>CRITICAL: All sitemap URLs use <code>https://gilafstore.com</code> (no www), but canonical tags and JSON-LD schemas all use <code>https://www.gilafstore.com</code>.</strong> This domain split causes Google to see two separate URL versions for every page, diluting link equity and crawl budget. See Section 11 for full details.
+</div>
+
+<!-- ===== 7. BREADCRUMBS ===== -->
+<h2><span class="section-num">7.</span> Breadcrumb Implementation</h2>
+
+<table>
+  <tr><th>Page</th><th>HTML Breadcrumb</th><th>JSON-LD BreadcrumbList</th><th>Status</th></tr>
+  <tr><td>Product pages</td><td>Not present</td><td><strong>Yes</strong> &mdash; Home &rarr; Category &rarr; Product</td><td><span class="badge badge-partial">PARTIAL</span></td></tr>
+  <tr><td>Shop page</td><td><strong>Yes</strong> &mdash; Home / Shop</td><td>Not present</td><td><span class="badge badge-partial">PARTIAL</span></td></tr>
+  <tr><td>Category pages</td><td>Unknown</td><td>Not present</td><td><span class="badge badge-missing">MISSING</span></td></tr>
+  <tr><td>Policy / Blog / Info pages</td><td>Not present</td><td>Not present</td><td><span class="badge badge-missing">MISSING</span></td></tr>
+</table>
+
+<div class="info-box warn">
+  <strong>Recommendation:</strong> Add both visible HTML breadcrumb AND JSON-LD BreadcrumbList schema on ALL public pages. Google uses breadcrumb schema to display rich SERP breadcrumbs, which improve CTR by 20-30%.
+</div>
+
+<!-- ===== 8. HEADING HIERARCHY ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">8.</span> Heading Hierarchy (&lt;h1&gt;) Audit</h2>
+
+<div class="info-box finding">
+  <strong>CRITICAL GLOBAL ISSUE:</strong> The site logo in <code>includes/new-header.php</code> (line 373) is wrapped in <code>&lt;h1&gt;</code>:
+  <pre>&lt;h1 style="color: #ffffff; ..."&gt;GILAF STORE&lt;/h1&gt;</pre>
+  This renders on <strong>every single page</strong>, meaning every page with a content &lt;h1&gt; actually has <strong>2 or more &lt;h1&gt; tags</strong>. Google's John Mueller has explicitly stated: <em>"Multiple H1s are fine... but having a logo as H1 is not ideal."</em>
+  <br><br><strong>Fix:</strong> Change logo <code>&lt;h1&gt;</code> to <code>&lt;span&gt;</code> or <code>&lt;div&gt;</code>. This is a single-line change with maximum SEO impact.
+</div>
+
+<table>
+  <tr><th>Page</th><th>&lt;h1&gt; Count</th><th>Content</th><th>Severity</th></tr>
+  <tr><td><code>includes/new-header.php</code> (global)</td><td style="color:#dc2626;font-weight:700;">1 (on ALL pages)</td><td>"GILAF STORE" (logo)</td><td><span class="badge badge-critical">Critical</span></td></tr>
+  <tr><td><code>index.php</code> (Homepage)</td><td>0 body + 1 header = <strong>1</strong></td><td>No content &lt;h1&gt;. Homepage has no visible primary heading.</td><td><span class="badge badge-medium">Medium</span></td></tr>
+  <tr><td><code>product.php</code></td><td>1 body + 1 header = <strong>2</strong></td><td>Product name (line 603)</td><td><span class="badge badge-critical">Critical</span> (due to header)</td></tr>
+  <tr><td><code>shop.php</code></td><td>1 body + 1 header = <strong>2</strong></td><td>"Our Products" (line 777)</td><td><span class="badge badge-critical">Critical</span> (due to header)</td></tr>
+  <tr><td><code>about-us.php</code></td><td>2 body + 1 header = <strong>3</strong></td><td>"Gilaf Foods & Spices" (line 263) + "Built on Vision..." (line 290)</td><td><span class="badge badge-high">High</span></td></tr>
+  <tr><td><code>faqs.php</code></td><td>1 body + 1 header = <strong>2</strong></td><td>"Frequently Asked Questions"</td><td><span class="badge badge-critical">Critical</span> (due to header)</td></tr>
+  <tr><td><code>blogs.php</code></td><td>1 body + 1 header = <strong>2</strong></td><td>"Our Blogs"</td><td><span class="badge badge-critical">Critical</span> (due to header)</td></tr>
+  <tr><td><code>offers.php</code></td><td>1 body + 1 header = <strong>2</strong></td><td>"Exclusive Offers & Deals"</td><td><span class="badge badge-critical">Critical</span> (due to header)</td></tr>
+  <tr><td><code>cart.php</code></td><td>0 body + 1 header = <strong>1</strong></td><td>No content &lt;h1&gt;</td><td><span class="badge badge-low">Low</span></td></tr>
+  <tr><td><code>checkout.php</code></td><td>0 body + 1 header = <strong>1</strong></td><td>No content &lt;h1&gt;</td><td><span class="badge badge-low">Low</span></td></tr>
+</table>
+
+<!-- ===== 9. IMAGE ALT AUDIT ===== -->
+<h2><span class="section-num">9.</span> Image Alt Text Audit</h2>
+
+<h3>9.1 Public-Facing Pages (Customer-Visible)</h3>
+<div class="info-box good">
+  <strong>Status: PASS</strong> &mdash; All main pages have proper descriptive alt text.
+</div>
+
+<table>
+  <tr><th>Page</th><th>Image Type</th><th>Alt Value</th><th>Status</th></tr>
+  <tr><td><code>index.php</code></td><td>Hero image</td><td>"Gilaf Store - Premium Heritage Foods"</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td><code>index.php</code></td><td>Product cards</td><td>Product name (dynamic)</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td><code>index.php</code></td><td>Ad images</td><td>"Advertisement"</td><td><span class="badge badge-medium">Generic</span></td></tr>
+  <tr><td><code>product.php</code></td><td>Main product image</td><td>Product name (dynamic)</td><td><span class="badge badge-ok">OK</span></td></tr>
+  <tr><td><code>product.php</code></td><td>Thumbnails</td><td>"Thumbnail 1", "Thumbnail 2"...</td><td><span class="badge badge-medium">Generic</span></td></tr>
+  <tr><td><code>product.php</code></td><td>Related products</td><td>Product name (dynamic)</td><td><span class="badge badge-ok">OK</span></td></tr>
+</table>
+
+<h3>9.2 Empty Alt (<code>alt=""</code>) Instances</h3>
+<table>
+  <tr><th>File</th><th>Line(s)</th><th>Context</th><th>Severity</th></tr>
+  <tr><td><code>includes/order_emails.php</code></td><td>124, 481</td><td>Product thumbnails in order confirmation emails</td><td><span class="badge badge-low">Low</span> (email, not indexed)</td></tr>
+  <tr><td><code>sales-portal/new_order.php</code></td><td>357, 543</td><td>Product images in sales portal order form</td><td><span class="badge badge-low">Low</span> (admin, noindexed)</td></tr>
+  <tr><td><code>admin/manage_freshly_harvested.php</code></td><td>219, 248</td><td>Product images in admin panel</td><td><span class="badge badge-low">Low</span> (admin, noindexed)</td></tr>
+  <tr><td><code>razorpay_payment.php</code></td><td>97</td><td>Product image on payment page</td><td><span class="badge badge-medium">Medium</span> (public-facing)</td></tr>
+</table>
+
+<h3>9.3 SEO Image Helper Functions</h3>
+<div class="info-box good">
+  <strong>Status: EXCELLENT</strong> &mdash; <code>seo_functions.php</code> provides <code>generate_image_alt_text()</code> (line 611) and <code>generate_seo_image_filename()</code> (line 644) for automated SEO-friendly alt text and filenames. These are available but not yet used consistently across all templates.
+</div>
+
+<!-- ===== 10. HREFLANG ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">10.</span> Hreflang / Internationalization</h2>
+
+<div class="info-box warn">
+  <strong>Status: NOT IMPLEMENTED</strong><br><br>
+  Zero <code>&lt;link rel="alternate" hreflang="..."&gt;</code> tags found in any production PHP file.<br><br>
+  <strong>Context:</strong> The site includes a <code>language_banner.php</code> in the footer (suggesting language detection), and a <code>GLOBAL_LANGUAGE_SYSTEM.md</code> documentation file exists. However, no hreflang signals are sent to search engines.<br><br>
+  <strong>Impact:</strong> If the site serves different content to users based on language/region preferences, Google cannot discover or index those alternate versions. This leads to:
+  <ul style="margin: 8px 0 0 20px;">
+    <li>Duplicate content issues if same page exists in multiple languages</li>
+    <li>Wrong language version appearing in search results for different markets</li>
+  </ul>
+</div>
+
+<!-- ===== 11. DOMAIN CONSISTENCY ===== -->
+<h2><span class="section-num">11.</span> Domain Consistency (www vs non-www)</h2>
+
+<div class="info-box finding">
+  <strong>CRITICAL: Domain Split Detected</strong><br>
+  Canonical URLs and structured data use <code>www.gilafstore.com</code>, but ALL sitemaps use <code>gilafstore.com</code>.
+</div>
+
+<table>
+  <tr><th>Source</th><th>Domain Used</th><th>Correct?</th></tr>
+  <tr><td><code>new-header.php</code> &mdash; canonical tag</td><td><code>https://www.gilafstore.com</code></td><td><span class="badge badge-ok">www</span></td></tr>
+  <tr><td><code>seo_functions.php</code> &mdash; all schema URLs</td><td><code>https://www.gilafstore.com</code></td><td><span class="badge badge-ok">www</span></td></tr>
+  <tr><td><code>new-header.php</code> &mdash; OG image URL</td><td><code>https://www.gilafstore.com</code></td><td><span class="badge badge-ok">www</span></td></tr>
+  <tr><td><code>robots.txt</code> &mdash; Sitemap directive</td><td><code>https://www.gilafstore.com</code></td><td><span class="badge badge-ok">www</span></td></tr>
+  <tr><td style="background:#fee2e2"><code>sitemap.xml</code> &mdash; child sitemap URLs</td><td style="background:#fee2e2"><code>https://gilafstore.com</code></td><td><span class="badge badge-critical">NON-www</span></td></tr>
+  <tr><td style="background:#fee2e2"><code>pages-sitemap.xml</code> &mdash; all 22 page URLs</td><td style="background:#fee2e2"><code>https://gilafstore.com</code></td><td><span class="badge badge-critical">NON-www</span></td></tr>
+  <tr><td style="background:#fee2e2"><code>product-sitemap.php</code> &mdash; all product URLs</td><td style="background:#fee2e2"><code>https://gilafstore.com</code></td><td><span class="badge badge-critical">NON-www</span></td></tr>
+  <tr><td style="background:#fee2e2"><code>category-sitemap.php</code> &mdash; all category URLs</td><td style="background:#fee2e2"><code>https://gilafstore.com</code></td><td><span class="badge badge-critical">NON-www</span></td></tr>
+</table>
+
+<div class="info-box finding">
+  <strong>Impact:</strong> Google's crawler sees the sitemap URLs pointing to <code>gilafstore.com</code> but the pages themselves declare <code>www.gilafstore.com</code> as canonical. This creates a conflicting signal loop:
+  <ul style="margin: 8px 0 0 20px;">
+    <li>Crawl budget wasted crawling both versions</li>
+    <li>Link equity split between www and non-www</li>
+    <li>Potential indexation of wrong domain version</li>
+    <li>Rich results may fail validation if URL doesn't match canonical</li>
+  </ul>
+  <strong>Fix:</strong> Update ALL sitemap files to use <code>https://www.gilafstore.com</code> (matching canonical). OR set up 301 redirect from non-www to www at server level.
+</div>
+
+<!-- ===== 12. PHASE 1 SUMMARY ===== -->
+<h2><span class="section-num">12.</span> Phase 1 Performance &amp; Security Summary</h2>
+
+<p style="font-size: 13px; margin-bottom: 12px;">The following performance and security optimizations were completed as part of Phase 1 stabilization alongside this SEO audit.</p>
+
+<table>
+  <tr><th>Task Group</th><th>Action Taken</th><th>Impact</th></tr>
+  <tr><td>CSS Cleanup</td><td>Removed dead empty media query from <code>mobile-responsive.css</code>. Documented 3.5 KB dead CSS across 7 source files.</td><td>506 bytes saved. Full consolidation ready for Phase 2.</td></tr>
+  <tr><td>JS Performance</td><td>Enhanced chatbot lazy-load: added first-interaction triggers (click/touch/keydown), reduced idle timeout 8s &rarr; 5s.</td><td>~3s faster chatbot availability. 98 KB dead legacy JS identified.</td></tr>
+  <tr><td>Image Optimization</td><td>Verified hero image already optimized: WebP with srcset, responsive, fetchpriority=high. JPG not loaded.</td><td>Already optimal. 244 KB dead JPG candidate for deletion.</td></tr>
+  <tr><td>Security Hardening</td><td>Full audit of <code>db_connect.php</code>. Identified hardcoded production credentials, exposed error messages, 75 publicly accessible debug/test/SQL files.</td><td>SECURITY_CLEANUP_REPORT.md generated. .env migration plan prepared.</td></tr>
+  <tr><td>Root Cleanup Plan</td><td>Classified 129 root files: production, backup, debug, migration, obsolete, dangerous.</td><td>ROOT_CLEANUP_PLAN.md generated. ~4.7 MB quarantine candidates.</td></tr>
+</table>
+
+<!-- ===== 13. COMPLETE ISSUE REGISTRY ===== -->
+<div class="page-break"></div>
+<h2><span class="section-num">13.</span> Complete Issue Registry</h2>
+
+<table>
+  <tr><th style="width:5%">#</th><th style="width:38%">Issue</th><th style="width:22%">File(s)</th><th style="width:12%">Severity</th><th style="width:23%">Fix Complexity</th></tr>
+  <tr style="background:#fef2f2"><td>1</td><td>www vs non-www domain split &mdash; sitemaps use non-www, canonicals use www</td><td><code>sitemap.xml</code>, <code>pages-sitemap.xml</code>, <code>product-sitemap.php</code>, <code>category-sitemap.php</code></td><td><span class="badge badge-critical">Critical</span></td><td>Low &mdash; update 4 files</td></tr>
+  <tr style="background:#fef2f2"><td>2</td><td>Logo wrapped in &lt;h1&gt; on ALL pages &mdash; causes duplicate H1 sitewide</td><td><code>includes/new-header.php</code> line 373</td><td><span class="badge badge-critical">Critical</span></td><td>Trivial &mdash; change &lt;h1&gt; to &lt;span&gt;</td></tr>
+  <tr style="background:#fef2f2"><td>3</td><td>Homepage has no content &lt;h1&gt; tag (only logo H1)</td><td><code>index.php</code></td><td><span class="badge badge-critical">Critical</span></td><td>Low &mdash; add H1 to hero section</td></tr>
+  <tr style="background:#fef2f2"><td>4</td><td>No <code>noindex</code> mechanism for non-public pages (cart, checkout, thank-you, order_success)</td><td><code>includes/new-header.php</code></td><td><span class="badge badge-critical">Critical</span></td><td>Low &mdash; add conditional noindex meta</td></tr>
+  <tr style="background:#ffedd5"><td>5</td><td>Duplicate &lt;h1&gt; on about-us.php (3 total including header)</td><td><code>about-us.php</code> lines 263, 290</td><td><span class="badge badge-high">High</span></td><td>Trivial &mdash; change 2nd H1 to H2</td></tr>
+  <tr><td>6</td><td>Missing BreadcrumbList JSON-LD on shop, category, and info pages</td><td><code>shop.php</code>, category pages, policy pages</td><td><span class="badge badge-medium">Medium</span></td><td>Medium &mdash; add schema builder calls</td></tr>
+  <tr><td>7</td><td>robots.txt missing Disallow for <code>test_*</code>, <code>check_*</code>, <code>fix_*</code>, <code>clear_*</code>, some <code>*.sql</code> patterns</td><td><code>robots.txt</code></td><td><span class="badge badge-medium">Medium</span></td><td>Trivial &mdash; add 5 lines</td></tr>
+  <tr><td>8</td><td>No hreflang tags despite having language detection system</td><td><code>includes/new-header.php</code></td><td><span class="badge badge-medium">Medium</span></td><td>Medium &mdash; needs language URL mapping</td></tr>
+  <tr><td>9</td><td>Product page thumbnail alt text is generic ("Thumbnail 1")</td><td><code>product.php</code> line 552</td><td><span class="badge badge-medium">Medium</span></td><td>Trivial &mdash; use product name + index</td></tr>
+  <tr><td>10</td><td>Empty <code>alt=""</code> on razorpay_payment.php product image</td><td><code>razorpay_payment.php</code> line 97</td><td><span class="badge badge-low">Low</span></td><td>Trivial &mdash; add product name</td></tr>
+  <tr><td>11</td><td>Missing &lt;h1&gt; on cart.php and checkout.php</td><td><code>cart.php</code>, <code>checkout.php</code></td><td><span class="badge badge-low">Low</span></td><td>Trivial &mdash; add page heading</td></tr>
+</table>
+
+<!-- ===== 14. ACTION PLAN ===== -->
+<h2><span class="section-num">14.</span> Recommended Action Plan</h2>
+
+<h3>Priority 1 &mdash; Critical Fixes (Do Immediately)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Estimated Effort</th><th>SEO Impact</th></tr>
+  <tr><td>A</td><td>Change logo <code>&lt;h1&gt;</code> to <code>&lt;span&gt;</code> in <code>new-header.php</code> line 373</td><td>1 minute</td><td>HIGH &mdash; fixes duplicate H1 sitewide</td></tr>
+  <tr><td>B</td><td>Update ALL sitemap files to use <code>https://www.gilafstore.com</code></td><td>15 minutes</td><td>HIGH &mdash; resolves domain split</td></tr>
+  <tr><td>C</td><td>Add <code>&lt;h1&gt;</code> to homepage hero section in <code>index.php</code></td><td>2 minutes</td><td>HIGH &mdash; homepage needs primary heading</td></tr>
+  <tr><td>D</td><td>Add conditional <code>&lt;meta name="robots" content="noindex"&gt;</code> for cart, checkout, thank-you, order_success pages</td><td>10 minutes</td><td>MEDIUM &mdash; prevents thin pages from indexing</td></tr>
+</table>
+
+<h3>Priority 2 &mdash; High/Medium Fixes (Within 1 Week)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Estimated Effort</th></tr>
+  <tr><td>E</td><td>Fix duplicate &lt;h1&gt; on <code>about-us.php</code> &mdash; change line 290 to &lt;h2&gt;</td><td>1 minute</td></tr>
+  <tr><td>F</td><td>Add BreadcrumbList JSON-LD to shop.php and category pages</td><td>30 minutes</td></tr>
+  <tr><td>G</td><td>Update <code>robots.txt</code> with missing Disallow patterns</td><td>5 minutes</td></tr>
+  <tr><td>H</td><td>Update product thumbnail alt text to use product name + position</td><td>10 minutes</td></tr>
+  <tr><td>I</td><td>Fix empty <code>alt=""</code> on <code>razorpay_payment.php</code></td><td>2 minutes</td></tr>
+</table>
+
+<h3>Priority 3 &mdash; Enhancements (Within 1 Month)</h3>
+<table>
+  <tr><th>#</th><th>Action</th><th>Estimated Effort</th></tr>
+  <tr><td>J</td><td>Implement hreflang tags if multilingual content is served</td><td>2-4 hours</td></tr>
+  <tr><td>K</td><td>Add visible HTML breadcrumbs to product detail pages</td><td>1 hour</td></tr>
+  <tr><td>L</td><td>Use <code>generate_image_alt_text()</code> consistently across all templates</td><td>2 hours</td></tr>
+  <tr><td>M</td><td>Add &lt;h1&gt; to cart.php and checkout.php</td><td>5 minutes</td></tr>
+</table>
+
+<!-- ===== FOOTER ===== -->
+<div class="report-footer">
+  <p><strong>Gilaf Store &mdash; SEO Technical Audit Report</strong></p>
+  <p>Generated: May 7, 2026 &nbsp;|&nbsp; Platform: Custom PHP &nbsp;|&nbsp; Domain: gilafstore.com</p>
+  <p style="margin-top: 6px;">This report is confidential and intended for internal use only.</p>
+</div>
+
+</div><!-- .container -->
+
+</body>
+</html>

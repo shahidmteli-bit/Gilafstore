@@ -1,0 +1,27 @@
+{
+  "name": "gilaf-sales-portal",
+  "version": "1.0.0",
+  "description": "Gilaf Store Sales Portal - Android APK",
+  "main": "index.js",
+  "scripts": {
+    "build": "node build.js",
+    "cap:init": "npx cap init \"Gilaf Sales\" \"com.gilafstore.sales\" --web-dir www",
+    "cap:add": "npx cap add android",
+    "cap:copy": "node build.js && npx cap copy android",
+    "cap:open": "npx cap open android",
+    "cap:build": "node build.js && npx cap copy android && cd android && gradlew assembleDebug",
+    "apk:debug": "node build.js && npx cap copy android && cd android && gradlew assembleDebug"
+  },
+  "dependencies": {
+    "@capacitor/android": "^5.7.0",
+    "@capacitor/app": "^5.0.7",
+    "@capacitor/core": "^5.7.0",
+    "@capacitor/geolocation": "^5.0.7",
+    "@capacitor/camera": "^5.0.9",
+    "@capacitor/splash-screen": "^5.0.7",
+    "@capacitor/status-bar": "^5.0.7"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^5.7.0"
+  }
+}

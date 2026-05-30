@@ -1,0 +1,27 @@
+{
+    "enabled": 1,
+    "tags": [
+        {
+            "name": "Gilaf GA4",
+            "type": "ga4",
+            "tag_id": "G-KQBS1QM69X",
+            "script": "",
+            "enabled": 1,
+            "pages": [
+                "all"
+            ],
+            "custom_urls": []
+        },
+        {
+            "name": "Gilaf GTM",
+            "type": "gtm",
+            "tag_id": "GTM-PF6VZ8GZ",
+            "script": "",
+            "enabled": 1,
+            "pages": [
+                "all"
+            ],
+            "custom_urls": []
+        }
+    ]
+}

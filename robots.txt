@@ -1,0 +1,100 @@
+# Robots.txt for GilafStore.com
+# Last updated: 2026-05-19
+
+User-agent: *
+Allow: /
+
+# ── Core system paths ──────────────────────────────────────────
+Disallow: /admin/
+Disallow: /user/
+Disallow: /sales-portal/
+Disallow: /includes/
+Disallow: /vendor/
+Disallow: /cache/
+Disallow: /backups/
+Disallow: /api/
+Disallow: /cron/
+Disallow: /archive/
+Allow: /uploads/blog/
+Disallow: /uploads/
+Disallow: /newsletter_subscribe.php
+Disallow: /.windsurf-backups/
+Disallow: /logs/
+
+# ── Admin & payment handlers ───────────────────────────────────
+Disallow: /admin_actions.php
+Disallow: /gs-secure-portal-92XK.php
+Disallow: /razorpay_create_order.php
+Disallow: /razorpay_payment.php
+Disallow: /razorpay_verify.php
+Disallow: /razorpay_webhook.php
+Disallow: /process_payment.php
+Disallow: /confirm_upi_payment.php
+Disallow: /payment_gateway.php
+Disallow: /upi_payment.php
+Disallow: /buy_now.php
+Disallow: /apply_promo.php
+Disallow: /order_success.php
+Disallow: /submit_review.php
+Disallow: /submit_suggestion.php
+Disallow: /submit_application.php
+Disallow: /get_application.php
+Disallow: /track_click.php
+Disallow: /get_click_stats.php
+Disallow: /live_chat_user_api.php
+Disallow: /merchant-feed.php
+Disallow: /generate_invoice_pdf.php
+Disallow: /download_invoice.php
+
+# ── Chatbot & utility APIs ─────────────────────────────────────
+Disallow: /chatbot_callback.php
+Disallow: /chatbot_create_ticket.php
+Disallow: /chatbot_eligible_returns.php
+Disallow: /chatbot_gemini.php
+Disallow: /chatbot_order_status.php
+Disallow: /chatbot_recent_orders.php
+Disallow: /chatbot_recent_tickets.php
+Disallow: /chatbot_ticket_status.php
+Disallow: /chatbot.js
+
+# ── Debug, test, fix, check scripts ───────────────────────────
+Disallow: /debug_*
+Disallow: /test_*
+Disallow: /check_*
+Disallow: /fix_*
+Disallow: /vb.php
+Disallow: /_run_migration.php
+
+# ── Database migration & setup scripts ───────────────────────
+Disallow: /*.sql
+Disallow: /*.backup_*
+Disallow: /database_*
+Disallow: /migration_*
+Disallow: /setup_*
+
+# ── Cart, checkout, account, payment flows ────────────────────
+Disallow: /cart.php
+Disallow: /checkout.php
+Disallow: /thank-you.php
+Disallow: /order-success.php
+Disallow: /track-shipment.php
+Disallow: /track_order.php
+
+# ── Duplicate/parameter URLs (waste crawl budget) ─────────────
+# Blocks search, sort, filter, pagination query-string variants
+Disallow: /shop.php?search=*
+Disallow: /shop.php?sort=*
+Disallow: /shop.php?page=*
+Disallow: /shop.php?added=*
+Disallow: /shop.php?filter=*
+Disallow: /shop.php?category=*
+# Old dynamic product URLs — PHP issues 301 → /product/<slug>
+# Keeping crawlable so Googlebot can follow the redirect:
+# Allow: /product.php (default — Google follows 301 to slug)
+
+# ── Suggestion / internal search ──────────────────────────────
+Disallow: /suggestions.php
+Disallow: /search.php
+
+# Sitemap Index
+Sitemap: https://gilafstore.com/sitemap.xml

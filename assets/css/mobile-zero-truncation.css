@@ -1,0 +1,54 @@
+/* ============================================
+   MOBILE ZERO-TRUNCATION GLOBAL OVERRIDE
+   Purpose: Permanently disable text truncation on mobile
+   Priority: Load LAST to override all other styles
+   ============================================ */
+
+/* Universal Mobile Text Wrapping Rule */
+@media only screen and (max-width: 768px) {
+
+    /* ABSOLUTE ZERO-TRUNCATION RULE */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    span,
+    div,
+    .section-title,
+    .section-subtitle,
+    .section-header-card h2,
+    .section-header-card p,
+    .product-title,
+    .product-cat,
+    .product-origin,
+    .product-weights {
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        -webkit-line-clamp: unset !important;
+        line-clamp: unset !important;
+        -webkit-box-orient: unset !important;
+        height: auto !important;
+        max-height: none !important;
+    }
+
+    /* Container Flexibility */
+    .section-header-card,
+    .product-card,
+    .product-details {
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+    }
+
+    /* Ensure multi-line support */
+    .section-title,
+    .section-subtitle {
+        display: block !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+}

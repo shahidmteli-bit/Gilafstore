@@ -1,0 +1,84 @@
+{
+  "name": "Gilaf Store - Taste . Culture . Craft",
+  "short_name": "Gilaf Store",
+  "description": "Official Gilaf Store app — Shop premium organic products, track orders, and explore curated collections. Taste . Culture . Craft.",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#1a3c34",
+  "theme_color": "#1a3c34",
+  "categories": ["shopping", "food", "lifestyle"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Shop All Products",
+      "short_name": "Shop",
+      "url": "./shop.php",
+      "icons": [{"src": "assets/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "Track My Order",
+      "short_name": "Track",
+      "url": "./user/my_orders.php",
+      "icons": [{"src": "assets/icons/icon-96x96.png", "sizes": "96x96"}]
+    },
+    {
+      "name": "App Store",
+      "short_name": "Apps",
+      "url": "./app_store.php",
+      "icons": [{"src": "assets/icons/icon-96x96.png", "sizes": "96x96"}]
+    }
+  ]
+}

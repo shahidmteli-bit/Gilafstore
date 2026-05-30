@@ -1,0 +1,652 @@
+// GILAF STORE - NEW UI/UX JAVASCRIPT
+// Header scroll effect
+window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) { 
+        header.classList.add('scrolled'); 
+        document.body.classList.add('scrolled'); 
+    } else { 
+        header.classList.remove('scrolled'); 
+        document.body.classList.remove('scrolled'); 
+    }
+});
+
+// Modern Mobile Menu with Submenu Panels
+const menuToggle = document.querySelector('.menu-toggle');
+const mobileMenuClose = document.querySelector('.mobile-menu-close');
+const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+const mobileNav = document.querySelector('.mobile-nav');
+
+function openMobileMenu() {
+    if (mobileNav) mobileNav.classList.add('mobile-open');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.add('active');
+    document.body.classList.add('mobile-menu-open');
+}
+
+function closeMobileMenu() {
+    if (mobileNav) mobileNav.classList.remove('mobile-open');
+    if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
+    document.body.classList.remove('mobile-menu-open');
+    // Close all submenu panels
+    document.querySelectorAll('.mobile-submenu-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        openMobileMenu();
+    });
+}
+
+if (mobileMenuClose) {
+    mobileMenuClose.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeMobileMenu();
+    });
+}
+
+if (mobileMenuOverlay) {
+    mobileMenuOverlay.addEventListener('click', function() {
+        closeMobileMenu();
+    });
+}
+
+// Submenu Panel Navigation
+document.addEventListener('DOMContentLoaded', function() {
+    // Open submenu panels
+    document.querySelectorAll('.mobile-menu-item.has-submenu').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const submenuId = this.getAttribute('data-submenu');
+            const submenuPanel = document.getElementById('submenu-' + submenuId);
+            if (submenuPanel) {
+                submenuPanel.classList.add('active');
+            }
+        });
+    });
+    
+    // Back buttons to close submenu panels
+    document.querySelectorAll('.mobile-submenu-back').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const panel = this.closest('.mobile-submenu-panel');
+            if (panel) {
+                panel.classList.remove('active');
+            }
+        });
+    });
+    
+    // Close menu when clicking submenu items
+    document.querySelectorAll('.mobile-submenu-item').forEach(link => {
+        link.addEventListener('click', function() {
+            closeMobileMenu();
+        });
+    });
+    
+    // Close menu when clicking main menu items (non-submenu)
+    document.querySelectorAll('.mobile-menu-item:not(.has-submenu)').forEach(link => {
+        link.addEventListener('click', function() {
+            if (this.tagName === 'A') {
+                closeMobileMenu();
+            }
+        });
+    });
+});
+
+// Handle window resize
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        if (window.innerWidth > 1366) {
+            closeMobileMenu();
+        }
+    }, 250);
+});
+
+// Login Modal Functions
+function openLoginModal() {
+    closeMobileMenu(); 
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+}
+
+function closeLoginModal() { 
+    const modal = document.getElementById('loginModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+function openTrackingModal() {
+    closeMobileMenu();
+    const modal = document.getElementById('trackingModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+}
+
+function switchLoginTab(type) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.login-tab-premium').forEach(t => t.classList.remove('active'));
+    
+    // Hide all form sections
+    document.querySelectorAll('.form-section').forEach(f => {
+        f.classList.remove('active');
+        f.style.display = 'none';
+    });
+    
+    // Activate selected tab and form
+    const tab = document.getElementById(`tab-${type}`);
+    const form = document.getElementById(`form-${type}`);
+    if (tab) tab.classList.add('active');
+    if (form) {
+        form.classList.add('active');
+        form.style.display = 'flex';
+    }
+}
+
+// Region/Currency Management
+let currentCurrency = { code: 'INR', symbol: '₹', rate: 1, country: 'IN' };
+
+function openRegionModal() { 
+    const modal = document.getElementById('regionModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+}
+
+function closeRegionModal() { 
+    const modal = document.getElementById('regionModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+// Close modals when clicking outside
+window.onclick = function(event) {
+    const regModal = document.getElementById('regionModal');
+    const admModal = document.getElementById('adminModal');
+    const logModal = document.getElementById('loginModal');
+    const trkModal = document.getElementById('trackingModal');
+    
+    if (event.target == regModal && regModal) {
+        regModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+    if (event.target == admModal && admModal) {
+        admModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+    if (event.target == logModal && logModal) {
+        logModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+    if (event.target == trkModal && trkModal) {
+        trkModal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+async function setRegion(countryCode, currencyCode, symbol, rate) {
+    currentCurrency = { code: currencyCode, symbol: symbol, rate: rate, country: countryCode };
+    
+    // Save preference to backend
+    try {
+        const formData = new FormData();
+        formData.append('action', 'update_preference');
+        formData.append('country_code', countryCode);
+        
+        await fetch('update_region_preference.php', {
+            method: 'POST',
+            body: formData
+        });
+    } catch (error) {
+        console.error('Error saving region preference:', error);
+    }
+    
+    const flagEl = document.getElementById('current-flag');
+    const currEl = document.getElementById('current-currency');
+    
+    if (flagEl) flagEl.src = `https://flagcdn.com/${countryCode.toLowerCase()}.svg`;
+    if (currEl) currEl.innerText = `${currencyCode} (${symbol})`;
+    
+    document.querySelectorAll('.country-option').forEach(opt => opt.classList.remove('selected'));
+    if (event && event.currentTarget) {
+        event.currentTarget.classList.add('selected');
+    }
+    
+    updateAllPrices();
+    
+    // Reload page to update region-specific content
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+}
+
+function updateAllPrices() {
+    const priceElements = document.querySelectorAll('.dynamic-price');
+    priceElements.forEach(el => {
+        const basePrice = parseFloat(el.getAttribute('data-price-inr'));
+        if (currentCurrency.code === 'INR') {
+            el.innerText = `₹${basePrice.toLocaleString('en-IN')}`;
+        } else {
+            const exportMarkup = 1.1; 
+            const converted = (basePrice * currentCurrency.rate * exportMarkup);
+            const finalPrice = Math.ceil(converted) - 0.01;
+            el.innerText = `${currentCurrency.symbol}${finalPrice.toFixed(2)}`;
+        }
+    });
+}
+
+// Store Locator Functions - Database Driven (Smart Search: pincode + city)
+async function findStores() {
+    const input = document.getElementById('pincodeInput');
+    const container = document.getElementById('store-results-container');
+    const errorMsg = document.getElementById('locator-error');
+    
+    if (!input || !container || !errorMsg) return;
+    
+    const query = input.value.trim();
+    container.innerHTML = '';
+    errorMsg.innerText = '';
+    
+    if (!query || query.length < 2) { 
+        errorMsg.innerText = "Please enter a valid 6-digit pincode or city name."; 
+        return; 
+    }
+    
+    const isPincode = /^[0-9]{6}$/.test(query);
+    if (!isPincode && query.length < 2) {
+        errorMsg.innerText = "Please enter at least 2 characters for city search.";
+        return;
+    }
+    
+    // Show loading state
+    container.innerHTML = '<div class="no-results-msg"><i class="fas fa-spinner fa-spin"></i> Searching for stores...</div>';
+    
+    try {
+        const response = await fetch(`api/find_stores.php?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        if (data.success && data.stores && data.stores.length > 0) {
+            container.innerHTML = '';
+            
+            if (data.match_type === 'exact') {
+                // Exact match — show stores directly, no warning
+                renderStoresFromDB(data.stores, false);
+            } else if (data.match_type === 'nearby') {
+                // Nearby match within 20km — show info banner + stores
+                container.innerHTML = `<div class="no-results-msg" style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #ffc107;">
+                    <strong>No stores found exactly in ${data.query}.</strong><br>
+                    Showing nearest stores within ${data.max_radius_km || 20} km near <strong>${data.reference_location || 'your area'}</strong>.
+                </div>`;
+                renderStoresFromDB(data.stores, true);
+            }
+        } else if (data.no_coverage) {
+            // No coverage — show expansion message and log the request
+            container.innerHTML = `<div class="no-results-msg" style="background: linear-gradient(135deg, #f8f4eb 0%, #f0e8d5 100%); color: #5a4a2f; padding: 30px; border-radius: 12px; border: 1px solid #d4c5a0; text-align: center;">
+                <i class="fas fa-map-marked-alt" style="font-size: 2rem; color: #C5A059; margin-bottom: 12px; display: block;"></i>
+                <strong style="font-size: 1.1rem;">We currently do not have stores in your area.</strong><br><br>
+                <span style="font-size: 0.95rem;">Gilaf is actively expanding across India and will be available near you soon.</span>
+            </div>`;
+            // Log internally for expansion tracking
+            logUnservedRequest(query);
+        } else {
+            // Generic error / no stores
+            container.innerHTML = `<div class="no-results-msg" style="background: linear-gradient(135deg, #f8f4eb 0%, #f0e8d5 100%); color: #5a4a2f; padding: 30px; border-radius: 12px; border: 1px solid #d4c5a0; text-align: center;">
+                <i class="fas fa-map-marked-alt" style="font-size: 2rem; color: #C5A059; margin-bottom: 12px; display: block;"></i>
+                <strong style="font-size: 1.1rem;">We currently do not have stores in your area.</strong><br><br>
+                <span style="font-size: 0.95rem;">Gilaf is actively expanding across India and will be available near you soon.</span>
+            </div>`;
+            logUnservedRequest(query);
+        }
+    } catch (error) {
+        console.error('Store search error:', error);
+        container.innerHTML = `<div class="no-results-msg" style="background: #f8d7da; color: #721c24; padding: 20px; border-radius: 8px;"><i class="fas fa-exclamation-triangle"></i> Unable to search for stores. Please try again later.</div>`;
+    }
+}
+
+// Log unserved location request for expansion tracking
+async function logUnservedRequest(query) {
+    try {
+        await fetch('api/log_unserved_request.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: 'query=' + encodeURIComponent(query)
+        });
+    } catch (e) { /* silent */ }
+}
+
+// Load and display unserved location requests tab
+async function loadUnservedRequests() {
+    const container = document.getElementById('unserved-requests-container');
+    if (!container) return;
+    
+    container.innerHTML = '<div style="text-align:center; padding:20px; color:#999;"><i class="fas fa-spinner fa-spin"></i> Loading requests...</div>';
+    
+    try {
+        const response = await fetch('api/get_unserved_requests.php');
+        const data = await response.json();
+        
+        if (data.success && data.requests && data.requests.length > 0) {
+            let html = '<div class="unserved-table-wrapper"><table class="unserved-table"><thead><tr><th>Searched Location</th><th>Type</th><th>Requests</th><th>Last Searched</th></tr></thead><tbody>';
+            data.requests.forEach(req => {
+                const typeIcon = req.search_type === 'pincode' ? '<i class="fas fa-map-pin"></i> Pincode' : '<i class="fas fa-city"></i> City';
+                const dateStr = new Date(req.last_requested).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+                html += `<tr><td><strong>${req.search_query}</strong></td><td>${typeIcon}</td><td><span class="request-count-badge">${req.request_count}</span></td><td>${dateStr}</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = '<div style="text-align:center; padding:30px; color:#999;"><i class="fas fa-check-circle" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>No unserved location requests yet.</div>';
+        }
+    } catch (e) {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:#d9534f;"><i class="fas fa-exclamation-triangle"></i> Could not load requests.</div>';
+    }
+}
+
+function clearLocator() {
+    const input = document.getElementById('pincodeInput');
+    const container = document.getElementById('store-results-container');
+    const errorMsg = document.getElementById('locator-error');
+    
+    if (input) input.value = '';
+    if (container) container.innerHTML = '';
+    if (errorMsg) errorMsg.innerText = '';
+}
+
+function renderStoresFromDB(storeList, showDistance) {
+    const container = document.getElementById('store-results-container');
+    if (!container) return;
+    
+    storeList.forEach(store => {
+        const distBadge = showDistance && store.distance ? `<span class="distance-tag">${store.distance.toFixed(1)} km away</span>` : '';
+        
+        // Store type badge
+        const typeBadge = `<span class="store-type-badge" style="background: ${store.type_color || '#666'}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 10px;">${store.type_label || 'Store'}</span>`;
+        
+        const html = `
+            <div class="store-card">
+                <div class="store-name">
+                    ${store.store_name || store.name}
+                    ${typeBadge}
+                    ${distBadge}
+                </div>
+                <div class="store-address">
+                    <i class="fas fa-map-marker-alt" style="color:var(--color-gold); margin-right:5px;"></i>
+                    ${store.address}${store.city ? ', ' + store.city : ''}${store.state ? ', ' + store.state : ''} - ${store.pincode}
+                </div>
+                ${store.owner_name ? `<div style="font-size: 0.9rem; color: #666; margin-top: 5px;"><i class="fas fa-user" style="margin-right: 5px;"></i>Owner: ${store.owner_name}</div>` : ''}
+                <div class="store-actions">
+                    <a href="tel:${store.phone}" class="store-btn btn-call">
+                        <i class="fas fa-phone-alt"></i> Call
+                    </a>
+                    <a href="${store.google_maps_url || store.mapUrl || '#'}" target="_blank" class="store-btn btn-dir">
+                        <i class="fas fa-directions"></i> Directions
+                    </a>
+                </div>
+            </div>
+        `;
+        container.innerHTML += html;
+    });
+}
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+    var R = 6371;
+    var dLat = deg2rad(lat2 - lat1);
+    var dLon = deg2rad(lon2 - lon1); 
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+            Math.sin(dLon/2) * Math.sin(dLon/2); 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    return R * c;
+}
+
+function deg2rad(deg) { 
+    return deg * (Math.PI/180); 
+}
+
+// Admin Panel Functions - Removed (now managed through admin panel database interface)
+
+// Authenticity Verification with Batch Lifecycle Features
+function verifyBatch(e) {
+    e.preventDefault();
+    
+    const batchInput = document.getElementById('batchInput');
+    const resultBox = document.getElementById('verification-result');
+    
+    if (!batchInput || !resultBox) return;
+    
+    const batchValue = batchInput.value.trim().toUpperCase();
+    
+    if (!batchValue) {
+        alert('Please enter a batch code');
+        return;
+    }
+    
+    // Show loading
+    resultBox.style.display = "block";
+    resultBox.style.borderLeft = "4px solid #3b82f6";
+    resultBox.innerHTML = '<p style="text-align:center;"><i class="fas fa-spinner fa-spin"></i> Verifying batch...</p>';
+    
+    // Fetch batch data from API with lifecycle features
+    const basePath = (document.querySelector('meta[name="base-url"]') || {}).content || '';
+    const apiUrl = basePath ? (basePath + '/api/verify_batch_ajax.php') : 'api/verify_batch_ajax.php';
+    fetch(apiUrl + '?code=' + encodeURIComponent(batchValue))
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.valid) {
+                // Valid batch - show green verification
+                const batch = data.batch;
+                let badges = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;">';
+                if (batch.is_lab_tested) badges += '<span style="background:#3b82f6;color:white;padding:4px 12px;border-radius:20px;font-size:0.8rem;">🧪 Lab Tested</span>';
+                if (batch.is_organic) badges += '<span style="background:#10b981;color:white;padding:4px 12px;border-radius:20px;font-size:0.8rem;">🌱 Organic</span>';
+                badges += '</div>';
+                
+                resultBox.style.borderLeft = "4px solid var(--color-green)";
+                resultBox.innerHTML = `
+                    <h4 style="color:var(--color-green); display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-check-circle"></i> Authenticity Verified
+                    </h4>
+                    ${badges}
+                    <div style="margin-top:15px; font-size:0.9rem; color:#444; line-height:1.8;">
+                        ${batch.product_image ? `<div style="text-align:center;margin-bottom:15px;"><img src="${batch.product_image}" alt="${batch.product_name}" style="max-width:120px;border-radius:8px;"></div>` : ''}
+                        <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
+                            <strong>Product Name:</strong> ${batch.product_name}
+                        </div>
+                        <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
+                            <strong>Net Weight:</strong> ${batch.net_weight}
+                        </div>
+                        ${batch.ean ? `<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;"><strong>EAN:</strong> ${batch.ean}</div>` : ''}
+                        ${batch.mrp ? `<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;"><strong>MRP:</strong> ₹${batch.mrp}</div>` : ''}
+                        <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
+                            <strong>Manufacturing Date:</strong> ${batch.manufacturing_date}
+                        </div>
+                        <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
+                            <strong>Expiry Date:</strong> ${batch.expiry_date}
+                        </div>
+                        <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;">
+                            <strong>Country of Origin:</strong> ${batch.country_of_origin}
+                        </div>
+                        ${batch.approver_name ? `<div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 10px;"><strong>Approved By:</strong> ${batch.approver_name}</div>` : ''}
+                        <div style="color: #666; font-size: 0.8rem;">
+                            <strong>Verification Date & Time:</strong> ${batch.verified_at}
+                        </div>
+                    </div>
+                `;
+            } else if (data.success && !data.valid) {
+                // Invalid batch - show warning/error
+                let color = '#f59e0b';
+                let icon = 'exclamation-triangle';
+                
+                if (data.error_type === 'recalled') {
+                    color = '#ef4444';
+                    icon = 'ban';
+                } else if (data.error_type === 'blocked') {
+                    color = '#ef4444';
+                    icon = 'lock';
+                } else if (data.error_type === 'expired') {
+                    color = '#f59e0b';
+                    icon = 'clock';
+                }
+                
+                resultBox.style.borderLeft = `4px solid ${color}`;
+                resultBox.innerHTML = `
+                    <h4 style="color:${color}; display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-${icon}"></i> ${data.message}
+                    </h4>
+                    <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+                        ${data.description}
+                    </p>
+                    ${data.batch ? `
+                        <div style="margin-top:15px; padding-top:15px; border-top:1px solid #ddd; font-size:0.85rem; color:#666;">
+                            <div><strong>Batch Code:</strong> ${data.batch.code}</div>
+                            <div><strong>Product:</strong> ${data.batch.product_name}</div>
+                            <div><strong>Expiry Date:</strong> ${data.batch.expiry_date}</div>
+                        </div>
+                    ` : ''}
+                    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <a href="${basePath}/contact.php" style="padding:10px 20px; background:var(--color-green); color:white; text-decoration:none; border-radius:4px; font-size:0.9rem;">
+                            <i class="fas fa-headset"></i> Contact Support
+                        </a>
+                        <a href="${basePath}/report-suspicious.php?batch=${batchValue}" style="padding:10px 20px; background:white; color:var(--color-green); border:2px solid var(--color-green); text-decoration:none; border-radius:4px; font-size:0.9rem;">
+                            <i class="fas fa-flag"></i> Report Suspicious Product
+                        </a>
+                    </div>
+                `;
+            } else {
+                // Not found or error
+                resultBox.style.borderLeft = "4px solid #ef4444";
+                resultBox.innerHTML = `
+                    <h4 style="color:#ef4444; display:flex; align-items:center; gap:10px;">
+                        <i class="fas fa-times-circle"></i> ${data.message || 'Batch Not Found'}
+                    </h4>
+                    <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+                        ${data.description || 'The batch code entered does not exist in our system. This could indicate a counterfeit product or an incorrect batch code.'}
+                    </p>
+                    <div style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <a href="${basePath}/contact.php" style="padding:10px 20px; background:var(--color-green); color:white; text-decoration:none; border-radius:4px; font-size:0.9rem;">
+                            <i class="fas fa-headset"></i> Contact Support
+                        </a>
+                        <a href="${basePath}/report-suspicious.php?batch=${batchValue}" style="padding:10px 20px; background:white; color:var(--color-green); border:2px solid var(--color-green); text-decoration:none; border-radius:4px; font-size:0.9rem;">
+                            <i class="fas fa-flag"></i> Report Suspicious Product
+                        </a>
+                    </div>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Verification error:', error);
+            resultBox.style.borderLeft = "4px solid #ef4444";
+            resultBox.innerHTML = `
+                <h4 style="color:#ef4444; display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-exclamation-triangle"></i> System Error
+                </h4>
+                <p style="margin-top:10px; font-size:0.9rem; color:#666;">
+                    Unable to verify batch at this time. Please try again later.
+                </p>
+            `;
+        });
+}
+
+// Order Tracking Functions
+function openTrackingModal() { 
+    const modal = document.getElementById('trackingModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+    }
+}
+
+function closeTrackingModal() { 
+    const modal = document.getElementById('trackingModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.classList.remove('modal-open');
+    }
+}
+
+function trackOrder() {
+    const input = document.getElementById('trackingIdInput');
+    const resultBox = document.getElementById('trackingResult');
+    const timeline = document.getElementById('trackingTimeline');
+    const errorBox = document.getElementById('trackingError');
+    const courierName = document.getElementById('trackingCourierName');
+    const deliveryDate = document.getElementById('trackingDeliveryDate');
+    
+    if (!input || !resultBox || !timeline) return;
+    
+    const trackingId = input.value.trim();
+    
+    if(!trackingId) { 
+        alert("Please enter a tracking ID"); 
+        return; 
+    }
+    
+    // Hide error, show loading
+    if (errorBox) errorBox.style.display = 'none';
+    resultBox.style.display = 'block';
+    timeline.innerHTML = '<div style="text-align:center; padding:20px; color:#888;"><i class="fas fa-circle-notch fa-spin"></i> Fetching status...</div>';
+    
+    // Fetch real data from API - use relative path for compatibility
+    fetch(`api/track_order.php?tracking=${encodeURIComponent(trackingId)}`)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                resultBox.style.display = 'none';
+                if (errorBox) {
+                    errorBox.style.display = 'block';
+                    errorBox.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${data.error || 'Order not found'}`;
+                }
+                return;
+            }
+            
+            // Update courier name and delivery date
+            if (courierName) courierName.textContent = data.courier.name || 'Not assigned';
+            if (deliveryDate) deliveryDate.textContent = data.estimated_delivery || '--';
+            
+            // Build timeline
+            let html = '';
+            data.timeline.forEach(step => {
+                const activeClass = step.status === 'active' ? 'active' : (step.status === 'completed' ? 'completed' : '');
+                const descHtml = step.date ? `<p>${step.date}</p>` : '';
+                
+                html += `
+                    <div class="timeline-step ${activeClass}">
+                        <div class="step-icon"><div class="dot"></div></div>
+                        <div class="step-content">
+                            <h5>${step.title}</h5>
+                            ${descHtml}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            timeline.innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Tracking error:', error);
+            resultBox.style.display = 'none';
+            if (errorBox) {
+                errorBox.style.display = 'block';
+                errorBox.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error fetching tracking information';
+            }
+        });
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Update prices on load
+    updateAllPrices();
+});

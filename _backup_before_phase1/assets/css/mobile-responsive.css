@@ -1,0 +1,195 @@
+/* ============================================
+   MOBILE RESPONSIVE LAYOUT
+   Universal mobile design for all phone sizes
+   320px - 600px with fluid scaling
+   ============================================ */
+
+/* Base mobile styles - applies to all phones */
+@media only screen and (max-width: 768px) {
+
+    /* SECTION TITLES - Fluid scaling based on viewport */
+    .section-title {
+        font-size: clamp(1.2rem, 5vw, 2.5rem) !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+        padding: 0 15px !important;
+        word-break: keep-all !important;
+        font-weight: 600 !important;
+        max-width: 100% !important;
+        text-align: center !important;
+        height: auto !important;
+    }
+
+    /* SECTION SUBTITLES - Fluid scaling */
+    .section-subtitle {
+        font-size: clamp(0.5rem, 2vw, 0.8rem) !important;
+        white-space: nowrap !important;
+        padding: 0 15px !important;
+        letter-spacing: clamp(0.3px, 0.5vw, 1px) !important;
+        margin-top: 8px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 100% !important;
+        text-align: center !important;
+    }
+
+    /* SECTION HEADER CARD */
+    .section-header-card {
+        padding: 20px 15px !important;
+        margin-bottom: 30px !important;
+    }
+
+    .section-header-card h2 {
+        font-size: clamp(1.2rem, 5vw, 2.5rem) !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-weight: 600 !important;
+        max-width: 100% !important;
+    }
+
+    .section-header-card p {
+        font-size: clamp(0.5rem, 2vw, 0.8rem) !important;
+        white-space: nowrap !important;
+        letter-spacing: clamp(0.3px, 0.5vw, 1px) !important;
+        margin-top: 8px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 100% !important;
+    }
+
+    /* LOGO TAGLINE - DO NOT override, let existing CSS handle it */
+}
+
+/* ============================================
+   VERY SMALL PHONES (320px - 359px)
+   ============================================ */
+@media only screen and (max-width: 359px) {
+    .section-title {
+        font-size: clamp(1rem, 5.5vw, 1.3rem) !important;
+        padding: 0 10px !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.45rem, 2.2vw, 0.6rem) !important;
+        letter-spacing: 0.2px !important;
+        padding: 0 10px !important;
+    }
+}
+
+/* ============================================
+   STANDARD ANDROID PHONES (360px - 389px)
+   Galaxy S9+, Pixel, etc.
+   ============================================ */
+@media only screen and (min-width: 360px) and (max-width: 389px) {
+    .section-title {
+        font-size: clamp(1.1rem, 5.2vw, 1.4rem) !important;
+        padding: 0 12px !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.48rem, 2vw, 0.65rem) !important;
+        letter-spacing: 0.3px !important;
+        padding: 0 12px !important;
+    }
+}
+
+/* ============================================
+   iPHONES (375px - 389px)
+   iPhone SE, iPhone 12/13/14 mini, etc.
+   ============================================ */
+@media only screen and (min-width: 375px) and (max-width: 389px) {
+    .section-title {
+        font-size: clamp(1.15rem, 5vw, 1.5rem) !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.5rem, 1.9vw, 0.68rem) !important;
+        letter-spacing: 0.4px !important;
+    }
+}
+
+/* ============================================
+   LARGE PHONES (390px - 430px)
+   iPhone 12/13/14/15 Pro Max, Galaxy S21+, etc.
+   ============================================ */
+@media only screen and (min-width: 390px) and (max-width: 430px) {
+    .section-title {
+        font-size: clamp(1.2rem, 4.8vw, 1.6rem) !important;
+        padding: 0 15px !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.52rem, 1.8vw, 0.72rem) !important;
+        letter-spacing: 0.5px !important;
+        padding: 0 15px !important;
+    }
+}
+
+/* ============================================
+   PHABLETS & FOLDABLES (480px - 600px)
+   Galaxy Fold (unfolded), large phablets
+   ============================================ */
+@media only screen and (min-width: 480px) and (max-width: 600px) {
+    .section-title {
+        font-size: clamp(1.4rem, 4.5vw, 1.9rem) !important;
+        padding: 0 20px !important;
+    }
+
+    .section-subtitle {
+        font-size: clamp(0.6rem, 1.6vw, 0.8rem) !important;
+        letter-spacing: 0.6px !important;
+        padding: 0 20px !important;
+    }
+}
+
+/* ============================================
+   ASPECT RATIO ADJUSTMENTS
+   ============================================ */
+
+/* 16:9 Aspect Ratio */
+@media only screen and (max-width: 768px) and (aspect-ratio: 16/9) {
+    .section-header-card {
+        padding: 18px 15px !important;
+    }
+}
+
+/* 18:9 Aspect Ratio (2:1) */
+@media only screen and (max-width: 768px) and (aspect-ratio: 18/9) {
+    .section-header-card {
+        padding: 20px 15px !important;
+    }
+}
+
+/* 19.5:9 Aspect Ratio */
+@media only screen and (max-width: 768px) and (aspect-ratio: 19.5/9) {
+    .section-header-card {
+        padding: 22px 15px !important;
+    }
+}
+
+/* 20:9 Aspect Ratio */
+@media only screen and (max-width: 768px) and (aspect-ratio: 20/9) {
+    .section-header-card {
+        padding: 24px 15px !important;
+    }
+}
+
+/* ============================================
+   LAYOUT CONSISTENCY
+   Ensures same visual structure across all devices
+   ============================================ */
+@media only screen and (max-width: 768px) {
+
+    /* Container consistency - DO NOT override existing container styles */
+
+    /* Product grid - DO NOT override, let existing CSS handle layout */
+
+    /* Product card - DO NOT override, preserve original design */
+
+    /* Button consistency - DO NOT override button styles */
+
+    /* Text consistency - DO NOT override text styles */
+}

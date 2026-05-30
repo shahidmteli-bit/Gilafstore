@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+<sitemap>
+<loc>https://gilafstore.com/pages-sitemap.xml</loc>
+<lastmod>2026-05-19</lastmod>
+</sitemap>
+
+<sitemap>
+<loc>https://gilafstore.com/product-sitemap.php</loc>
+<lastmod>2026-05-19</lastmod>
+</sitemap>
+
+<sitemap>
+<loc>https://gilafstore.com/category-sitemap.php</loc>
+<lastmod>2026-05-19</lastmod>
+</sitemap>
+
+<sitemap>
+<loc>https://gilafstore.com/blog-sitemap.php</loc>
+<lastmod>2026-05-19</lastmod>
+</sitemap>
+
+</sitemapindex>
