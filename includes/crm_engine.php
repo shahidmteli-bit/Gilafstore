@@ -434,7 +434,7 @@ class CRMEngine
 
         // Generate OTP
         $otp = str_pad((string)random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
-        $otpHash = password_hash($otp, PASSWORD_BCRYPT);
+        $otpHash = password_hash($otp, PASSWORD_ARGON2ID); // ISSUE-010: upgraded from BCRYPT (memory-hard, NIST RFC 9106)
         $expirySeconds = $this->getSetting('whatsapp_otp_expiry', 300);
         $expiresAt = date('Y-m-d H:i:s', time() + $expirySeconds);
 
