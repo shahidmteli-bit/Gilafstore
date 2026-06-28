@@ -84,19 +84,25 @@ class SMSService
         $message = "Your Gilaf Store OTP is: $otp. Valid for 5 minutes. Do not share this code.";
         $sendResult = $this->sendSMS($phone, $message, 'otp', $otp);
 
+        $smsSent = false;
         if ($sendResult['success']) {
-            return ['success' => true, 'message' => 'OTP sent successfully', 'expires_in' => 300, '_otp_internal' => $otp];
-        }
-
-        // Try fallback provider
-        if ($this->fallbackProvider) {
-            $sendResult = $this->sendSMSViaProvider($this->fallbackProvider, $phone, $message, 'otp', $otp);
-            if ($sendResult['success']) {
-                return ['success' => true, 'message' => 'OTP sent successfully', 'expires_in' => 300, '_otp_internal' => $otp];
+            $smsSent = true;
+        } elseif ($this->fallbackProvider) {
+            $fallbackResult = $this->sendSMSViaProvider($this->fallbackProvider, $phone, $message, 'otp', $otp);
+            if (!empty($fallbackResult['success'])) {
+                $smsSent = true;
             }
         }
 
-        return ['success' => false, 'error' => 'Failed to send OTP. Please try again.'];
+        // OTP is stored in DB — always succeed so WACRM WhatsApp delivery can proceed.
+        // _sms_sent = true means SMS was also dispatched; false = WhatsApp-only delivery.
+        return [
+            'success'       => true,
+            'message'       => 'OTP generated successfully',
+            'expires_in'    => 300,
+            '_otp_internal' => $otp,
+            '_sms_sent'     => $smsSent,
+        ];
     }
 
     /**

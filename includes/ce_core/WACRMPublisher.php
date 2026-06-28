@@ -36,6 +36,7 @@ class CE_WACRMPublisher
         'trigger.order_created'   => 'trigger.order_created',
         'trigger.payment_success' => 'trigger.payment_success',
         'customer.otp_request'    => 'customer.otp_request',
+        'login.otp'               => 'login.otp',
     ];
 
     // Mapping admin_actions.php $status values → WACRM event types
@@ -164,20 +165,24 @@ class CE_WACRMPublisher
     {
         try {
             $payload = [
-                'event'     => 'customer.otp_request',
+                'event'     => 'login.otp',
                 'timestamp' => date('c'),
                 'source'    => 'gilafstore',
                 'data'      => [
-                    'phone'          => $phone,
-                    'otp'            => $otp,
-                    'purpose'        => $purpose,
-                    'expiry_minutes' => $expiryMinutes,
-                    'name'           => $name,
+                    'customer' => [
+                        'phone' => $phone,
+                        'name'  => $name,
+                    ],
+                    'otp'      => [
+                        'code'   => $otp,
+                        'expiry' => $expiryMinutes * 60,
+                    ],
+                    'purpose'  => $purpose,
                 ],
             ];
 
             $result = $this->adapter->dispatch($payload);
-            $this->logResult('customer.otp_request', null, null, $result);
+            $this->logResult('login.otp', null, null, $result);
 
         } catch (\Throwable $e) {
             error_log('CE_WACRMPublisher::publishOTPEvent — ' . $e->getMessage());
