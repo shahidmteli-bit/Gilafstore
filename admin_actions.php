@@ -513,7 +513,20 @@ try {
             if ($status === 'delivered') {
                 auto_calculate_gst_if_eligible($orderId, $db);
             }
-            
+
+            // Fire WACRM order status event (non-blocking)
+            try {
+                require_once __DIR__ . '/../includes/ce_core/WACRMPublisher.php';
+                $wacrmExtra = [];
+                if ($status === 'shipped' && $trackingId) {
+                    $wacrmExtra['tracking_id'] = $trackingId;
+                    $wacrmExtra['courier']     = $courierCompany;
+                }
+                (new CE_WACRMPublisher())->publishOrderStatus($status, $orderId, $wacrmExtra);
+            } catch (\Throwable $wacrmErr) {
+                error_log("WACRM publisher failed for order #{$orderId} status '{$status}': " . $wacrmErr->getMessage());
+            }
+
             redirect_with_message('/admin/manage_orders.php', 'Order status updated successfully');
             break;
 
